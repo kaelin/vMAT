@@ -14,6 +14,9 @@
 		0568E8031700124400AE99F4 /* vMAT.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7E91700124400AE99F4 /* vMAT.dylib */; };
 		0568E8091700124400AE99F4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0568E8071700124400AE99F4 /* InfoPlist.strings */; };
 		0568E80C1700124400AE99F4 /* vMATTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0568E80B1700124400AE99F4 /* vMATTests.m */; };
+		0568E8171700154300AE99F4 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E8151700153600AE99F4 /* Accelerate.framework */; };
+		0568E8181700156A00AE99F4 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E8151700153600AE99F4 /* Accelerate.framework */; };
+		0568E81B170015CF00AE99F4 /* BlocksKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E819170015A900AE99F4 /* BlocksKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +44,8 @@
 		0568E8081700124400AE99F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0568E80A1700124400AE99F4 /* vMATTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vMATTests.h; sourceTree = "<group>"; };
 		0568E80B1700124400AE99F4 /* vMATTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = vMATTests.m; sourceTree = "<group>"; };
+		0568E8151700153600AE99F4 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		0568E819170015A900AE99F4 /* BlocksKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BlocksKit.framework; path = "../../../kaelin/Library/Developer/Xcode/DerivedData/OMWorkspace-bzkzcamyqoztgyalubrmemkzmjvk/Build/Products/Debug/BlocksKit.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +53,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0568E81B170015CF00AE99F4 /* BlocksKit.framework in Frameworks */,
+				0568E8171700154300AE99F4 /* Accelerate.framework in Frameworks */,
 				0568E7ED1700124400AE99F4 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -56,9 +63,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0568E7FF1700124400AE99F4 /* SenTestingKit.framework in Frameworks */,
-				0568E8001700124400AE99F4 /* Cocoa.framework in Frameworks */,
 				0568E8031700124400AE99F4 /* vMAT.dylib in Frameworks */,
+				0568E8181700156A00AE99F4 /* Accelerate.framework in Frameworks */,
+				0568E8001700124400AE99F4 /* Cocoa.framework in Frameworks */,
+				0568E7FF1700124400AE99F4 /* SenTestingKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +95,8 @@
 		0568E7EB1700124400AE99F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0568E819170015A900AE99F4 /* BlocksKit.framework */,
+				0568E8151700153600AE99F4 /* Accelerate.framework */,
 				0568E7EC1700124400AE99F4 /* Cocoa.framework */,
 				0568E7FE1700124400AE99F4 /* SenTestingKit.framework */,
 				0568E7EE1700124400AE99F4 /* Other Frameworks */,
@@ -347,6 +357,10 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../kaelin/Library/Developer/Xcode/DerivedData/OMWorkspace-bzkzcamyqoztgyalubrmemkzmjvk/Build/Products/Debug\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "vMAT/vMAT-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -358,6 +372,10 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../kaelin/Library/Developer/Xcode/DerivedData/OMWorkspace-bzkzcamyqoztgyalubrmemkzmjvk/Build/Products/Debug\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "vMAT/vMAT-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -409,6 +427,7 @@
 				0568E8111700124400AE99F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0568E8121700124400AE99F4 /* Build configuration list for PBXNativeTarget "vMATTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +436,7 @@
 				0568E8141700124400AE99F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
