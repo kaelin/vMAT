@@ -1,0 +1,424 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0568E7ED1700124400AE99F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7EC1700124400AE99F4 /* Cocoa.framework */; };
+		0568E7F71700124400AE99F4 /* vMAT.m in Sources */ = {isa = PBXBuildFile; fileRef = 0568E7F61700124400AE99F4 /* vMAT.m */; };
+		0568E7FF1700124400AE99F4 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7FE1700124400AE99F4 /* SenTestingKit.framework */; };
+		0568E8001700124400AE99F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7EC1700124400AE99F4 /* Cocoa.framework */; };
+		0568E8031700124400AE99F4 /* vMAT.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7E91700124400AE99F4 /* vMAT.dylib */; };
+		0568E8091700124400AE99F4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0568E8071700124400AE99F4 /* InfoPlist.strings */; };
+		0568E80C1700124400AE99F4 /* vMATTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0568E80B1700124400AE99F4 /* vMATTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0568E8011700124400AE99F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0568E7E11700124400AE99F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0568E7E81700124400AE99F4;
+			remoteInfo = vMAT;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0568E7E91700124400AE99F4 /* vMAT.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = vMAT.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		0568E7EC1700124400AE99F4 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		0568E7EF1700124400AE99F4 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		0568E7F01700124400AE99F4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		0568E7F11700124400AE99F4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		0568E7F41700124400AE99F4 /* vMAT-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "vMAT-Prefix.pch"; sourceTree = "<group>"; };
+		0568E7F51700124400AE99F4 /* vMAT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vMAT.h; sourceTree = "<group>"; };
+		0568E7F61700124400AE99F4 /* vMAT.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = vMAT.m; sourceTree = "<group>"; };
+		0568E7FD1700124400AE99F4 /* vMATTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = vMATTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0568E7FE1700124400AE99F4 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		0568E8061700124400AE99F4 /* vMATTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "vMATTests-Info.plist"; sourceTree = "<group>"; };
+		0568E8081700124400AE99F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0568E80A1700124400AE99F4 /* vMATTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vMATTests.h; sourceTree = "<group>"; };
+		0568E80B1700124400AE99F4 /* vMATTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = vMATTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0568E7E61700124400AE99F4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0568E7ED1700124400AE99F4 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0568E7F91700124400AE99F4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0568E7FF1700124400AE99F4 /* SenTestingKit.framework in Frameworks */,
+				0568E8001700124400AE99F4 /* Cocoa.framework in Frameworks */,
+				0568E8031700124400AE99F4 /* vMAT.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0568E7E01700124400AE99F4 = {
+			isa = PBXGroup;
+			children = (
+				0568E7F21700124400AE99F4 /* vMAT */,
+				0568E8041700124400AE99F4 /* vMATTests */,
+				0568E7EB1700124400AE99F4 /* Frameworks */,
+				0568E7EA1700124400AE99F4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0568E7EA1700124400AE99F4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0568E7E91700124400AE99F4 /* vMAT.dylib */,
+				0568E7FD1700124400AE99F4 /* vMATTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0568E7EB1700124400AE99F4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0568E7EC1700124400AE99F4 /* Cocoa.framework */,
+				0568E7FE1700124400AE99F4 /* SenTestingKit.framework */,
+				0568E7EE1700124400AE99F4 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0568E7EE1700124400AE99F4 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0568E7EF1700124400AE99F4 /* AppKit.framework */,
+				0568E7F01700124400AE99F4 /* CoreData.framework */,
+				0568E7F11700124400AE99F4 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		0568E7F21700124400AE99F4 /* vMAT */ = {
+			isa = PBXGroup;
+			children = (
+				0568E7F51700124400AE99F4 /* vMAT.h */,
+				0568E7F61700124400AE99F4 /* vMAT.m */,
+				0568E7F31700124400AE99F4 /* Supporting Files */,
+			);
+			path = vMAT;
+			sourceTree = "<group>";
+		};
+		0568E7F31700124400AE99F4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0568E7F41700124400AE99F4 /* vMAT-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0568E8041700124400AE99F4 /* vMATTests */ = {
+			isa = PBXGroup;
+			children = (
+				0568E80A1700124400AE99F4 /* vMATTests.h */,
+				0568E80B1700124400AE99F4 /* vMATTests.m */,
+				0568E8051700124400AE99F4 /* Supporting Files */,
+			);
+			path = vMATTests;
+			sourceTree = "<group>";
+		};
+		0568E8051700124400AE99F4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0568E8061700124400AE99F4 /* vMATTests-Info.plist */,
+				0568E8071700124400AE99F4 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		0568E7E71700124400AE99F4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		0568E7E81700124400AE99F4 /* vMAT */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0568E80F1700124400AE99F4 /* Build configuration list for PBXNativeTarget "vMAT" */;
+			buildPhases = (
+				0568E7E51700124400AE99F4 /* Sources */,
+				0568E7E61700124400AE99F4 /* Frameworks */,
+				0568E7E71700124400AE99F4 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = vMAT;
+			productName = vMAT;
+			productReference = 0568E7E91700124400AE99F4 /* vMAT.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		0568E7FC1700124400AE99F4 /* vMATTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0568E8121700124400AE99F4 /* Build configuration list for PBXNativeTarget "vMATTests" */;
+			buildPhases = (
+				0568E7F81700124400AE99F4 /* Sources */,
+				0568E7F91700124400AE99F4 /* Frameworks */,
+				0568E7FA1700124400AE99F4 /* Resources */,
+				0568E7FB1700124400AE99F4 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0568E8021700124400AE99F4 /* PBXTargetDependency */,
+			);
+			name = vMATTests;
+			productName = vMATTests;
+			productReference = 0568E7FD1700124400AE99F4 /* vMATTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0568E7E11700124400AE99F4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Kaelin Colclasure";
+			};
+			buildConfigurationList = 0568E7E41700124400AE99F4 /* Build configuration list for PBXProject "vMAT" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0568E7E01700124400AE99F4;
+			productRefGroup = 0568E7EA1700124400AE99F4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0568E7E81700124400AE99F4 /* vMAT */,
+				0568E7FC1700124400AE99F4 /* vMATTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0568E7FA1700124400AE99F4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0568E8091700124400AE99F4 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0568E7FB1700124400AE99F4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0568E7E51700124400AE99F4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0568E7F71700124400AE99F4 /* vMAT.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0568E7F81700124400AE99F4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0568E80C1700124400AE99F4 /* vMATTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0568E8021700124400AE99F4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0568E7E81700124400AE99F4 /* vMAT */;
+			targetProxy = 0568E8011700124400AE99F4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		0568E8071700124400AE99F4 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0568E8081700124400AE99F4 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		0568E80D1700124400AE99F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0568E80E1700124400AE99F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0568E8101700124400AE99F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "vMAT/vMAT-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		0568E8111700124400AE99F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "vMAT/vMAT-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		0568E8131700124400AE99F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "vMAT/vMAT-Prefix.pch";
+				INFOPLIST_FILE = "vMATTests/vMATTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		0568E8141700124400AE99F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "vMAT/vMAT-Prefix.pch";
+				INFOPLIST_FILE = "vMATTests/vMATTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0568E7E41700124400AE99F4 /* Build configuration list for PBXProject "vMAT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0568E80D1700124400AE99F4 /* Debug */,
+				0568E80E1700124400AE99F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0568E80F1700124400AE99F4 /* Build configuration list for PBXNativeTarget "vMAT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0568E8101700124400AE99F4 /* Debug */,
+				0568E8111700124400AE99F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		0568E8121700124400AE99F4 /* Build configuration list for PBXNativeTarget "vMATTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0568E8131700124400AE99F4 /* Debug */,
+				0568E8141700124400AE99F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0568E7E11700124400AE99F4 /* Project object */;
+}
