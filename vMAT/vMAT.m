@@ -125,21 +125,21 @@ vMAT_linkage(const float pdistv[],
                 idxJ = [J indexGreaterThanIndex:idxJ];
             }];
             [J addIndex:(fi * (m - (fi + 1) / 2) - m + fj) - 1];
-            long idx2 = 0;
+            long idxY = 0;
             for (long col = 0;
                  col < lenY;
                  col++) {
                 if ([J containsIndex:col]) continue;
-                Y[idx2] = Y[col];
-                ++idx2;
+                Y[idxY] = Y[col];
+                ++idxY;
             }
-            lenY = idx2;
+            lenY = idxY;
             --m; fm = m;
             R[i] = n + idx;
-            for (idx2 = j;
-                 idx2 < n - 1;
-                 idx2++) {
-                R[idx2] = R[idx2 + 1];
+            for (long idxR = j;
+                 idxR < n - 1;
+                 idxR++) {
+                R[idxR] = R[idxR + 1];
             }
         }
     }
