@@ -16,6 +16,25 @@ vMAT_eye(vDSP_Length rows,
                              vDSP_Length outputLength,
                              bool * keepOutput));
 
+/*! Read a matrix asynchronously from a stream.
+ 
+ @param stream An `NSInputStream` (must already be opened).
+ @param rows The number of rows to be read.
+ @param cols The number of columns to be read.
+ @param options A dictionary of options (not presently implemented; must be nil).
+ @param asyncOutputBlock A block to be called asynchronously once the data is available.
+ 
+ */
+extern void
+vMAT_fread(NSInputStream * stream,
+           vDSP_Length rows,
+           vDSP_Length cols,
+           NSDictionary * options,
+           void (^asyncOutputBlock)(float output[],
+                                    vDSP_Length outputLength,
+                                    NSData * outputData,
+                                    NSError * error));
+
 /*! Compute a hierarchical cluster tree from a distance matrix.
  
  @param pdistv A (square, for now) distance matrix.

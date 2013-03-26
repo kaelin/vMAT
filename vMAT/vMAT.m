@@ -8,6 +8,8 @@
 
 #import "vMAT.h"
 
+#import "vMAT_StreamDelegate.h"
+
 #import <BlocksKit/BlocksKit.h>
 
 
@@ -31,6 +33,26 @@ vMAT_eye(vDSP_Length rows,
     if (!keepOutput) {
         free(E);
     }
+}
+
+void
+vMAT_fread(NSInputStream * stream,
+           vDSP_Length rows,
+           vDSP_Length cols,
+           NSDictionary * options,
+           void (^asyncOutputBlock)(float output[],
+                                    vDSP_Length outputLength,
+                                    NSData * outputData,
+                                    NSError * error))
+{
+    vMAT_StreamDelegate * reader = [[vMAT_StreamDelegate alloc] initWithStream:stream
+                                                                        rows:rows
+                                                                        cols:cols
+                                                                     options:options];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
+        reader.outputBlock = asyncOutputBlock;
+        [reader startReading];
+    });
 }
 
 void

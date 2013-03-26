@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		054359481700B41A0037AAC4 /* vMAT_StreamDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */; };
+		054359491700B41A0037AAC4 /* vMAT_StreamDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */; };
 		0568E7ED1700124400AE99F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7EC1700124400AE99F4 /* Cocoa.framework */; };
 		0568E7F71700124400AE99F4 /* vMAT.m in Sources */ = {isa = PBXBuildFile; fileRef = 0568E7F61700124400AE99F4 /* vMAT.m */; };
 		0568E7FF1700124400AE99F4 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7FE1700124400AE99F4 /* SenTestingKit.framework */; };
@@ -30,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_StreamDelegate.h; sourceTree = "<group>"; };
+		054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vMAT_StreamDelegate.m; sourceTree = "<group>"; };
 		0568E7E91700124400AE99F4 /* vMAT.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = vMAT.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		0568E7EC1700124400AE99F4 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		0568E7EF1700124400AE99F4 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -119,6 +123,8 @@
 			children = (
 				0568E7F51700124400AE99F4 /* vMAT.h */,
 				0568E7F61700124400AE99F4 /* vMAT.m */,
+				054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */,
+				054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */,
 				0568E7F31700124400AE99F4 /* Supporting Files */,
 			);
 			path = vMAT;
@@ -158,6 +164,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				054359481700B41A0037AAC4 /* vMAT_StreamDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0568E7F71700124400AE99F4 /* vMAT.m in Sources */,
+				054359491700B41A0037AAC4 /* vMAT_StreamDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

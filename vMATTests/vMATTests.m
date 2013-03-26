@@ -8,6 +8,9 @@
 
 #import "vMATTests.h"
 
+#import <sys/types.h>
+#import <sys/stat.h>
+
 #import "vMAT.h"
 
 
@@ -78,6 +81,96 @@
             STAssertEquals(output[i], EYE[i], nil);
         }
     });
+}
+
+- (void)test_vMAT_fread;
+{
+    float identity = 1.f;
+    NSInputStream * stream = [NSInputStream inputStreamWithData:[NSData dataWithBytes:&identity
+                                                                               length:sizeof(identity)]];
+    [stream open];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    vMAT_fread(stream, 1, 1, nil, ^(float *output,
+                                    vDSP_Length outputLength,
+                                    NSData *outputData,
+                                    NSError *error) {
+        STAssertTrue(output != NULL, nil);
+        STAssertEquals(outputLength, (vDSP_Length)1, nil);
+        STAssertNotNil(outputData, nil);
+        STAssertNil(error, nil);
+        STAssertEquals(output[0], identity, nil);
+        dispatch_semaphore_signal(semaphore);
+        sleep(3); // Tie up one concurrent vMATStreamWorker worker slot…
+    });
+    long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
+                                                                     1 * NSEC_PER_SEC));
+    STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
+- (void)test_vMAT_fread_again;
+{
+    float identity = 1.f;
+    NSInputStream * stream = [NSInputStream inputStreamWithData:[NSData dataWithBytes:&identity
+                                                                               length:sizeof(identity)]];
+    [stream open];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    vMAT_fread(stream, 1, 1, nil, ^(float *output,
+                                    vDSP_Length outputLength,
+                                    NSData *outputData,
+                                    NSError *error) {
+        STAssertTrue(output != NULL, nil);
+        STAssertEquals(outputLength, (vDSP_Length)1, nil);
+        STAssertNotNil(outputData, nil);
+        STAssertNil(error, nil);
+        STAssertEquals(output[0], identity, nil);
+        dispatch_semaphore_signal(semaphore);
+    });
+    long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
+                                                                     1 * NSEC_PER_SEC));
+    STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
+- (void)test_vMAT_fread_named_pipe;
+{
+    NSString * pipePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"otest-%d.fifo", getpid()]];
+    int rc = mkfifo([pipePath UTF8String], 0600);
+    STAssertTrue(rc == 0, @"mkfifo: %s", strerror(errno));
+    if (rc != 0) return; // Can't really do anything more…
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^ {
+        float I[] = { 1, 2, 3 };
+        int ofd = open([pipePath UTF8String], O_WRONLY);
+        STAssertTrue(ofd >= 0, @"open: %s", strerror(errno));
+        for (int i = 0;
+             i < 3;
+             i++) {
+            [NSThread sleepForTimeInterval:0.1];
+            size_t lenw = write(ofd, &I[i], sizeof(float));
+            STAssertEquals(lenw, (size_t)4, nil);
+        }
+        close(ofd);
+        // NSLog(@"named pipe closed");
+    });
+    NSInputStream * stream = [NSInputStream inputStreamWithFileAtPath:pipePath];
+    [stream open];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    vMAT_fread(stream, 1, 3, nil, ^(float *output,
+                                    vDSP_Length outputLength,
+                                    NSData *outputData,
+                                    NSError *error) {
+        const float O[] = { 1, 2, 3 };
+        STAssertTrue(output != NULL, nil);
+        STAssertEquals(outputLength, (vDSP_Length)(sizeof(O) / sizeof(float)), nil);
+        STAssertNotNil(outputData, nil);
+        STAssertNil(error, nil);
+        for (int i = 0; i < sizeof(O) / sizeof(float); i++) {
+            STAssertEqualsWithAccuracy(output[i], O[i], 0.00001, nil);
+        }
+        dispatch_semaphore_signal(semaphore);
+    });
+    long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
+                                                                     3 * NSEC_PER_SEC));
+    STAssertFalse(timedout, @"Timed out waiting for completion (3s)");
+    unlink([pipePath UTF8String]);
 }
 
 // TODO: Make vMAT_linkage use pdist Y vector directly, with appropriate error checking...
