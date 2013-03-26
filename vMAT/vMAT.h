@@ -7,6 +7,7 @@
 //
 
 #import <Accelerate/Accelerate.h>
+#import <Foundation/Foundation.h>
 
 
 extern void
@@ -16,7 +17,7 @@ vMAT_eye(vDSP_Length rows,
                              vDSP_Length outputLength,
                              bool * keepOutput));
 
-/*! Read a matrix asynchronously from a stream.
+/*! Read a float matrix asynchronously from a stream.
  
  @param stream An `NSInputStream` (must already be opened).
  @param rows The number of rows to be read.
@@ -35,7 +36,7 @@ vMAT_fread(NSInputStream * stream,
                                     NSData * outputData,
                                     NSError * error));
 
-/*! Compute a hierarchical cluster tree from a distance matrix.
+/*! Compute a hierarchical cluster tree from a float distance matrix.
  
  @param pdistv A (square, for now) distance matrix.
  @param pdistvLength The number of elements in `pdistv`.
@@ -49,7 +50,7 @@ vMAT_linkage(const float pdistv[],
                                  vDSP_Length outputLength,
                                  bool * keepOutput));
 
-/*! Compute the pairwise distances between the samples in a matrix.
+/*! Compute the pairwise distances between the samples in a float matrix.
  
  @param sample A 2D matrix with variables in columns and samples in rows.
  @param rows The number of samples.
@@ -65,7 +66,7 @@ vMAT_pdist(const float sample[],
                                vDSP_Length outputLength,
                                bool * keepOutput));
 
-/*! Compute the pairwise distances between two sets of samples.
+/*! Compute the pairwise distances between two sets of float samples.
  
  @param sampleA A 2D matrix `A` with variables in columns and samples in rows.
  @param rowsA The number of samples in `A`.
@@ -88,6 +89,6 @@ vMAT_pdist2(const float sampleA[],
 extern NSString * const vMAT_ErrorDomain;
 
 enum {
-    vMaT_ErrorCodeNone,
-    vMAT_ErrorCodeEndOfStream,
+    vMAT_ErrorCodeNone               = 0,
+    vMAT_ErrorCodeEndOfStream        = 1,
 };

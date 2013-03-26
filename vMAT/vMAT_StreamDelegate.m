@@ -8,8 +8,6 @@
 
 #import "vMAT_StreamDelegate.h"
 
-#import "vMAT.h"
-
 
 dispatch_semaphore_t semaphore = NULL;
 
@@ -26,7 +24,8 @@ dispatch_semaphore_t semaphore = NULL;
     NSParameterAssert(rows * cols > 0);
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        semaphore = dispatch_semaphore_create(4); // Tie up no more than (N) dispatch work queues
+        // Use no more than vMAT_LIMIT_CONCURRENT_STREAMS dispatch work queues.
+        semaphore = dispatch_semaphore_create(vMAT_LIMIT_CONCURRENT_STREAMS);
     });
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     if ((self = [super init]) != nil) {
@@ -37,6 +36,8 @@ dispatch_semaphore_t semaphore = NULL;
         [_bufferData setLength:lenD];
         D = [_bufferData mutableBytes];
         idxD = 0;
+        _rows = rows;
+        _cols = cols;
     }
     return self;
 }
@@ -71,9 +72,13 @@ dispatch_semaphore_t semaphore = NULL;
                 idxD += lenr;
                 room -= lenr;
                 if (room == 0) {
-                    _outputBlock([_bufferData mutableBytes],
+                    NSMutableData * outputData = [NSMutableData dataWithCapacity:lenD];
+                    [outputData setLength:lenD];
+                    // Matlab writes data in column order, whereas C wants it in row order.
+                    vDSP_mtrans([_bufferData mutableBytes], 1, [outputData mutableBytes], 1, _rows, _cols);
+                    _outputBlock([outputData mutableBytes],
                                  lenD / sizeof(float),
-                                 _bufferData, error);
+                                 outputData, error);
                     goto finish;
                 }
             }

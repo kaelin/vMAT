@@ -6,8 +6,10 @@
 //  Copyright (c) 2013 Kaelin Colclasure. All rights reserved.
 //
 
-#import <Accelerate/Accelerate.h>
+#import "vMAT.h"
 
+
+#define vMAT_LIMIT_CONCURRENT_STREAMS (4)
 
 @interface vMAT_StreamDelegate : NSObject <NSStreamDelegate> {
     long lenD;
@@ -18,6 +20,9 @@
 @property (readonly, retain) NSMutableData * bufferData;
 @property (copy) void (^ outputBlock)(float output[], vDSP_Length outputLength, NSData * outputData, NSError * error);
 @property (readonly, retain) NSStream * stream;
+@property (assign) vDSP_Length rows;
+@property (assign) vDSP_Length cols;
+
 
 - (id)initWithStream:(NSStream *)stream
                 rows:(vDSP_Length)rows

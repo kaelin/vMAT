@@ -130,6 +130,37 @@
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
 }
 
+- (void)test_vMAT_fread_matlab_dat;
+{
+    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-float-4x3"
+                                                           withExtension:@"dat"];
+    NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
+    [stream open];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    vMAT_fread(stream, 4, 3, nil, ^(float *output,
+                                    vDSP_Length outputLength,
+                                    NSData *outputData,
+                                    NSError *error) {
+        STAssertTrue(output != NULL, nil);
+        const float M[] = {
+             2.00000,   3.00000,  13.00000,
+            11.00000,  10.00000,   8.00000,
+             7.00000,   6.00000,  12.00000,
+            14.00000,  15.00000,   1.00000,
+        };
+        STAssertEquals(outputLength, (vDSP_Length)(sizeof(M) / sizeof(*M)), nil);
+        STAssertNotNil(outputData, nil);
+        STAssertNil(error, nil);
+        for (int i = 0; i < outputLength; i++) {
+            STAssertEqualsWithAccuracy(output[i], M[i], 0.00001, nil);
+        }
+        dispatch_semaphore_signal(semaphore);
+    });
+    long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
+                                                                     1 * NSEC_PER_SEC));
+    STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
 - (void)test_vMAT_fread_named_pipe;
 {
     NSString * pipePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"otest-%d.fifo", getpid()]];
