@@ -246,3 +246,5 @@ vMAT_pdist2(const float sampleA[],
         free(D);
     }
 }
+
+NSString * const vMAT_ErrorDomain = @"com.ohmware.vMAT";

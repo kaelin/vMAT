@@ -204,6 +204,9 @@
         STAssertEquals(outputLength, (vDSP_Length)0, nil);
         STAssertNotNil(outputData, nil);
         STAssertNotNil(error, nil);
+        STAssertEqualObjects([error domain], vMAT_ErrorDomain, nil);
+        STAssertEquals([error code], (NSInteger)vMAT_ErrorCodeEndOfStream, nil);
+        // NSLog(@"%@", [error localizedDescription]);
         dispatch_semaphore_signal(semaphore);
     });
     long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,

@@ -84,3 +84,10 @@ vMAT_pdist2(const float sampleA[],
             void (^outputBlock)(float output[],
                                 vDSP_Length outputLength,
                                 bool * keepOutput));
+
+extern NSString * const vMAT_ErrorDomain;
+
+enum {
+    vMaT_ErrorCodeNone,
+    vMAT_ErrorCodeEndOfStream,
+};

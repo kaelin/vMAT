@@ -8,6 +8,8 @@
 
 #import "vMAT_StreamDelegate.h"
 
+#import "vMAT.h"
+
 
 dispatch_semaphore_t semaphore = NULL;
 
@@ -79,13 +81,15 @@ dispatch_semaphore_t semaphore = NULL;
         }
             
         case NSStreamEventErrorOccurred:
+            error = [_stream streamError];
             // Fall through
         case NSStreamEventEndEncountered:
             if (error == nil) {
-                error = [NSError errorWithDomain:NSPOSIXErrorDomain
-                                            code:ENODATA
+                error = [NSError errorWithDomain:vMAT_ErrorDomain
+                                            code:vMAT_ErrorCodeEndOfStream
                                         userInfo:nil];
             }
+            [_bufferData setLength:idxD];
             _outputBlock(NULL, 0, _bufferData, error);
         finish:
             [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
