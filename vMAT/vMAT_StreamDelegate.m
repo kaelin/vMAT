@@ -45,7 +45,7 @@ dispatch_semaphore_t semaphore = NULL;
 {
     NSRunLoop * runLoop = [NSRunLoop currentRunLoop];
     [runLoop run];
-    NSLog(@"%s done", __func__);
+    // NSLog(@"%s done", __func__);
     dispatch_semaphore_signal(semaphore);
 }
 
@@ -68,7 +68,12 @@ dispatch_semaphore_t semaphore = NULL;
             if (lenr > 0) {
                 idxD += lenr;
                 room -= lenr;
-                if (room == 0) goto finish;
+                if (room == 0) {
+                    _outputBlock([_bufferData mutableBytes],
+                                 lenD / sizeof(float),
+                                 _bufferData, error);
+                    goto finish;
+                }
             }
             break;
         }
@@ -76,10 +81,13 @@ dispatch_semaphore_t semaphore = NULL;
         case NSStreamEventErrorOccurred:
             // Fall through
         case NSStreamEventEndEncountered:
+            if (error == nil) {
+                error = [NSError errorWithDomain:NSPOSIXErrorDomain
+                                            code:ENODATA
+                                        userInfo:nil];
+            }
+            _outputBlock(NULL, 0, _bufferData, error);
         finish:
-            _outputBlock([_bufferData mutableBytes],
-                         lenD / sizeof(float),
-                         _bufferData, error);
             [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
                               forMode:NSRunLoopCommonModes];
             break;
