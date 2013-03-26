@@ -246,6 +246,37 @@
     unlink([pipePath UTF8String]);
 }
 
+- (void)test_vMAT_fwrite;
+{
+    NSOutputStream * stream = [NSOutputStream outputStreamToMemory];
+    [stream open];
+    const float M[] = {
+         2.00000,   3.00000,  13.00000,
+        11.00000,  10.00000,   8.00000,
+         7.00000,   6.00000,  12.00000,
+        14.00000,  15.00000,   1.00000,
+    };
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    vMAT_fwrite(stream, M, 4, 3, nil, ^(vDSP_Length outputLength,
+                                        NSError *error) {
+        const float Mt[] = {
+             2.00000,  11.00000,   7.00000,  14.00000,
+             3.00000,  10.00000,   6.00000,  15.00000,
+            13.00000,   8.00000,  12.00000,   1.00000,
+        };
+        STAssertEquals(outputLength, (vDSP_Length)(sizeof(Mt) / sizeof(*Mt)), nil);
+        STAssertNil(error, nil);
+        float * output = (float *)[[stream propertyForKey:NSStreamDataWrittenToMemoryStreamKey] bytes];
+        for (int i = 0; i < outputLength; i++) {
+            STAssertEqualsWithAccuracy(output[i], Mt[i], 0.00001, nil);
+        }
+        dispatch_semaphore_signal(semaphore);
+    });
+    long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
+                                                                     1 * NSEC_PER_SEC));
+    STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
 // TODO: Make vMAT_linkage use pdist Y vector directly, with appropriate error checking...
 
 - (void)test_vMAT_linkage;

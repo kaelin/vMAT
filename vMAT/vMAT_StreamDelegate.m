@@ -31,13 +31,9 @@ dispatch_semaphore_t semaphore = NULL;
     if ((self = [super init]) != nil) {
         _stream = stream;
         _stream.delegate = self;
-        lenD = rows * cols * sizeof(float);
-        _bufferData = [NSMutableData dataWithCapacity:lenD];
-        [_bufferData setLength:lenD];
-        D = [_bufferData mutableBytes];
-        idxD = 0;
         _rows = rows;
         _cols = cols;
+        _options = [options copy];
     }
     return self;
 }
@@ -54,6 +50,27 @@ dispatch_semaphore_t semaphore = NULL;
 
 - (void)startReading;
 {
+    lenD = _rows * _cols * sizeof(float);
+    _bufferData = [NSMutableData dataWithCapacity:lenD];
+    [_bufferData setLength:lenD];
+    D = [_bufferData mutableBytes];
+    idxD = 0;
+    __weak id weakSelf = self;
+    _completionBlock = ^(vDSP_Length outputLength, NSError * error) {
+        vMAT_StreamDelegate * weak = weakSelf;
+        [weak.bufferData setLength:weak->idxD];
+        weak.outputBlock(NULL, 0, weak.bufferData, error);
+    };
+    [_stream scheduleInRunLoop:[NSRunLoop currentRunLoop]
+                       forMode:NSRunLoopCommonModes];
+    [self main];
+}
+
+- (void)startWriting;
+{
+    lenD = [_bufferData length];
+    D = [_bufferData mutableBytes];
+    idxD = 0;
     [_stream scheduleInRunLoop:[NSRunLoop currentRunLoop]
                        forMode:NSRunLoopCommonModes];
     [self main];
@@ -74,11 +91,26 @@ dispatch_semaphore_t semaphore = NULL;
                 if (room == 0) {
                     NSMutableData * outputData = [NSMutableData dataWithCapacity:lenD];
                     [outputData setLength:lenD];
-                    // Matlab writes data in column order, whereas C wants it in row order.
+                    // Matlab writes data in column order, whereas C stores it in row order.
                     vDSP_mtrans([_bufferData mutableBytes], 1, [outputData mutableBytes], 1, _rows, _cols);
                     _outputBlock([outputData mutableBytes],
                                  lenD / sizeof(float),
                                  outputData, error);
+                    goto finish;
+                }
+            }
+            break;
+        }
+            
+        case NSStreamEventHasSpaceAvailable: {
+            long room = lenD - idxD;
+            long lenw = [(NSOutputStream *)_stream write:&D[idxD]
+                                               maxLength:room];
+            if (lenw > 0) {
+                idxD += lenw;
+                room -= lenw;
+                if (room == 0) {
+                    _completionBlock(lenD / sizeof(float), nil);
                     goto finish;
                 }
             }
@@ -94,8 +126,7 @@ dispatch_semaphore_t semaphore = NULL;
                                             code:vMAT_ErrorCodeEndOfStream
                                         userInfo:nil];
             }
-            [_bufferData setLength:idxD];
-            _outputBlock(NULL, 0, _bufferData, error);
+            _completionBlock(0, error);
         finish:
             [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
                               forMode:NSRunLoopCommonModes];

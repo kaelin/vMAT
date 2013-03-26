@@ -17,11 +17,13 @@
     long idxD;
 }
 
-@property (readonly, retain) NSMutableData * bufferData;
+@property (retain) NSMutableData * bufferData;
+@property (copy) void (^ completionBlock)(vDSP_Length outputLength, NSError * error);
 @property (copy) void (^ outputBlock)(float output[], vDSP_Length outputLength, NSData * outputData, NSError * error);
 @property (readonly, retain) NSStream * stream;
 @property (assign) vDSP_Length rows;
 @property (assign) vDSP_Length cols;
+@property (readonly, retain) NSDictionary * options;
 
 
 - (id)initWithStream:(NSStream *)stream
@@ -30,5 +32,6 @@
              options:(NSDictionary *)options;
 
 - (void)startReading;
+- (void)startWriting;
 
 @end

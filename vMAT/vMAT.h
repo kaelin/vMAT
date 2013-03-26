@@ -10,6 +10,13 @@
 #import <Foundation/Foundation.h>
 
 
+/*! Make a float identity matrix.
+ 
+ @param rows Number of rows.
+ @param cols Number of columns.
+ @param outputBlock A block for receiving the output identity matrix.
+ 
+ */
 extern void
 vMAT_eye(vDSP_Length rows,
          vDSP_Length cols,
@@ -35,6 +42,25 @@ vMAT_fread(NSInputStream * stream,
                                     vDSP_Length outputLength,
                                     NSData * outputData,
                                     NSError * error));
+
+/* Write a float matrix asynchronously to a stream.
+ 
+ @param stream An `NSOutputStream` (must already be opened).
+ @param matrix A float matrix.
+ @param rows The number of rows to be written.
+ @param cols The number of columns to be written.
+ @param options A dictionary of options (not presently implemented; must be nil).
+ @param asyncCompletionBlock A block to be called asynchronously once the data is written.
+ 
+ */
+void
+vMAT_fwrite(NSOutputStream * stream,
+            const float matrix[],
+            vDSP_Length rows,
+            vDSP_Length cols,
+            NSDictionary * options,
+            void (^asyncCompletionBlock)(vDSP_Length outputLength,
+                                         NSError * error));
 
 /*! Compute a hierarchical cluster tree from a float distance matrix.
  
