@@ -115,6 +115,34 @@ vMAT_pdist2(const float sampleA[],
 extern NSString * const vMAT_ErrorDomain;
 
 enum {
-    vMAT_ErrorCodeNone               = 0,
-    vMAT_ErrorCodeEndOfStream        = 1,
+    vMAT_ErrorCodeNone                = 0,
+    vMAT_ErrorCodeEndOfStream         = 1,
+    
+    vMAT_ErrorCodeInvalidMATv5Header  = 301,
+    vMAT_ErrorCodeInvalidMATv5Tag     = 302,
+    vMAT_ErrorCodeInvalidMATv5Element = 303,
 };
+
+typedef enum {
+    miINT8       = 1,
+    miUINT8      = 2,
+    miINT16      = 3,
+    miUINT16     = 4,
+    miINT32      = 5,
+    miUINT32     = 6,
+    miSINGLE     = 7,
+    miDOUBLE     = 9,
+    miINT64      = 12,
+    miUINT64     = 13,
+    miMATRIX     = 14,
+    miCOMPRESSED = 15,
+    miUTF8       = 16,
+    miUTF16      = 17,
+    miUTF32      = 18,
+} vMAT_MIType;
+
+extern NSString *
+vMAT_MITypeDescription(vMAT_MIType type);
+
+
+#import "vMAT_MATv5ReadOperation.h"

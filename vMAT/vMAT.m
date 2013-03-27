@@ -272,3 +272,31 @@ vMAT_pdist2(const float sampleA[],
 }
 
 NSString * const vMAT_ErrorDomain = @"com.ohmware.vMAT";
+
+NSString *
+vMAT_MITypeDescription(vMAT_MIType type)
+{
+    static NSString * const desc[] = {
+        nil,
+        @"miINT8       =  1",
+        @"miUINT8      =  2",
+        @"miINT16      =  3",
+        @"miUINT16     =  4",
+        @"miINT32      =  5",
+        @"miUINT32     =  6",
+        @"miSINGLE     =  7",
+        nil,
+        @"miDOUBLE     =  9",
+        nil,
+        nil,
+        @"miINT64      = 12",
+        @"miUINT64     = 13",
+        @"miMATRIX     = 14",
+        @"miCOMPRESSED = 15",
+        @"miUTF8       = 16",
+        @"miUTF16      = 17",
+        @"miUTF32      = 18",
+    };
+    if (type > 0 && type < 19) return desc[type];
+    else return nil;
+}
