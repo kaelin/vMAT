@@ -41,7 +41,7 @@
 //           length:(uint32_t)byteLength
 //           stream:(NSInputStream *)stream;
 //{
-//    
+//    printf("Element Type %s\n", [vMAT_MITypeDescription(type) UTF8String]);
 //}
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation

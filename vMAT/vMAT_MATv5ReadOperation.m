@@ -91,7 +91,7 @@
     uint64_t subsystemOffset = *(uint64_t *)&header[117];
     uint16_t version = *(uint16_t *)&header[124];
     uint16_t endianIndicator = *(uint16_t *)&header[126];
-    uint16_t bom = 'MI';
+    uint16_t bom = 0x4d49; // 'MI';
     if (endianIndicator == bom) {
         _byteOrder = OSHostByteOrder();
         _swapBytes = NO;

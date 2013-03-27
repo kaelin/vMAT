@@ -20,6 +20,7 @@
 
 // startOffset may be negative, indicating offset from end of data
 - (NSString *)descriptionFromOffset:(NSInteger)startOffset;
-- (NSString *)descriptionFromOffset:(NSInteger)startOffset limitingToByteCount:(NSUInteger)maxBytes;
+- (NSString *)descriptionFromOffset:(NSInteger)startOffset
+                limitingToByteCount:(NSUInteger)maxBytes;
 
 @end
