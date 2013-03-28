@@ -15,6 +15,7 @@
 {
     if ((self = [super init]) != nil) {
         _stream = stream;
+        _elementHandler = self;
     }
     return self;
 }
@@ -25,8 +26,7 @@
 {
     long readLength = 0;
     while (readLength < length &&
-           !self.isCancelled &&
-           !self.isFinished) {
+           !self.isCancelled) {
         long lenr = [_stream read:&buffer[readLength]
                         maxLength:length - readLength];
         if (lenr > 0) readLength += lenr;
@@ -35,10 +35,7 @@
             if (errorBlock != nil) {
                 errorBlock(readLength, [_stream streamError]);
             }
-            if (!self.isCancelled && !self.isFinished) {
-                if (readLength == 0) self.isFinished = YES;
-                else [self cancel];
-            }
+            else @throw [_stream streamError];
             break;
         }
         else {
@@ -46,13 +43,7 @@
             if (errorBlock != nil) {
                 errorBlock(readLength, [_stream streamError]);
             }
-            if (!self.isCancelled && !self.isFinished)  {
-                [self cancel];
-            }
-            if (errorBlock == nil) {
-                [_delegate operation:self
-                         handleError:[_stream streamError]];
-            }
+            else @throw [_stream streamError];
             break;
         }
     }
@@ -68,26 +59,21 @@
     return result;
 }
 
-- (void)readHeader;
+- (void)readHeader; 
 {
     if (self.isCancelled) return;
     uint8_t header[128] = { };
     [self readComplete:header length:128
            handleError:^(long readLength, NSError * streamError)
      {
-         [self cancel];
-         [_delegate operation:self
-                  handleError:[NSError errorWithDomain:vMAT_ErrorDomain
-                                                  code:vMAT_ErrorCodeInvalidMATv5Header
-                                              userInfo:
-                               @{ NSLocalizedFailureReasonErrorKey:
-                               [NSString stringWithFormat:@"MATv5 header incomplete (only %ld bytes).", readLength],
-                                  NSUnderlyingErrorKey: streamError ? : [NSNull null],
-                               }]];
+         @throw [NSError errorWithDomain:vMAT_ErrorDomain
+                                    code:vMAT_ErrorCodeInvalidMATv5Header
+                                userInfo:
+                 @{ NSLocalizedFailureReasonErrorKey:
+                 [NSString stringWithFormat:@"MATv5 header incomplete (only %ld bytes).", readLength],
+                    NSUnderlyingErrorKey: streamError ? : [NSNull null],
+                 }];
      }];
-    if (self.isCancelled) {
-        return;
-    }
     uint64_t subsystemOffset = *(uint64_t *)&header[117];
     uint16_t version = *(uint16_t *)&header[124];
     uint16_t endianIndicator = *(uint16_t *)&header[126];
@@ -107,15 +93,12 @@
             version = OSSwapConstInt16(version);
         }
         else {
-            [self cancel];
-            [_delegate operation:self
-                     handleError:[NSError errorWithDomain:vMAT_ErrorDomain
-                                                     code:vMAT_ErrorCodeInvalidMATv5Header
-                                                 userInfo:
-                                  @{ NSLocalizedFailureReasonErrorKey:
-                                  [NSString stringWithFormat:@"MATv5 header endian indicator is invalid (%#02x).", endianIndicator],
-                                  }]];
-            return;
+            @throw [NSError errorWithDomain:vMAT_ErrorDomain
+                                       code:vMAT_ErrorCodeInvalidMATv5Header
+                                   userInfo:
+                    @{ NSLocalizedFailureReasonErrorKey:
+                    [NSString stringWithFormat:@"MATv5 header endian indicator is invalid (%#02x).", endianIndicator],
+                    }];
         }
     }
     if (subsystemOffset != 0x2020202020202020 && // All spaces means older file format
@@ -143,29 +126,31 @@
     }
 }
 
-- (void)readElement;
+- (BOOL)matchTagType:(vMAT_MIType *)typeInOut
+              length:(uint32_t *)lengthInOut
+   smallElementBytes:(uint32_t *)bytesOut;
 {
     struct { uint32_t type; uint32_t length; } tag;
     [self readComplete:(uint8_t *)&tag length:8
            handleError:^(long readLength, NSError * streamError)
      {
          if (readLength == 0 && streamError == nil) {
+             if (*typeInOut != 0 || *lengthInOut != 0) goto error;
              self.isFinished = YES;
          }
          else {
-             [self cancel];
-             [_delegate operation:self
-                      handleError:[NSError errorWithDomain:vMAT_ErrorDomain
-                                                      code:vMAT_ErrorCodeInvalidMATv5Tag
-                                                  userInfo:
-                                   @{ NSLocalizedFailureReasonErrorKey:
-                                   [NSString stringWithFormat:@"MATv5 tag incomplete (only %ld bytes).", readLength],
-                                      NSUnderlyingErrorKey: streamError ? : [NSNull null],
-                                   }]];
+         error:
+             @throw [NSError errorWithDomain:vMAT_ErrorDomain
+                                        code:vMAT_ErrorCodeInvalidMATv5Tag
+                                    userInfo:
+                     @{ NSLocalizedFailureReasonErrorKey:
+                     [NSString stringWithFormat:@"MATv5 tag incomplete (only %ld bytes).", readLength],
+                        NSUnderlyingErrorKey: streamError ? : [NSNull null],
+                     }];
          }
      }];
     if (self.isCancelled || self.isFinished) {
-        return;
+        return NO;
     }
     uint32_t smallElementBytes = tag.length;
     if (_swapBytes) {
@@ -175,10 +160,103 @@
     BOOL isSmallElement = tag.type > 0xffff;
     vMAT_MIType type = isSmallElement ? (tag.type & 0xffff) : tag.type;
     uint32_t length = isSmallElement ? (tag.type >> 16) & 0b11 : tag.length;
+    if (isSmallElement) {
+        if (bytesOut == NULL) {
+            @throw [NSError errorWithDomain:vMAT_ErrorDomain
+                                       code:vMAT_ErrorCodeInvalidMATv5Tag
+                                   userInfo:
+                    @{ NSLocalizedFailureReasonErrorKey:
+                    [NSString stringWithFormat:@"MATv5 tag %@ with small element data is not expected.", vMAT_MITypeDescription(type)],
+                    }];
+        }
+        else *bytesOut = smallElementBytes;
+    }
+    if (*typeInOut == 0) *typeInOut = type;
+    else if (*typeInOut != type) return NO;
+    if (*lengthInOut == 0) *lengthInOut = length;
+    else if (*lengthInOut != length) return NO;
+    return YES;
+}
+
+- (BOOL)matchTagType:(vMAT_MIType *)typeInOut
+              length:(uint32_t *)lengthInOut;
+{
+    return [self matchTagType:typeInOut length:lengthInOut smallElementBytes:NULL];
+}
+
+- (void)readElement;
+{
+    vMAT_MIType type = 0; // Match any
+    uint32_t length = 0;  // Match any
+    uint32_t smallElementBytes = ~0;
+    BOOL isSmallElement = NO;
+    if (![self matchTagType:&type length:&length smallElementBytes:&smallElementBytes]) {
+        @throw [NSError errorWithDomain:vMAT_ErrorDomain
+                                   code:vMAT_ErrorCodeInvalidMATv5Element
+                               userInfo:
+                @{ NSLocalizedFailureReasonErrorKey:
+                [NSString stringWithFormat:@"MATv5 top-level element is incomplete."],
+                }];
+    }
+    if (length <= 4 && smallElementBytes != ~0) {
+        isSmallElement = YES;
+        NSData * smallElementData = [NSData dataWithBytes:&smallElementBytes length:length];
+        NSInputStream * delegateStream = [NSInputStream inputStreamWithData:smallElementData];
+        NSInputStream * originalStream = _stream;
+        _stream = delegateStream;
+        [delegateStream open];
+        [_delegate operation:self
+               handleElement:type
+                      length:length
+                      stream:delegateStream];
+        [delegateStream close];
+        _stream = originalStream;
+        return;
+    }
     // The Matlab documentation is a bit obscure on this point, but seems to be saying:
     long actualLength = (type != miCOMPRESSED
                          ? ((unsigned long)((length) + (8) - 1)) & ~((unsigned long)((8) - 1))
                          : length);
+    NSNumber * savedOffset = [_stream propertyForKey:NSStreamFileCurrentOffsetKey];
+    [_elementHandler operation:self
+                 handleElement:type
+                        length:length
+                        stream:_stream];
+    long expectOffset = [savedOffset longValue] + actualLength;
+    long actualOffset = [[_stream propertyForKey:NSStreamFileCurrentOffsetKey] longValue];
+    if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
+    // NSLog(@"Expected %ld vs. actual %ld", expectOffset, actualOffset);
+    if (expectOffset > actualOffset) {
+        [self skipPadBytes:expectOffset - actualOffset];
+    }
+}
+
+- (void)readToplevelElement;
+{
+    vMAT_MIType type = 0; // Match any (really miCOMPRESSED or miMATRIX)
+    uint32_t length = 0;  // Match any
+    if (![self matchTagType:&type length:&length]) {
+        self.isFinished = YES;
+        return;
+    }
+    // The Matlab documentation is a bit obscure on this point, but seems to be saying:
+    long actualLength = (type != miCOMPRESSED
+                         ? ((unsigned long)((length) + (8) - 1)) & ~((unsigned long)((8) - 1))
+                         : length);
+    NSNumber * savedOffset = [_stream propertyForKey:NSStreamFileCurrentOffsetKey];
+    [_elementHandler operation:self
+                 handleElement:type
+                        length:length
+                        stream:_stream];
+    long expectOffset = [savedOffset longValue] + actualLength;
+    long actualOffset = [[_stream propertyForKey:NSStreamFileCurrentOffsetKey] longValue];
+    if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
+    // NSLog(@"Expected %ld vs. actual %ld", expectOffset, actualOffset);
+    if (expectOffset > actualOffset) {
+        [self skipPadBytes:expectOffset - actualOffset];
+    }
+    return;
+#if 0
     NSData * smallElementData = (isSmallElement
                                  ? [NSData dataWithBytes:&smallElementBytes length:length]
                                  : nil);
@@ -199,7 +277,7 @@
             long expectOffset = [savedOffset longValue] + actualLength;
             long actualOffset = [[_stream propertyForKey:NSStreamFileCurrentOffsetKey] longValue];
             if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
-            NSLog(@"Expected %ld vs. actual %ld", expectOffset, actualOffset);
+            // NSLog(@"Expected %ld vs. actual %ld", expectOffset, actualOffset);
             if (expectOffset > actualOffset) {
                 [self skipPadBytes:expectOffset - actualOffset];
             }
@@ -233,6 +311,7 @@
                handleElement:type
                         data:data];
     }
+#endif
     if (length < actualLength) {
         [self skipPadBytes:actualLength - length];
     }
@@ -240,12 +319,32 @@
 
 - (void)main;
 {
-    [self readHeader];
-    while (!self.isCancelled &&
-           !self.isFinished) {
-        [self readElement];
+    @try {
+        @autoreleasepool {
+            [self readHeader];
+        }
+        while (!self.isCancelled &&
+               !self.isFinished) {
+            @autoreleasepool {
+                [self readToplevelElement];
+            }
+        }
     }
-    self.isFinished = YES;
+    @catch (NSError * error) {
+        [_delegate operation:self
+                 handleError:error];
+    }
+    @finally {
+        self.isFinished = YES;
+    }
+}
+
+- (void)setDelegate:(id<vMAT_MATv5ReadOperationDelegate>)delegate;
+{
+    _delegate = delegate;
+    if ([_delegate respondsToSelector:@selector(operation:handleElement:length:stream:)]) {
+        _elementHandler = _delegate;
+    }
 }
 
 - (void)setIsFinished:(BOOL)isFinished;
@@ -255,6 +354,18 @@
         _isFinished = isFinished;
         [self didChangeValueForKey:@"isFinished"];
     }
+}
+
+@end
+
+@implementation vMAT_MATv5Variable
+
+- (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;
+{
+    if ((self = [super init]) != nil) {
+        _operation = operation;
+    }
+    return self;
 }
 
 @end

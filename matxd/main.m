@@ -9,7 +9,11 @@
 #import "vMAT.h"
 
 
-@interface MATv5ReadDelegate : NSObject <vMAT_MATv5ReadOperationDelegate>
+@interface MATv5ReadDelegate : NSObject <vMAT_MATv5ReadOperationDelegate> {
+    long _remainingLength[128];
+}
+
+@property (assign) int recursionDepth;
 
 @end
 
@@ -28,27 +32,39 @@
 {
     char * byteOrderDesc[] = { "Unknown", "Little Endian", "Big Endian" };
     char * swapBytesDesc[] = { "native", "needs swapping" };
-    printf("MATv5 Header Description %s\n", [[descriptiveData description] UTF8String]);
+    NSString * description = [[NSString alloc] initWithBytes:[descriptiveData bytes]
+                                                      length:operation.hasSubsystemOffset ? 116 : 124
+                                                    encoding:NSUTF8StringEncoding];
+    printf("  ↱ Description: %s\n", [description UTF8String]);
     if (operation.hasSubsystemOffset) {
-        printf("  ⤷ Subsystem Data Offset: %lld\n", operation.subsystemOffset);
+        printf("  ↱ Subsystem Data Offset: %lld\n", operation.subsystemOffset);
     }
-    printf("  ⤷ Version: %#06x\n", version);
-    printf("  ⤷ Byte Order: %s (%s)\n", byteOrderDesc[byteOrder], swapBytesDesc[operation.swapBytes]);
+    printf("  ↱ Version: %#06x\n", version);
+    printf("  ↱ Byte Order: %s (%s)\n", byteOrderDesc[byteOrder], swapBytesDesc[operation.swapBytes]);
+    printf("MATv5 Header %s\n", [[descriptiveData description] UTF8String]);
 }
-
-//- (void)operation:(vMAT_MATv5ReadOperation *)operation
-//    handleElement:(vMAT_MIType)type
-//           length:(uint32_t)byteLength
-//           stream:(NSInputStream *)stream;
-//{
-//    printf("Element Type %s\n", [vMAT_MITypeDescription(type) UTF8String]);
-//}
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation
     handleElement:(vMAT_MIType)type
-             data:(NSData *)data;
+           length:(uint32_t)byteLength
+           stream:(NSInputStream *)stream;
 {
-    printf("Element Type %s %s\n", [vMAT_MITypeDescription(type) UTF8String], [[data description] UTF8String]);
+    printf("%*sElement Type %s %d bytes\n", 2 * _recursionDepth, "", [vMAT_MITypeDescription(type) UTF8String], byteLength);
+    if (type == miMATRIX) {
+        long localDepth = _recursionDepth;
+        _remainingLength[localDepth] = byteLength;
+        _recursionDepth++;
+        while (_remainingLength[localDepth] > 0) {
+            [operation readElement];
+        }
+        _recursionDepth--;
+    }
+    else {
+        NSMutableData * data = [NSMutableData dataWithCapacity:byteLength];
+        data.length = byteLength;
+        [operation readComplete:[data mutableBytes] length:byteLength];
+        printf("%*s↳ %s\n", 2 * _recursionDepth, "", [[data description] UTF8String]);
+    }
 }
 
 @end
