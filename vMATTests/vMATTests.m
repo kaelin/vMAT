@@ -208,6 +208,12 @@
     unlink([pipePath UTF8String]);
 }
 
+- (void)test_vMAT_fread_nil_stream;
+{
+    STAssertThrowsSpecificNamed(vMAT_fread(nil, 1, 1, nil, ^(float *output, vDSP_Length outputLength, NSData *outputData, NSError *error) {
+    }), NSException, NSInternalInconsistencyException, nil);
+}
+
 - (void)test_vMAT_fread_short_pipe;
 {
     NSString * pipePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"otest-%d.fifo", getpid()]];
@@ -281,6 +287,12 @@
     long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
                                                                      1 * NSEC_PER_SEC));
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
+- (void)test_vMAT_fwrite_nil_stream;
+{
+    STAssertThrowsSpecificNamed(vMAT_fwrite(nil, NULL, 1, 1, nil, ^(vDSP_Length outputLength, NSError *error) {
+    }), NSException, NSInternalInconsistencyException, nil);
 }
 
 // TODO: Make vMAT_linkage use pdist Y vector directly, with appropriate error checking...

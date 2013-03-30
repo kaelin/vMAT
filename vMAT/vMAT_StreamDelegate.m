@@ -20,6 +20,7 @@ dispatch_semaphore_t semaphore = NULL;
                 cols:(vDSP_Length)cols
              options:(NSDictionary *)options;
 {
+    NSParameterAssert(stream != nil);
     NSParameterAssert(options == nil); // TODO: Implement options…
     NSParameterAssert(rows * cols > 0);
     static dispatch_once_t onceToken;
