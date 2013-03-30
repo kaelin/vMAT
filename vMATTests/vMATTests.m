@@ -99,6 +99,7 @@
         STAssertNotNil(outputData, nil);
         STAssertNil(error, nil);
         STAssertEquals(output[0], identity, nil);
+        [stream close];
         dispatch_semaphore_signal(semaphore);
         sleep(3); // Tie up one concurrent vMATStreamWorker worker slot…
     });
@@ -123,6 +124,7 @@
         STAssertNotNil(outputData, nil);
         STAssertNil(error, nil);
         STAssertEquals(output[0], identity, nil);
+        [stream close];
         dispatch_semaphore_signal(semaphore);
     });
     long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
@@ -154,6 +156,7 @@
         for (int i = 0; i < outputLength; i++) {
             STAssertEqualsWithAccuracy(output[i], M[i], 0.00001, nil);
         }
+        [stream close];
         dispatch_semaphore_signal(semaphore);
     });
     long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
@@ -196,6 +199,7 @@
         for (int i = 0; i < sizeof(O) / sizeof(float); i++) {
             STAssertEqualsWithAccuracy(output[i], O[i], 0.00001, nil);
         }
+        [stream close];
         dispatch_semaphore_signal(semaphore);
     });
     long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
@@ -238,6 +242,7 @@
         STAssertEqualObjects([error domain], vMAT_ErrorDomain, nil);
         STAssertEquals([error code], (NSInteger)vMAT_ErrorCodeEndOfStream, nil);
         // NSLog(@"%@", [error localizedDescription]);
+        [stream close];
         dispatch_semaphore_signal(semaphore);
     });
     long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
@@ -270,6 +275,7 @@
         for (int i = 0; i < outputLength; i++) {
             STAssertEqualsWithAccuracy(output[i], Mt[i], 0.00001, nil);
         }
+        [stream close];
         dispatch_semaphore_signal(semaphore);
     });
     long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,

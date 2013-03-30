@@ -128,8 +128,10 @@ dispatch_semaphore_t semaphore = NULL;
             }
             _completionBlock(0, error);
         finish:
-            [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
-                              forMode:NSRunLoopCommonModes];
+            if ([stream streamStatus] != NSStreamStatusClosed) {
+                [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
+                                  forMode:NSRunLoopCommonModes];
+            }
             break;
             
         default:

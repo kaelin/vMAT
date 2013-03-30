@@ -27,6 +27,7 @@
 		0568E8171700154300AE99F4 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E8151700153600AE99F4 /* Accelerate.framework */; };
 		0568E8181700156A00AE99F4 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E8151700153600AE99F4 /* Accelerate.framework */; };
 		0568E81B170015CF00AE99F4 /* BlocksKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E819170015A900AE99F4 /* BlocksKit.framework */; };
+		058C5E651706891B00A65E82 /* MATv5ReadWriteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 058C5E641706891B00A65E82 /* MATv5ReadWriteTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,8 @@
 		0568E8151700153600AE99F4 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		0568E819170015A900AE99F4 /* BlocksKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BlocksKit.framework; path = "../../../kaelin/Library/Developer/Xcode/DerivedData/OMWorkspace-bzkzcamyqoztgyalubrmemkzmjvk/Build/Products/Debug/BlocksKit.framework"; sourceTree = "<group>"; };
 		058C5E62170610FD00A65E82 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		058C5E631706891B00A65E82 /* MATv5ReadWriteTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MATv5ReadWriteTests.h; sourceTree = "<group>"; };
+		058C5E641706891B00A65E82 /* MATv5ReadWriteTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MATv5ReadWriteTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +215,8 @@
 			children = (
 				0568E80A1700124400AE99F4 /* vMATTests.h */,
 				0568E80B1700124400AE99F4 /* vMATTests.m */,
+				058C5E631706891B00A65E82 /* MATv5ReadWriteTests.h */,
+				058C5E641706891B00A65E82 /* MATv5ReadWriteTests.m */,
 				0568E8051700124400AE99F4 /* Supporting Files */,
 			);
 			path = vMATTests;
@@ -376,6 +381,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0568E80C1700124400AE99F4 /* vMATTests.m in Sources */,
+				058C5E651706891B00A65E82 /* MATv5ReadWriteTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
