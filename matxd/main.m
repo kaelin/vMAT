@@ -44,6 +44,16 @@
 @implementation MATv5ReadDelegate
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation
+   handleVariable:(vMAT_MATv5Variable *)variable;
+{
+    // MATv5ReadDelegate provides its own alternative implementation of the
+    // -operation:handleElement:length:stream: method. It intentionally
+    // bypasses the default processing of workspace variables so that it
+    // can dump the constituent elements individually.
+    NSAssert(NO, @"%s should never be called!", __func__);
+}
+
+- (void)operation:(vMAT_MATv5ReadOperation *)operation
       handleError:(NSError *)error;
 {
     NSLog(@"%@", [error localizedDescription]);
@@ -56,8 +66,12 @@
 {
     char * byteOrderDesc[] = { "Unknown", "Little Endian", "Big Endian" };
     char * swapBytesDesc[] = { "native", "needs swapping" };
-    NSString * description = [[NSString alloc] initWithBytes:[descriptiveData bytes]
-                                                      length:operation.hasSubsystemOffset ? 116 : 124
+    const char * descBytes = [descriptiveData bytes];
+    NSUInteger descLength  = operation.hasSubsystemOffset ? 116 : 124;
+    while (descLength > 0 && (descBytes[descLength - 1] == 0 || isspace(descBytes[descLength - 1])))
+        --descLength;
+    NSString * description = [[NSString alloc] initWithBytes:descBytes
+                                                      length:descLength
                                                     encoding:NSUTF8StringEncoding];
     printf("  ↱ Description: %s\n", [description UTF8String]);
     if (operation.hasSubsystemOffset) {
