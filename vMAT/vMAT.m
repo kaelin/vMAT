@@ -199,6 +199,21 @@ vMAT_linkage(const float pdistv[],
 }
 
 void
+vMAT_load(NSInputStream * stream,
+          NSArray * variableNames,
+          void (^asyncCompletionBlock)(NSDictionary * workspace,
+                                       NSError * error))
+{
+    NSCAssert([variableNames isEqual:@[]], @"Actually loading something is not yet implemented!!!");
+    vMAT_MATv5ReadOperation * operation = [[vMAT_MATv5ReadOperation alloc] initWithInputStream:stream];
+    vMAT_MATv5ReadOperationDelegate * reader = [[vMAT_MATv5ReadOperationDelegate alloc] initWithReadOperation:operation];
+    reader.completionBlock = asyncCompletionBlock;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
+        [reader start];
+    });
+}
+
+void
 vMAT_pdist(const float sample[],
            vDSP_Length rows,
            vDSP_Length cols,

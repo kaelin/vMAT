@@ -100,6 +100,19 @@ vMAT_linkage(const float pdistv[],
                                  vDSP_Length outputLength,
                                  bool * keepOutput));
 
+/*! Load variables asynchronously from a MAT (v5) file into a workspace dictionary.
+
+ @param stream An `NSInputStream` (must already be opened).
+ @param variableNames An `NSArray` containing a list of the workspace variable names to be loaded.
+ @param asyncCompletionBlock A block to be called asynchronously when the read operation completes.
+ 
+ */
+extern void
+vMAT_load(NSInputStream * stream,
+          NSArray * variableNames,
+          void (^asyncCompletionBlock)(NSDictionary * workspace,
+                                       NSError * error));
+
 /*! Compute the pairwise distances between the samples in a float matrix.
  
  @param sample A 2D matrix with variables in columns and samples in rows.

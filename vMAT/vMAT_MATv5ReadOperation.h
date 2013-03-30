@@ -79,6 +79,17 @@
 
 @end
 
+@interface vMAT_MATv5ReadOperationDelegate : NSObject <vMAT_MATv5ReadOperationDelegate>
+
+@property (readonly, weak) vMAT_MATv5ReadOperation * operation;
+@property (copy) void (^ completionBlock)(NSDictionary * workspace, NSError * error);
+
+- (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;
+
+- (void)start;
+
+@end
+
 @interface vMAT_MATv5Variable : NSObject
 
 @property (readonly, weak) vMAT_MATv5ReadOperation * operation;

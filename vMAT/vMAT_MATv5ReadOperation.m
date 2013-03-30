@@ -13,6 +13,7 @@
 
 - (id)initWithInputStream:(NSInputStream *)stream;
 {
+    NSParameterAssert(stream != nil);
     if ((self = [super init]) != nil) {
         _stream = stream;
         _elementHandler = self;
@@ -184,6 +185,17 @@
     return [self matchTagType:typeInOut length:lengthInOut smallElementBytes:NULL];
 }
 
+- (void)operation:(vMAT_MATv5ReadOperation *)operation
+    handleElement:(vMAT_MIType)type
+           length:(uint32_t)byteLength
+           stream:(NSInputStream *)stream;
+{
+    NSAssert(operation == self, @"I'm not myself right now!");
+    NSMutableData * data = [NSMutableData dataWithCapacity:byteLength];
+    data.length = byteLength;
+    [self readComplete:[data mutableBytes] length:byteLength];
+}
+
 - (void)readElement;
 {
     vMAT_MIType type = 0; // Match any
@@ -294,6 +306,39 @@
         _isFinished = isFinished;
         [self didChangeValueForKey:@"isFinished"];
     }
+}
+
+@end
+
+@implementation vMAT_MATv5ReadOperationDelegate
+
+- (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;
+{
+    if ((self = [super init]) != nil) {
+        _operation = operation;
+    }
+    return self;
+}
+
+- (void)start;
+{
+    NSOperationQueue * queue = [[NSOperationQueue alloc] init];
+    [queue setName:@"com.ohmware.vMAT_MATv5ReadOperationDelegate"];
+    [queue addOperation:_operation];
+    [queue waitUntilAllOperationsAreFinished];
+    _completionBlock(@{ }, nil);
+}
+
+- (void)operation:(vMAT_MATv5ReadOperation *)operation
+   handleVariable:(vMAT_MATv5Variable *)variable;
+{
+    
+}
+
+- (void)operation:(vMAT_MATv5ReadOperation *)operation
+      handleError:(NSError *)error;
+{
+    
 }
 
 @end
