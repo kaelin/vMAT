@@ -149,6 +149,10 @@ vMAT_pdist2(const float sampleA[],
                                 vDSP_Length outputLength,
                                 bool * keepOutput));
 
+extern void
+vMAT_swapbytes(void * vector32,
+               vDSP_Length vectorLength);
+
 extern NSString * const vMAT_ErrorDomain;
 
 enum {

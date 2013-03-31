@@ -286,6 +286,18 @@ vMAT_pdist2(const float sampleA[],
     }
 }
 
+void
+vMAT_swapbytes(void * vector32,
+               vDSP_Length vectorLength)
+{
+    uint32_t * vswap = vector32;
+    for (long i = 0;
+         i < vectorLength;
+         i++) {
+        vswap[i] = OSSwapConstInt32(vswap[i]);
+    }
+}
+
 NSString * const vMAT_ErrorDomain = @"com.ohmware.vMAT";
 
 NSString *
