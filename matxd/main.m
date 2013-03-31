@@ -91,6 +91,9 @@
     if (type == miMATRIX) {
         long localDepth = _recursionDepth;
         _remainingLength[localDepth] = byteLength;
+        if (localDepth > 0) {
+            _remainingLength[localDepth - 1] -= 8 + byteLength; // TODO: Small elements?
+        }
         _recursionDepth++;
         while (_remainingLength[localDepth] > 0) {
             [operation readElement];
@@ -102,6 +105,9 @@
         data.length = byteLength;
         [operation readComplete:[data mutableBytes] length:byteLength];
         printf("%*s↳ %s\n", 2 * _recursionDepth, "", [[data description] UTF8String]);
+        if (_recursionDepth > 0) {
+            _remainingLength[_recursionDepth - 1] -= 8 + byteLength; // TODO: Small elements?
+        }
     }
 }
 

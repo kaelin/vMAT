@@ -8,6 +8,8 @@
 
 #import "vMAT_MATv5ReadOperation.h"
 
+#import <BlocksKit/BlocksKit.h>
+
 
 @implementation vMAT_MATv5ReadOperation
 
@@ -48,7 +50,7 @@
             break;
         }
     }
-    if (readLength < length) {
+    if (readLength < length && self.isCancelled) {
         @throw [NSError errorWithDomain:vMAT_ErrorDomain
                                    code:vMAT_ErrorCodeOperationCancelled
                                userInfo:
@@ -221,7 +223,7 @@ static void (^ unexpectedEOS)() = ^ {
                     handleEOS:unexpectedEOS];
 }
 
-- (BOOL)matchArrayFlags:(uint32_t *)flagsOut
+- (void)matchArrayFlags:(uint32_t *)flagsOut
              dimensions:(NSArray **)dimensionsOut
                    name:(NSString **)nameOut;
 {
@@ -245,8 +247,13 @@ static void (^ unexpectedEOS)() = ^ {
     [self readComplete:(uint8_t *)dimensions length:length];
     long dimensionsLength = length / sizeof(*dimensions);
     if (_swapBytes) vMAT_swapbytes(dimensions, dimensionsLength);
-    
-    return YES;
+    NSNumber * values[8] = { };
+    for (int i = 0;
+         i < dimensionsLength;
+         i++) {
+        values[i] = [NSNumber numberWithInt:dimensions[i]];
+    }
+    *dimensionsOut = [NSArray arrayWithObjects:values count:dimensionsLength];
 }
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation
@@ -260,6 +267,7 @@ static void (^ unexpectedEOS)() = ^ {
         NSArray * dimensions = nil;
         NSString * name = nil;
         [self matchArrayFlags:flags dimensions:&dimensions name:&name];
+        NSLog(@"Reading %@", name);
     }
     
 //    NSMutableData * data = [NSMutableData dataWithCapacity:byteLength];
