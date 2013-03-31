@@ -73,7 +73,7 @@
 
 - (id)initWithInputStream:(NSInputStream *)stream;
 
-- (long)readComplete:(uint8_t *)buffer
+- (void)readComplete:(uint8_t *)buffer
               length:(long)length;
 - (void)readElement;
 
@@ -81,7 +81,7 @@
 
 @interface vMAT_MATv5ReadOperationDelegate : NSObject <vMAT_MATv5ReadOperationDelegate>
 
-@property (readonly, weak) vMAT_MATv5ReadOperation * operation;
+@property (readonly) vMAT_MATv5ReadOperation * operation;
 @property (copy) void (^ completionBlock)(NSDictionary * workspace, NSError * error);
 
 - (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;

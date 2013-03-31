@@ -156,12 +156,14 @@ vMAT_swapbytes(void * vector32,
 extern NSString * const vMAT_ErrorDomain;
 
 enum {
-    vMAT_ErrorCodeNone                = 0,
-    vMAT_ErrorCodeEndOfStream         = 1,
+    vMAT_ErrorCodeNone                    = 0,
+    vMAT_ErrorCodeEndOfStream             = 1,
+    vMAT_ErrorCodeOperationCancelled      = 2,
     
-    vMAT_ErrorCodeInvalidMATv5Header  = 301,
-    vMAT_ErrorCodeInvalidMATv5Tag     = 302,
-    vMAT_ErrorCodeInvalidMATv5Element = 303,
+    vMAT_ErrorCodeInvalidMATv5Header      = 301,
+    vMAT_ErrorCodeInvalidMATv5Tag         = 302,
+    vMAT_ErrorCodeInvalidMATv5Element     = 303,
+    vMAT_ErrorCodeUnsupportedMATv5Element = 304,
 };
 
 typedef enum {
