@@ -32,7 +32,10 @@
            !self.isCancelled) {
         long lenr = [_stream read:&buffer[readLength]
                         maxLength:length - readLength];
-        if (lenr > 0) readLength += lenr;
+        if (lenr > 0) {
+            readLength += lenr;
+            _elementRemainingLength -= lenr;
+        }
         else if (lenr == 0) {
             NSAssert([_stream streamError] == nil, @"Did not expect a streamError!");
             if (errorBlock != nil) {
@@ -82,6 +85,7 @@
                     NSUnderlyingErrorKey: streamError ? : [NSNull null],
                  }];
      }];
+    _elementRemainingLength = 0; // Account for those 128 bytes
     uint64_t subsystemOffset = *(uint64_t *)&header[117];
     uint16_t version = *(uint16_t *)&header[124];
     uint16_t endianIndicator = *(uint16_t *)&header[126];
@@ -304,22 +308,20 @@ static void (^ unexpectedEOS)() = ^ {
     long actualLength = (type != miCOMPRESSED
                          ? ((unsigned long)((length) + (8) - 1)) & ~((unsigned long)((8) - 1))
                          : length);
-    NSNumber * savedOffset = [_stream propertyForKey:NSStreamFileCurrentOffsetKey];
+    if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
     [_elementHandler operation:self
                  handleElement:type
                         length:length
                         stream:_stream];
-    long expectOffset = [savedOffset longValue] + actualLength;
-    long actualOffset = [[_stream propertyForKey:NSStreamFileCurrentOffsetKey] longValue];
-    if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
-    // NSLog(@"Expected %ld vs. actual %ld", expectOffset, actualOffset);
-    if (expectOffset > actualOffset) {
-        [self skipPadBytes:expectOffset - actualOffset];
+    if (actualLength > length) {
+        [self skipPadBytes:actualLength - length];
     }
 }
 
 - (void)readToplevelElement;
 {
+    NSAssert(_elementRemainingLength == 0,
+             @"elementRemainingLength is %ld; expecting 0!", _elementRemainingLength);
     vMAT_MIType type = 0; // Match any (really miCOMPRESSED or miMATRIX)
     uint32_t length = 0;  // Match any
     [self matchTagType:&type
@@ -334,18 +336,18 @@ static void (^ unexpectedEOS)() = ^ {
     long actualLength = (type != miCOMPRESSED
                          ? ((unsigned long)((length) + (8) - 1)) & ~((unsigned long)((8) - 1))
                          : length);
-    NSNumber * savedOffset = [_stream propertyForKey:NSStreamFileCurrentOffsetKey];
+    if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
+    _elementRemainingLength = length;
     [_elementHandler operation:self
                  handleElement:type
                         length:length
                         stream:_stream];
-    long expectOffset = [savedOffset longValue] + actualLength;
-    long actualOffset = [[_stream propertyForKey:NSStreamFileCurrentOffsetKey] longValue];
-    if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
-    // NSLog(@"Expected %ld vs. actual %ld", expectOffset, actualOffset);
-    if (expectOffset > actualOffset) {
-        [self skipPadBytes:expectOffset - actualOffset];
+    if (actualLength > length) {
+        [self skipPadBytes:actualLength - length];
     }
+    NSAssert(_elementRemainingLength <= 0 && _elementRemainingLength > -7,
+             @"elementRemainingLength is %ld; expecting {-7..0}!", _elementRemainingLength);
+    _elementRemainingLength = 0;
 }
 
 - (void)main;

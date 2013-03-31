@@ -70,6 +70,7 @@
 @property (readonly) BOOL hasSubsystemOffset;
 @property (readonly) int64_t subsystemOffset;
 @property (readonly, weak) id elementHandler;
+@property (readonly) long elementRemainingLength;
 
 - (id)initWithInputStream:(NSInputStream *)stream;
 
