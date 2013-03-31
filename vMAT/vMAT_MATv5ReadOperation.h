@@ -71,10 +71,11 @@
 @property (readonly) int64_t subsystemOffset;
 @property (readonly, weak) id elementHandler;
 @property (readonly) long elementRemainingLength;
+@property (readonly, retain) vMAT_MATv5Variable * variable;
 
 - (id)initWithInputStream:(NSInputStream *)stream;
 
-- (void)readComplete:(uint8_t *)buffer
+- (void)readComplete:(void *)buffer
               length:(long)length;
 - (void)readElement;
 
@@ -94,7 +95,12 @@
 @interface vMAT_MATv5Variable : NSObject
 
 @property (readonly, weak) vMAT_MATv5ReadOperation * operation;
-@property (readonly) NSString * name;
+@property (assign) BOOL isComplex;
+@property (assign) BOOL isGlobal;
+@property (assign) BOOL isLogical;
+@property (assign) vMAT_MXClass mxClass;
+@property (retain) NSArray * dimensions;
+@property (retain) NSString * name;
 
 - (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;
 

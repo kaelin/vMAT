@@ -10,6 +10,13 @@
 
 #import <BlocksKit/BlocksKit.h>
 
+@interface vMAT_MATv5ReadOperation (Private)
+
+- (void)readElementType:(vMAT_MIType *)typeInOut
+                 length:(uint32_t *)lengthInOut
+            outputBlock:(void(^)())outputBlock;
+
+@end
 
 @implementation vMAT_MATv5ReadOperation
 
@@ -23,7 +30,7 @@
     return self;
 }
 
-- (void)readComplete:(uint8_t *)buffer
+- (void)readComplete:(void *)buffer
               length:(long)length
          handleError:(void(^)(long readLength, NSError * streamError))errorBlock;
 {
@@ -63,7 +70,7 @@
     }
 }
 
-- (void)readComplete:(uint8_t *)buffer
+- (void)readComplete:(void *)buffer
               length:(long)length;
 {
     return [self readComplete:buffer length:length
@@ -144,6 +151,15 @@
     }
 }
 
+static void (^ unexpectedEOS)() = ^ {
+    @throw [NSError errorWithDomain:vMAT_ErrorDomain
+                               code:vMAT_ErrorCodeEndOfStream
+                           userInfo:
+            @{ NSLocalizedFailureReasonErrorKey:
+            @"MATv5 read operation encountered unexpected end of input stream."
+            }];
+};
+
 - (void)matchTagType:(vMAT_MIType *)typeInOut
               length:(uint32_t *)lengthInOut
    smallElementBytes:(uint32_t *)bytesOut
@@ -151,7 +167,7 @@
 {
     __block BOOL didHandleError = NO;
     struct { uint32_t type; uint32_t length; } tag;
-    [self readComplete:(uint8_t *)&tag length:8
+    [self readComplete:&tag length:8
            handleError:^(long readLength, NSError * streamError)
      {
          didHandleError = YES;
@@ -209,15 +225,6 @@
     }
 }
 
-static void (^ unexpectedEOS)() = ^ {
-    @throw [NSError errorWithDomain:vMAT_ErrorDomain
-                               code:vMAT_ErrorCodeEndOfStream
-                           userInfo:
-            @{ NSLocalizedFailureReasonErrorKey:
-            @"MATv5 read operation encountered unexpected end of input stream."
-            }];
-};
-
 - (void)matchTagType:(vMAT_MIType *)typeInOut
               length:(uint32_t *)lengthInOut;
 {
@@ -229,12 +236,12 @@ static void (^ unexpectedEOS)() = ^ {
 
 - (void)matchArrayFlags:(uint32_t *)flagsOut
              dimensions:(NSArray **)dimensionsOut
-                   name:(NSString **)nameOut;
+                   name:(NSString **)nameOut;     // Optional
 {
-    uint32_t type = 0, length = 0;
+    __block uint32_t type = 0, length = 0;
     type = miUINT32; length = 8;
     [self matchTagType:&type length:&length];
-    [self readComplete:(uint8_t *)flagsOut length:8];
+    [self readComplete:flagsOut length:8];
     if (_swapBytes) vMAT_swapbytes(flagsOut, 2);
     int32_t dimensions[8] = { };
     type = miINT32; length = 0;
@@ -248,7 +255,7 @@ static void (^ unexpectedEOS)() = ^ {
                  length / sizeof(*dimensions), sizeof(dimensions) / sizeof(*dimensions)],
                 }];
     }
-    [self readComplete:(uint8_t *)dimensions length:length];
+    [self readComplete:dimensions length:length];
     long dimensionsLength = length / sizeof(*dimensions);
     if (_swapBytes) vMAT_swapbytes(dimensions, dimensionsLength);
     NSNumber * values[8] = { };
@@ -258,50 +265,52 @@ static void (^ unexpectedEOS)() = ^ {
         values[i] = [NSNumber numberWithInt:dimensions[i]];
     }
     *dimensionsOut = [NSArray arrayWithObjects:values count:dimensionsLength];
-}
-
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
-    handleElement:(vMAT_MIType)type
-           length:(uint32_t)byteLength
-           stream:(NSInputStream *)stream;
-{
-    NSAssert(operation == self, @"I'm not myself right now!");
-    if (type == miMATRIX) {
-        uint32_t flags[2] = { };
-        NSArray * dimensions = nil;
-        NSString * name = nil;
-        [self matchArrayFlags:flags dimensions:&dimensions name:&name];
-        NSLog(@"Reading %@", name);
+    if (nameOut != NULL) {
+        type = miINT8; length = 0;
+        [self readElementType:&type
+                       length:&length
+                  outputBlock:
+         ^ {
+             char name[64] = { }; // namelengthmax is 63 as of MATLAB R2013a
+             if (length > sizeof(name)) {
+                 @throw [NSError errorWithDomain:vMAT_ErrorDomain
+                                            code:vMAT_ErrorCodeUnsupportedMATv5Element
+                                        userInfo:
+                         @{ NSLocalizedFailureReasonErrorKey:
+                         [NSString stringWithFormat:@"MATv5 array element name is %u bytes (can only read up to %ld).",
+                          length, sizeof(name)],
+                         }];
+             }
+             [self readComplete:name length:length];
+             *nameOut = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
+         }];
     }
-    
-//    NSMutableData * data = [NSMutableData dataWithCapacity:byteLength];
-//    data.length = byteLength;
-//    [self readComplete:[data mutableBytes] length:byteLength];
 }
 
-- (void)readElement;
+- (void)readElementType:(vMAT_MIType *)typeInOut
+                 length:(uint32_t *)lengthInOut
+            outputBlock:(void(^)())outputBlock;
 {
-    vMAT_MIType type = 0; // Match any
-    uint32_t length = 0;  // Match any
     uint32_t smallElementBytes = ~0;
     BOOL isSmallElement = NO;
-    [self matchTagType:&type
-                length:&length
+    [self matchTagType:typeInOut
+                length:lengthInOut
      smallElementBytes:&smallElementBytes
              handleEOS:unexpectedEOS];
+    vMAT_MIType type = *typeInOut;
+    uint32_t length = *lengthInOut;
     if (length <= 4 && smallElementBytes != ~0) {
         isSmallElement = YES;
         NSData * smallElementData = [NSData dataWithBytes:&smallElementBytes length:length];
         NSInputStream * delegateStream = [NSInputStream inputStreamWithData:smallElementData];
         NSInputStream * originalStream = _stream;
+        long savedElementRemainingLength = _elementRemainingLength;
         _stream = delegateStream;
         [delegateStream open];
-        [_delegate operation:self
-               handleElement:type
-                      length:length
-                      stream:delegateStream];
+        outputBlock();
         [delegateStream close];
         _stream = originalStream;
+        _elementRemainingLength = savedElementRemainingLength;
         return;
     }
     // The Matlab documentation is a bit obscure on this point, but seems to be saying:
@@ -309,13 +318,25 @@ static void (^ unexpectedEOS)() = ^ {
                          ? ((unsigned long)((length) + (8) - 1)) & ~((unsigned long)((8) - 1))
                          : length);
     if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
-    [_elementHandler operation:self
-                 handleElement:type
-                        length:length
-                        stream:_stream];
+    outputBlock();
     if (actualLength > length) {
         [self skipPadBytes:actualLength - length];
     }
+}
+
+- (void)readElement;
+{
+    __block vMAT_MIType type = 0; // Match any
+    __block uint32_t length = 0;  // Match any
+    [self readElementType:&type
+                   length:&length
+              outputBlock:
+     ^ {
+         [_delegate operation:self
+                handleElement:type
+                       length:length
+                       stream:_stream];
+     }];
 }
 
 - (void)readToplevelElement;
@@ -348,6 +369,34 @@ static void (^ unexpectedEOS)() = ^ {
     NSAssert(_elementRemainingLength <= 0 && _elementRemainingLength > -7,
              @"elementRemainingLength is %ld; expecting {-7..0}!", _elementRemainingLength);
     _elementRemainingLength = 0;
+}
+
+- (void)operation:(vMAT_MATv5ReadOperation *)operation
+    handleElement:(vMAT_MIType)type
+           length:(uint32_t)byteLength
+           stream:(NSInputStream *)stream;
+{
+    NSAssert(operation == self, @"I'm not myself right now!");
+    if (_variable == nil) {
+        NSAssert(type == miMATRIX, @"Top-level element is not an miMATRIX; implementation not complete!");
+        uint32_t flags[2] = { };
+        NSArray * dimensions = nil;
+        NSString * name = nil;
+        [self matchArrayFlags:flags dimensions:&dimensions name:&name];
+        _variable = [[vMAT_MATv5Variable alloc] initWithReadOperation:self];
+        _variable.isComplex = (flags[0] & 0x800) == 0x800;
+        _variable.isGlobal  = (flags[0] & 0x400) == 0x400;
+        _variable.isLogical = (flags[0] & 0x200) == 0x200;
+        _variable.mxClass = flags[0] & 0xff;
+        _variable.dimensions = dimensions;
+        _variable.name = name;
+        [_delegate operation:self
+              handleVariable:_variable];
+    }
+    
+    NSMutableData * data = [NSMutableData dataWithCapacity:_elementRemainingLength];
+    data.length = _elementRemainingLength;
+    [self readComplete:[data mutableBytes] length:_elementRemainingLength];
 }
 
 - (void)main;
@@ -397,6 +446,7 @@ static void (^ unexpectedEOS)() = ^ {
 {
     if ((self = [super init]) != nil) {
         _operation = operation;
+        _operation.delegate = self;
     }
     return self;
 }
@@ -413,7 +463,7 @@ static void (^ unexpectedEOS)() = ^ {
 - (void)operation:(vMAT_MATv5ReadOperation *)operation
    handleVariable:(vMAT_MATv5Variable *)variable;
 {
-    
+    NSLog(@"Reading %@", variable);
 }
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation
@@ -433,6 +483,24 @@ static void (^ unexpectedEOS)() = ^ {
         _operation = operation;
     }
     return self;
+}
+
+- (NSString *)description;
+{
+    NSString * prefix = [super description];
+    NSMutableString * size = [NSMutableString stringWithString:@"["];
+    char * sep = "";
+    for (NSNumber * number in _dimensions) {
+        [size appendFormat:@"%s%@", sep, number];
+        sep = " ";
+    }
+    [size appendString:@"]"];
+    NSString * string = [NSString stringWithFormat:@"%.*s; mxClass: %@, size: %@, name: \"%@\">",
+                         (int)[prefix length] - 1, [prefix UTF8String],
+                         vMAT_MXClassDescription(_mxClass),
+                         size,
+                         _name];
+    return string;
 }
 
 @end
