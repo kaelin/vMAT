@@ -327,3 +327,28 @@ vMAT_MITypeDescription(vMAT_MIType type)
     if (type > 0 && type < 19) return desc[type];
     else return nil;
 }
+
+NSString *
+vMAT_MXClassDescription(vMAT_MXClass class)
+{
+    static NSString * const desc[] = {
+        nil,
+        @"[1]mxCELL_CLASS",
+        @"[2]mxSTRUCT_CLASS",
+        @"[3]mxOBJECT_CLASS",
+        @"[4]mxCHAR_CLASS",
+        @"[5]mxSPARSE_CLASS",
+        @"[6]mxDOUBLE_CLASS",
+        @"[7]mxSINGLE_CLASS",
+        @"[8]mxINT8_CLASS",
+        @"[9]mxUINT8_CLASS",
+        @"[10]mxINT16_CLASS",
+        @"[11]mxUINT16_CLASS",
+        @"[12]mxINT32_CLASS",
+        @"[13]mxUINT32_CLASS",
+        @"[14]mxINT64_CLASS",
+        @"[15]mxUINT64_CLASS",
+    };
+    if (class > 0 && class < 16) return desc[class];
+    else return nil;
+}
