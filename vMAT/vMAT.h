@@ -167,21 +167,22 @@ enum {
 };
 
 typedef enum {
-    miINT8       = 1,
-    miUINT8      = 2,
-    miINT16      = 3,
-    miUINT16     = 4,
-    miINT32      = 5,
-    miUINT32     = 6,
-    miSINGLE     = 7,
-    miDOUBLE     = 9,
-    miINT64      = 12,
-    miUINT64     = 13,
-    miMATRIX     = 14,
-    miCOMPRESSED = 15,
-    miUTF8       = 16,
-    miUTF16      = 17,
-    miUTF32      = 18,
+    miINT8        = 1,
+    miUINT8       = 2,
+    miINT16       = 3,
+    miUINT16      = 4,
+    miINT32       = 5,
+    miUINT32      = 6,
+    miSINGLE      = 7,
+    miDOUBLE      = 9,
+    miINT64       = 12,
+    miUINT64      = 13,
+    miMATRIX      = 14,
+    miCOMPRESSED  = 15,
+    miUTF8        = 16,
+    miUTF16       = 17,
+    miUTF32       = 18,
+    miRANGE_LIMIT
 } vMAT_MIType;
 
 extern NSString *
@@ -203,9 +204,11 @@ typedef enum {
     mxUINT32_CLASS = 13,
     mxINT64_CLASS  = 14,
     mxUINT64_CLASS = 15,
+    mxRANGE_LIMIT
 } vMAT_MXClass;
 
 extern NSString *
 vMAT_MXClassDescription(vMAT_MXClass class);
 
 #import "vMAT_MATv5ReadOperation.h"
+#import "vMAT_MATv5Variable.h"

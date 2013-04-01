@@ -10,6 +10,7 @@
 
 #import <BlocksKit/BlocksKit.h>
 
+
 @interface vMAT_MATv5ReadOperation (Private)
 
 - (void)readElementType:(vMAT_MIType *)typeInOut
@@ -383,13 +384,10 @@ static void (^ unexpectedEOS)() = ^ {
         NSArray * dimensions = nil;
         NSString * name = nil;
         [self matchArrayFlags:flags dimensions:&dimensions name:&name];
-        _variable = [[vMAT_MATv5Variable alloc] initWithReadOperation:self];
-        _variable.isComplex = (flags[0] & 0x800) == 0x800;
-        _variable.isGlobal  = (flags[0] & 0x400) == 0x400;
-        _variable.isLogical = (flags[0] & 0x200) == 0x200;
-        _variable.mxClass = flags[0] & 0xff;
-        _variable.dimensions = dimensions;
-        _variable.name = name;
+        _variable = [vMAT_MATv5Variable variableWithMXClass:flags[0] & 0xff
+                                                 arrayFlags:flags[0]
+                                                 dimensions:dimensions
+                                                       name:name];
         [_delegate operation:self
               handleVariable:_variable];
     }
@@ -453,17 +451,20 @@ static void (^ unexpectedEOS)() = ^ {
 
 - (void)start;
 {
-    NSOperationQueue * queue = [[NSOperationQueue alloc] init];
-    [queue setName:@"com.ohmware.vMAT_MATv5ReadOperationDelegate"];
-    [queue addOperation:_operation];
-    [queue waitUntilAllOperationsAreFinished];
+    [_operation start];
+//    NSOperationQueue * queue = [[NSOperationQueue alloc] init];
+//    [queue setName:@"com.ohmware.vMAT_MATv5ReadOperationDelegate"];
+//    [queue addOperation:_operation];
+//    [queue waitUntilAllOperationsAreFinished];
     _completionBlock(@{ }, nil);
 }
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation
    handleVariable:(vMAT_MATv5Variable *)variable;
 {
-    NSLog(@"Reading %@", variable);
+    vMAT_MATv5NumericArray * array = [variable toNumericArray];
+    [array loadFromOperation:operation
+                 withMXClass:mxUINT8_CLASS];
 }
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation
@@ -471,36 +472,6 @@ static void (^ unexpectedEOS)() = ^ {
 {
     _completionBlock(@{ }, error);
     _completionBlock = nil;
-}
-
-@end
-
-@implementation vMAT_MATv5Variable
-
-- (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;
-{
-    if ((self = [super init]) != nil) {
-        _operation = operation;
-    }
-    return self;
-}
-
-- (NSString *)description;
-{
-    NSString * prefix = [super description];
-    NSMutableString * size = [NSMutableString stringWithString:@"["];
-    char * sep = "";
-    for (NSNumber * number in _dimensions) {
-        [size appendFormat:@"%s%@", sep, number];
-        sep = " ";
-    }
-    [size appendString:@"]"];
-    NSString * string = [NSString stringWithFormat:@"%.*s; mxClass: %@, size: %@, name: \"%@\">",
-                         (int)[prefix length] - 1, [prefix UTF8String],
-                         vMAT_MXClassDescription(_mxClass),
-                         size,
-                         _name];
-    return string;
 }
 
 @end
