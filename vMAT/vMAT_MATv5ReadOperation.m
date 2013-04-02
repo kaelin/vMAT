@@ -236,7 +236,7 @@ static void (^ unexpectedEOS)() = ^ {
 }
 
 - (void)matchArrayFlags:(uint32_t *)flagsOut
-             dimensions:(NSArray **)dimensionsOut
+             dimensions:(vMAT_Size *)sizeOut
                    name:(NSString **)nameOut;     // Optional
 {
     __block uint32_t type = 0, length = 0;
@@ -257,15 +257,12 @@ static void (^ unexpectedEOS)() = ^ {
                 }];
     }
     [self readComplete:dimensions length:length];
-    long dimensionsLength = length / sizeof(*dimensions);
-    if (_swapBytes) vMAT_swapbytes(dimensions, dimensionsLength);
-    NSNumber * values[8] = { };
+    if (_swapBytes) vMAT_swapbytes(dimensions, vMAT_MAXDIMS);
     for (int i = 0;
-         i < dimensionsLength;
+         i < vMAT_MAXDIMS;
          i++) {
-        values[i] = [NSNumber numberWithInt:dimensions[i]];
+        (*sizeOut)[i] = dimensions[i];
     }
-    *dimensionsOut = [NSArray arrayWithObjects:values count:dimensionsLength];
     if (nameOut != NULL) {
         type = miINT8; length = 0;
         [self readElementType:&type
@@ -381,12 +378,12 @@ static void (^ unexpectedEOS)() = ^ {
     if (_variable == nil) {
         NSAssert(type == miMATRIX, @"Top-level element is not an miMATRIX; implementation not complete!");
         uint32_t flags[2] = { };
-        NSArray * dimensions = nil;
+        vMAT_Size size = { };
         NSString * name = nil;
-        [self matchArrayFlags:flags dimensions:&dimensions name:&name];
+        [self matchArrayFlags:flags dimensions:&size name:&name];
         _variable = [vMAT_MATv5Variable variableWithMXClass:flags[0] & 0xff
                                                  arrayFlags:flags[0]
-                                                 dimensions:dimensions
+                                                 dimensions:size
                                                        name:name];
         [_delegate operation:self
               handleVariable:_variable];

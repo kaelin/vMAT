@@ -65,6 +65,9 @@ typedef __v4si vMAT_Size;
  */
 #define vMAT_MakeSize(dims...) ((vMAT_Size){ dims })
 
+extern NSString *
+vMAT_StringFromSize(vMAT_Size size);
+
 /*!
  @brief Make a float identity matrix.
  @discussion

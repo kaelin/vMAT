@@ -13,7 +13,7 @@
 
 + (vMAT_MATv5Variable *)variableWithMXClass:(vMAT_MXClass)mxClass
                                  arrayFlags:(uint32_t)flags
-                                 dimensions:(NSArray *)dimensions
+                                 dimensions:(vMAT_Size)size
                                        name:(NSString *)name;
 {
     vMAT_MATv5Variable * variable = nil;
@@ -34,7 +34,7 @@
             variable->_isGlobal  = (flags & 0x400) == 0x400;
             variable->_isLogical = (flags & 0x200) == 0x200;
             variable->_mxClass = mxClass;
-            variable->_dimensions = dimensions;
+            variable->_size = size;
             variable->_name = name;
             break;
         }
@@ -56,17 +56,10 @@
 - (NSString *)description;
 {
     NSString * prefix = [super description];
-    NSMutableString * size = [NSMutableString stringWithString:@"["];
-    char * sep = "";
-    for (NSNumber * number in _dimensions) {
-        [size appendFormat:@"%s%@", sep, number];
-        sep = " ";
-    }
-    [size appendString:@"]"];
     NSString * string = [NSString stringWithFormat:@"%.*s; mxClass: %@, size: %@, name: \"%@\">",
                          (int)[prefix length] - 1, [prefix UTF8String],
                          vMAT_MXClassDescription(_mxClass),
-                         size,
+                         vMAT_StringFromSize(_size),
                          _name];
     return string;
 }
@@ -146,8 +139,8 @@
 
 - (void)_load_miUINT8_mxUINT8_fromOperation:(vMAT_MATv5ReadOperation *)operation;
 {
-    long rows = [[_dimensions objectAtIndex:0] longValue];
-    long cols = [[_dimensions objectAtIndex:1] longValue];
+    long rows = _size[0];
+    long cols = _size[1];
     // MATLAB writes data in column order, whereas C stores it in row order.
     long lenC = rows * sizeof(uint8_t);
     uint8_t * C = malloc(lenC);

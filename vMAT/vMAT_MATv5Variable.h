@@ -42,7 +42,7 @@
     BOOL _isGlobal;
     BOOL _isLogical;
     vMAT_MXClass _mxClass;
-    NSArray * _dimensions;
+    vMAT_Size _size;
     NSString * _name;
 }
 
@@ -50,12 +50,12 @@
 @property (readonly) BOOL isGlobal;
 @property (readonly) BOOL isLogical;
 @property (readonly) vMAT_MXClass mxClass;
-@property (readonly, retain) NSArray * dimensions;
+@property (readonly) vMAT_Size size;
 @property (readonly, retain) NSString * name;
 
 + (vMAT_MATv5Variable *)variableWithMXClass:(vMAT_MXClass)mxClass
                                  arrayFlags:(uint32_t)flags
-                                 dimensions:(NSArray *)dimensions
+                                 dimensions:(vMAT_Size)size
                                        name:(NSString *)name;
 
 - (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation;

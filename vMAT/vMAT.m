@@ -13,6 +13,22 @@
 #import <BlocksKit/BlocksKit.h>
 
 
+NSString *
+vMAT_StringFromSize(vMAT_Size size)
+{
+    NSMutableString * string = [NSMutableString stringWithString:@"["];
+    char * sep = "";
+    for (int i = 0;
+         i < vMAT_MAXDIMS;
+         i++) {
+        if (size[i] > 0) [string appendFormat:@"%s%d", sep, size[i]];
+        else break;
+        sep = " ";
+    }
+    [string appendString:@"]"];
+    return string;
+}
+
 void
 vMAT_eye(vMAT_Size mxn,
          void (^outputBlock)(float output[],
