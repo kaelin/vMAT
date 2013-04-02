@@ -137,29 +137,78 @@
     return self;
 }
 
-- (void)_load_miUINT8_mxUINT8_fromOperation:(vMAT_MATv5ReadOperation *)operation;
+void
+vMAT_Size123Iterator(vMAT_Size size,
+                     void (^ block)(int32_t n, int32_t o, int32_t p))
 {
-    long rows = _size[0];
-    long cols = _size[1];
-    // MATLAB writes data in column order, whereas C stores it in row order.
-    long lenC = rows * sizeof(uint8_t);
-    uint8_t * C = malloc(lenC);
-    long lenD = rows * cols * sizeof(uint8_t);
-    _arrayData = [NSMutableData dataWithCapacity:lenD];
-    _arrayData.length = lenD;
-    uint8_t * D = [_arrayData mutableBytes];
-    for (int col = 0;
-         col < cols;
-         col++) {
-        [operation readComplete:C
-                         length:lenC];
-        // No need for swapping with 1-byte elements. 
-        for (int row = 0;
-             row < rows;
-             row++) {
-            D[row * cols + col] = C[row]; // Note this transposes D!
+    int32_t limP = size[3] ? : 1;
+    int32_t limO = size[2] ? : 1;
+    int32_t limN = size[1] ? : 1;
+    for (int32_t p = 0;
+         p < limP;
+         p++) {
+        for (int32_t o = 0;
+             o < limO;
+             o++) {
+            for (int32_t n = 0;
+                 n < limN;
+                 n++) {
+                block(n, o, p);
+            }
         }
     }
+}
+
+- (void)_load_miUINT8_mxDOUBLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
+{ // TODO: Use the template
+    long lenC = _size[0] * sizeof(uint8_t);
+    uint8_t * C = malloc(lenC);
+    long lenD = vMAT_Size_prod(_size) * sizeof(double);
+    _arrayData = [NSMutableData dataWithCapacity:lenD];
+    _arrayData.length = lenD;
+    double * D = [_arrayData mutableBytes];
+    __block long idxD = 0;
+    vMAT_Size123Iterator(_size, ^(int32_t n, int32_t o, int32_t p) {
+        [operation readComplete:C
+                         length:lenC];
+        // No need for swapping with 1-byte elements.
+        for (int m = 0;
+             m < _size[0];
+             m++) {
+            D[idxD] = C[m];
+            ++idxD;
+        }
+    });
+    free(C);
+}
+
+- (void)_load_miUINT8_mxUINT8_fromOperation:(vMAT_MATv5ReadOperation *)operation;
+{
+#define SwapA ; // No need for swapping with 1-byte elements.
+#define TypeA uint8_t
+#define TypeB uint8_t
+    long lenC = _size[0] * sizeof(TypeA);
+    TypeA * C = malloc(lenC);
+    long lenD = vMAT_Size_prod(_size) * sizeof(TypeB);
+    _arrayData = [NSMutableData dataWithCapacity:lenD];
+    _arrayData.length = lenD;
+    TypeB * D = [_arrayData mutableBytes];
+    __block long idxD = 0;
+    vMAT_Size123Iterator(_size, ^(int32_t n, int32_t o, int32_t p) {
+        [operation readComplete:C
+                         length:lenC];
+        if (operation.swapBytes) { SwapA; }
+        for (int m = 0;
+             m < _size[0];
+             m++) {
+            D[idxD] = C[m];
+            ++idxD;
+        }
+    });
+    free(C);
+#undef SwapA
+#undef TypeA
+#undef TypeB
 }
 
 @end

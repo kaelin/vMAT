@@ -442,6 +442,7 @@ static void (^ unexpectedEOS)() = ^ {
     if ((self = [super init]) != nil) {
         _operation = operation;
         _operation.delegate = self;
+        _workspace = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -453,15 +454,17 @@ static void (^ unexpectedEOS)() = ^ {
 //    [queue setName:@"com.ohmware.vMAT_MATv5ReadOperationDelegate"];
 //    [queue addOperation:_operation];
 //    [queue waitUntilAllOperationsAreFinished];
-    _completionBlock(@{ }, nil);
+    _completionBlock(_workspace, nil);
 }
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation
    handleVariable:(vMAT_MATv5Variable *)variable;
 {
+    if (![_variableNames containsObject:variable.name]) return;
     vMAT_MATv5NumericArray * array = [variable toNumericArray];
-    [array loadFromOperation:operation
-                 withMXClass:mxUINT8_CLASS];
+    [array loadFromOperation:operation];
+    [_workspace setObject:array
+                   forKey:array.name];
 }
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation

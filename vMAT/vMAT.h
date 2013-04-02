@@ -195,11 +195,20 @@ vMAT_swapbytes(void * vector32,
                vDSP_Length vectorLength);
 
 static inline long
-vMAT_v4si_dot(__v4si a,
-              __v4si b)
+vMAT_Size_dot(vMAT_Size a,
+              vMAT_Size b)
 {
     __v4si c = a * b;
     return (long)c[0] + c[1] + c[2] + c[3];
+}
+
+static inline long
+vMAT_Size_prod(vMAT_Size size)
+{
+    long d1 = size[1] ? : 1;
+    long d2 = size[2] ? : 1;
+    long d3 = size[3] ? : 1;
+    return (long)size[0] * d1 * d2 * d3;
 }
 
 extern NSString * const vMAT_ErrorDomain;

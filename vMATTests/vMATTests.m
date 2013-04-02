@@ -479,11 +479,11 @@
     });
 }
 
-- (void)test_vMAT_v4si_dot;
+- (void)test_vMAT_Size_dot;
 {
     // Let's try some index transposition computations for a 4x3x2 array.
-    __v4si ixmulC = { 1, 1 * 4, 1 * 4 * 3, 0 };
-    __v4si ixmulM = { 1 * 3, 1, 1 * 4 * 3, 0 };
+    vMAT_Size ixmulC = { 1, 1 * 4, 1 * 4 * 3, 0 };
+    vMAT_Size ixmulM = { 1 * 3, 1, 1 * 4 * 3, 0 };
     int C[4 * 3 * 2] = { -1 };
     int M[3 * 4 * 2] = { -1 };
     int count = 0;
@@ -492,8 +492,8 @@
             for (int n = 0; n < 3; n++) {
                 for (int m = 0; m < 4; m++) {
                     __v4si ixvecD = { m, n, o, p };
-                    long idxC = vMAT_v4si_dot(ixmulC, ixvecD);
-                    long idxM = vMAT_v4si_dot(ixmulM, ixvecD);
+                    long idxC = vMAT_Size_dot(ixmulC, ixvecD);
+                    long idxM = vMAT_Size_dot(ixmulM, ixvecD);
                     C[idxC] = count;
                     M[idxM] = count;
                     ++count;
@@ -502,7 +502,7 @@
         }
     }
     
-    long dotA = vMAT_v4si_dot(vMAT_MakeSize(INT_MAX / 3, 1, 3), vMAT_MakeSize(3, 1, 1));
+    long dotA = vMAT_Size_dot(vMAT_MakeSize(INT_MAX / 3, 1, 3), vMAT_MakeSize(3, 1, 1));
     STAssertEquals(dotA, (long)INT_MAX + 3, @"Result truncated?");
 }
 

@@ -87,6 +87,8 @@
 @interface vMAT_MATv5ReadOperationDelegate : NSObject <vMAT_MATv5ReadOperationDelegate>
 
 @property (readonly) vMAT_MATv5ReadOperation * operation;
+@property (retain) NSArray * variableNames;
+@property (readonly, retain) NSMutableDictionary * workspace;
 @property (copy) void (^ completionBlock)(NSDictionary * workspace, NSError * error);
 
 - (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;

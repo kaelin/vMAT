@@ -61,7 +61,7 @@ vMAT_fread(NSInputStream * stream,
                                     vDSP_Length outputLength,
                                     NSData * outputData,
                                     NSError * error))
-{
+{ // TODO: Convert to vMAT_Size
     vMAT_StreamDelegate * reader = [[vMAT_StreamDelegate alloc] initWithStream:stream
                                                                         rows:rows
                                                                         cols:cols
@@ -80,7 +80,7 @@ vMAT_fwrite(NSOutputStream * stream,
             NSDictionary * options,
             void (^asyncCompletionBlock)(vDSP_Length outputLength,
                                          NSError * error))
-{
+{ // TODO: Convert to vMAT_Size
     vMAT_StreamDelegate * writer = [[vMAT_StreamDelegate alloc] initWithStream:stream
                                                                           rows:rows
                                                                           cols:cols
@@ -102,7 +102,7 @@ vMAT_linkage(const float pdistv[],
              void (^outputBlock)(float output[],
                                  vDSP_Length outputLength,
                                  bool * keepOutput))
-{
+{ // TODO: Use pdist output vector
     long n = ceil(sqrt(pdistvLength));
     long idx;
     // First we need to reduce distanceMatrix to a vector (Y).
@@ -221,9 +221,9 @@ vMAT_load(NSInputStream * stream,
           void (^asyncCompletionBlock)(NSDictionary * workspace,
                                        NSError * error))
 {
-    NSCAssert([variableNames isEqual:@[]], @"Actually loading something is not yet implemented!!!");
     vMAT_MATv5ReadOperation * operation = [[vMAT_MATv5ReadOperation alloc] initWithInputStream:stream];
     vMAT_MATv5ReadOperationDelegate * reader = [[vMAT_MATv5ReadOperationDelegate alloc] initWithReadOperation:operation];
+    reader.variableNames = variableNames;
     reader.completionBlock = asyncCompletionBlock;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
         [reader start];
@@ -305,7 +305,7 @@ vMAT_pdist2(const float sampleA[],
 void
 vMAT_swapbytes(void * vector32,
                vDSP_Length vectorLength)
-{
+{ // TODO: Convert to vMAT_Size
     uint32_t * vswap = vector32;
     for (long i = 0;
          i < vectorLength;
