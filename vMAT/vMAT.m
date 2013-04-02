@@ -232,17 +232,16 @@ vMAT_pdist(const float sample[],
     });
     // Now reduce the full distance matrix to a vector of lengths (Y).
     // (The order is the same as Matlab's pdist results.)
-    long n = ceil(sqrt(lenD));
-    long lenY = n;
+    long lenY = ceil(sqrt(lenD));
     float * Y = calloc(lenY, sizeof(*Y));
     long idxY = 0;
     for (long row = 0;
-         row < n;
+         row < lenY;
          row++) {
         for (long col = row + 1;
-             col < n;
+             col < lenY;
              col++) {
-            Y[idxY] = D[row * n + col];
+            Y[idxY] = D[row * lenY + col];
             ++idxY;
         }
     }
