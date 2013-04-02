@@ -232,16 +232,17 @@ vMAT_pdist(const float sample[],
     });
     // Now reduce the full distance matrix to a vector of lengths (Y).
     // (The order is the same as Matlab's pdist results.)
-    long lenY = ceil(sqrt(lenD));
+    long lenN = ceil(sqrt(lenD));
+    long lenY = lenN * (lenN - 1) / 2;
     float * Y = calloc(lenY, sizeof(*Y));
     long idxY = 0;
-    for (long row = 0;
-         row < lenY;
-         row++) {
-        for (long col = row + 1;
-             col < lenY;
-             col++) {
-            Y[idxY] = D[row * lenY + col];
+    for (long n = 0;
+         n < lenN;
+         n++) {
+        for (long m = n + 1;
+             m < lenN;
+             m++) {
+            Y[idxY] = D[n * lenN + m];
             ++idxY;
         }
     }
@@ -262,18 +263,18 @@ vMAT_pdist2(const float sampleA[],
                                 vDSP_Length outputLength,
                                 bool * keepOutput))
 {
-    NSCAssert(mxnA[1] == mxnB[1], @"Mismatched n dimensions");
+    NSCAssert(mxnA[0] == mxnB[0], @"Mismatched m dimensions");
     // We need space to store a full distance matrix (D).
-    long lenD = mxnA[0] * mxnB[0];
+    long lenD = mxnA[1] * mxnB[1];
     float * D = calloc(lenD, sizeof(*D));
     long idxD = 0;
-    for (long idxA = 0;
-         idxA < mxnA[0];
-         idxA++) {
-        for (long idxB = 0;
-             idxB < mxnB[0];
-             idxB++) {
-            vDSP_distancesq(&sampleA[idxA], mxnA[0], &sampleB[idxB], mxnB[0], &D[idxD], mxnA[1]);
+    for (long idxB = 0;
+         idxB < mxnB[1];
+         idxB++) {
+        for (long idxA = 0;
+             idxA < mxnA[1];
+             idxA++) {
+            vDSP_distancesq(&sampleA[idxA * mxnA[0]], 1, &sampleB[idxB * mxnB[0]], 1, &D[idxD], mxnA[0]);
             D[idxD] = sqrtf(D[idxD]);
             ++idxD;
         }

@@ -155,7 +155,7 @@
         STAssertNotNil(outputData, nil);
         STAssertNil(error, nil);
         for (int i = 0; i < outputLength; i++) {
-            STAssertEqualsWithAccuracy(output[i], M[i], 0.00001, nil);
+            STAssertEqualsWithAccuracy(output[i], M[i], 0.0001, nil);
         }
         [stream close];
         dispatch_semaphore_signal(semaphore);
@@ -198,7 +198,7 @@
         STAssertNotNil(outputData, nil);
         STAssertNil(error, nil);
         for (int i = 0; i < sizeof(O) / sizeof(float); i++) {
-            STAssertEqualsWithAccuracy(output[i], O[i], 0.00001, nil);
+            STAssertEqualsWithAccuracy(output[i], O[i], 0.0001, nil);
         }
         [stream close];
         dispatch_semaphore_signal(semaphore);
@@ -280,7 +280,7 @@
         STAssertNil(error, nil);
         float * output = (float *)[[stream propertyForKey:NSStreamDataWrittenToMemoryStreamKey] bytes];
         for (int i = 0; i < outputLength; i++) {
-            STAssertEqualsWithAccuracy(output[i], Mt[i], 0.00001, nil);
+            STAssertEqualsWithAccuracy(output[i], Mt[i], 0.0001, nil);
         }
         [stream close];
         dispatch_semaphore_signal(semaphore);
@@ -317,7 +317,7 @@
             STAssertEquals(outputMatrix[i], Z[i], nil);
         }
         for (int i = 2; i < sizeof(Z) / sizeof(float); i += 3) {
-            STAssertEqualsWithAccuracy(outputMatrix[i], Z[i], 0.00001f, nil);
+            STAssertEqualsWithAccuracy(outputMatrix[i], Z[i], 0.0001, nil);
         }
     });
     const float DX5[] = {
@@ -341,23 +341,23 @@
             STAssertEquals(outputMatrix[i], Z[i], nil);
         }
         for (int i = 2; i < sizeof(Z) / sizeof(float); i += 3) {
-            STAssertEqualsWithAccuracy(outputMatrix[i], Z[i], 0.00001f, nil);
+            STAssertEqualsWithAccuracy(outputMatrix[i], Z[i], 0.0001, nil);
         }
     });
     const float DX13[] = {
-        0.00000,   2.45957,   3.69130,   0.60862,   2.42783,   2.03075,   1.66318,   2.66048,   2.10097,   2.07983,   1.72041,   4.74285,   0.72944,
-        2.45957,   0.00000,   1.88828,   2.51504,   0.27222,   1.38048,   1.35989,   2.42891,   4.06210,   2.01967,   1.76342,   3.98824,   2.40666,
-        3.69130,   1.88828,   0.00000,   3.97192,   2.04404,   3.12194,   3.00824,   2.92675,   4.55415,   3.58770,   3.59495,   2.39992,   3.72631,
-        0.60862,   2.51504,   3.97192,   0.00000,   2.43099,   1.94613,   1.66238,   3.03596,   2.50275,   2.04774,   1.39413,   5.23165,   0.98100,
-        2.42783,   0.27222,   2.04404,   2.43099,   0.00000,   1.41478,   1.40657,   2.65506,   4.04296,   2.09557,   1.66367,   4.14998,   2.42930,
-        2.03075,   1.38048,   3.12194,   1.94613,   1.41478,   0.00000,   0.41539,   2.13220,   4.04957,   0.72692,   0.87677,   4.95117,   1.65543,
-        1.66318,   1.35989,   3.00824,   1.66238,   1.40657,   0.41539,   0.00000,   1.93653,   3.65043,   0.78444,   0.91077,   4.69623,   1.30063,
-        2.66048,   2.42891,   2.92675,   3.03596,   2.65506,   2.13220,   1.93653,   0.00000,   3.94957,   1.88279,   2.82975,   3.84346,   2.15811,
-        2.10097,   4.06210,   4.55415,   2.50275,   4.04296,   4.04957,   3.65043,   3.94957,   0.00000,   4.08638,   3.77885,   4.60534,   2.63877,
-        2.07983,   2.01967,   3.58770,   2.04774,   2.09557,   0.72692,   0.78444,   1.88279,   4.08638,   0.00000,   1.27421,   5.20319,   1.49068,
-        1.72041,   1.76342,   3.59495,   1.39413,   1.66367,   0.87677,   0.91077,   2.82975,   3.77885,   1.27421,   0.00000,   5.38725,   1.56200,
-        4.74285,   3.98824,   2.39992,   5.23165,   4.14998,   4.95117,   4.69623,   3.84346,   4.60534,   5.20319,   5.38725,   0.00000,   4.85512,
-        0.72944,   2.40666,   3.72631,   0.98100,   2.42930,   1.65543,   1.30063,   2.15811,   2.63877,   1.49068,   1.56200,   4.85512,   0.00000,
+        0.00000, 2.45957, 3.69130, 0.60862, 2.42783, 2.03075, 1.66318, 2.66048, 2.10097, 2.07983, 1.72041, 4.74285, 0.72944,
+        2.45957, 0.00000, 1.88828, 2.51504, 0.27222, 1.38048, 1.35989, 2.42891, 4.06210, 2.01967, 1.76342, 3.98824, 2.40666,
+        3.69130, 1.88828, 0.00000, 3.97192, 2.04404, 3.12194, 3.00824, 2.92675, 4.55415, 3.58770, 3.59495, 2.39992, 3.72631,
+        0.60862, 2.51504, 3.97192, 0.00000, 2.43099, 1.94613, 1.66238, 3.03596, 2.50275, 2.04774, 1.39413, 5.23165, 0.98100,
+        2.42783, 0.27222, 2.04404, 2.43099, 0.00000, 1.41478, 1.40657, 2.65506, 4.04296, 2.09557, 1.66367, 4.14998, 2.42930,
+        2.03075, 1.38048, 3.12194, 1.94613, 1.41478, 0.00000, 0.41539, 2.13220, 4.04957, 0.72692, 0.87677, 4.95117, 1.65543,
+        1.66318, 1.35989, 3.00824, 1.66238, 1.40657, 0.41539, 0.00000, 1.93653, 3.65043, 0.78444, 0.91077, 4.69623, 1.30063,
+        2.66048, 2.42891, 2.92675, 3.03596, 2.65506, 2.13220, 1.93653, 0.00000, 3.94957, 1.88279, 2.82975, 3.84346, 2.15811,
+        2.10097, 4.06210, 4.55415, 2.50275, 4.04296, 4.04957, 3.65043, 3.94957, 0.00000, 4.08638, 3.77885, 4.60534, 2.63877,
+        2.07983, 2.01967, 3.58770, 2.04774, 2.09557, 0.72692, 0.78444, 1.88279, 4.08638, 0.00000, 1.27421, 5.20319, 1.49068,
+        1.72041, 1.76342, 3.59495, 1.39413, 1.66367, 0.87677, 0.91077, 2.82975, 3.77885, 1.27421, 0.00000, 5.38725, 1.56200,
+        4.74285, 3.98824, 2.39992, 5.23165, 4.14998, 4.95117, 4.69623, 3.84346, 4.60534, 5.20319, 5.38725, 0.00000, 4.85512,
+        0.72944, 2.40666, 3.72631, 0.98100, 2.42930, 1.65543, 1.30063, 2.15811, 2.63877, 1.49068, 1.56200, 4.85512, 0.00000,
     };
     vMAT_linkage(DX13, 13 * 13, ^void(float *outputMatrix,
                                       vDSP_Length outputMatrixLength,
@@ -381,75 +381,107 @@
             STAssertEquals(outputMatrix[i], Z[i], nil);
         }
         for (int i = 2; i < sizeof(Z) / sizeof(float); i += 3) {
-            STAssertEqualsWithAccuracy(outputMatrix[i], Z[i], 0.00001f, nil);
+            STAssertEqualsWithAccuracy(outputMatrix[i], Z[i], 0.0001, nil);
         }
     });
 }
 
 - (void)test_vMAT_pdist;
 {
-    vMAT_eye(vMAT_MakeSize(3, 2), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
-        vMAT_pdist(output, vMAT_MakeSize(3, 2), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+    vMAT_eye(vMAT_MakeSize(2, 3), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+        vMAT_pdist(output, vMAT_MakeSize(2, 3), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
             STAssertTrue(output != NULL, nil);
             const float Y[] = {
                 1.41421,   1.00000,   1.00000,
             };
             STAssertEquals(outputLength, (vDSP_Length)(sizeof(Y) / sizeof(float)), nil);
             for (int i = 0; i < sizeof(Y) / sizeof(float); i++) {
-                STAssertEqualsWithAccuracy(output[i], Y[i], 0.00001, nil);
+                STAssertEqualsWithAccuracy(output[i], Y[i], 0.0001, nil);
             }
         });
+    });
+    const float X[] = { // Random 8x5
+        0.21350,   0.37459,   0.17548,   0.69542,   0.10375,   0.31814,   0.25488,   0.12684,
+        0.54601,   0.07173,   0.11765,   0.79231,   0.71214,   0.88801,   0.45643,   0.15090,
+        0.89049,   0.15973,   0.37356,   0.42520,   0.17415,   0.49690,   0.63717,   0.52755,
+        0.15159,   0.38467,   0.29949,   0.93501,   0.88486,   0.92916,   0.88510,   0.56326,
+        0.43272,   0.73036,   0.55689,   0.59528,   0.77017,   0.78671,   0.07482,   0.91418,
+    };
+    vMAT_pdist(X, vMAT_MakeSize(8, 5), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+        const float Y[] = {
+            0.97525, 0.97998, 1.28368, 1.28301, 0.97138, 0.83201, 1.19173, 1.27148, 1.22583, 1.09240,
+        };
+        STAssertTrue(output != NULL, nil);
+        STAssertEquals(outputLength, (vDSP_Length)(sizeof(Y) / sizeof(float)), nil);
+        for (int i = 0; i < sizeof(Y) / sizeof(float); i++) {
+            STAssertEqualsWithAccuracy(output[i], Y[i], 0.0001, nil);
+        }
     });
 }
 
 - (void)test_vMAT_pdist2;
 {
-    NSMutableData * samplesA = [NSMutableData data];
-    NSMutableData * samplesB = [NSMutableData data];
-    vMAT_eye(vMAT_MakeSize(3, 2), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
-        [samplesA appendBytes:output
-                       length:outputLength * sizeof(*output)];
-        [samplesB appendBytes:output
-                       length:outputLength * sizeof(*output)];
-        [samplesB appendBytes:output
-                       length:outputLength * sizeof(*output)];
-        [samplesB appendBytes:output
-                       length:outputLength * sizeof(*output)];
-        float * input = [samplesB mutableBytes];
-        float * part2 = &input[1 * outputLength];
-        float * part3 = &input[2 * outputLength];
-        float k = 1.f;
-        vDSP_vsadd(input, 1, &k, part2, 1, outputLength);
-        k++;
-        vDSP_vsadd(input, 1, &k, part3, 1, outputLength);
-        k = 0.5f;
-        vDSP_vsmul(part2, 1, &k, part2, 1, outputLength);
-        k = -k;
-        vDSP_vsmul(part3, 1, &k, part3, 1, outputLength);
+    const float A[] = { // Top two rows of magic(4)
+        16,  5,
+         2, 11,
+         3, 10,
+        13,  8,
+    };
+    const float B[] = { // Bottom two rows of magic(4)
+         9,  4,
+         7, 14,
+         6, 15,
+        12,  1,
+    };
+    vMAT_pdist2(A, vMAT_MakeSize(2, 4), B, vMAT_MakeSize(2, 4), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+        const float D[] = {
+             7.07107,   9.89949,   8.48528,   5.65685,
+            12.72792,   5.83095,   5.65685,   8.48528,
+            14.14214,   5.65685,   5.83095,   9.89949,
+             5.65685,  14.14214,  12.72792,   7.07107,
+        };
+        STAssertTrue(output != NULL, nil);
+        STAssertEquals(outputLength, (vDSP_Length)(sizeof(D) / sizeof(float)), nil);
+        for (int i = 0; i < sizeof(D) / sizeof(float); i++) {
+            STAssertEqualsWithAccuracy(output[i], D[i], 0.0001, nil);
+        }
     });
-    STAssertTrue([samplesB length] == 3 * [samplesA length], nil);
-    vMAT_pdist2([samplesA mutableBytes], vMAT_MakeSize(3, 2),
-                [samplesB mutableBytes], vMAT_MakeSize(3 * 3, 2),
-                ^(float * output,
-                  vDSP_Length outputLength,
-                  bool *keepOutput)
-                {
-                    STAssertTrue(output != NULL, nil);
-                    const float Y[] = {
-                        0.00000,   1.41421,   1.00000,   0.50000,   1.11803,   0.70711,   2.69258,   2.50000,   2.23607,
-                        1.41421,   0.00000,   1.00000,   1.11803,   0.50000,   0.70711,   2.50000,   2.69258,   2.23607,
-                        1.00000,   1.00000,   0.00000,   1.11803,   1.11803,   0.70711,   1.80278,   1.80278,   1.41421,
-                    };
-                    STAssertEquals(outputLength, (vDSP_Length)(sizeof(Y) / sizeof(float)), nil);
-                    for (int i = 0; i < sizeof(Y) / sizeof(float); i++) {
-                        STAssertEqualsWithAccuracy(output[i], Y[i], 0.00001, nil);
-                    }
-                });
+}
+
+- (void)test_vMAT_pdist2_asymmetric;
+{
+    const float A[] = { // rand(8, 2)
+        0.89037, 0.52071, 0.49071, 0.56954, 0.59684, 0.30356, 0.72347, 0.49049,
+        0.73432, 0.08783, 0.70805, 0.02771, 0.38930, 0.08482, 0.55180, 0.57436,
+    };
+    const float B[] = { // rand(8, 1)
+        0.04508, 0.52524, 0.87503, 0.81947, 0.87245, 0.30698, 0.21590, 0.15737,
+    };
+    vMAT_pdist2(A, vMAT_MakeSize(8, 2), B, vMAT_MakeSize(8, 1), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+        const float D[] = {
+            1.17015, 1.37500,
+        };
+        STAssertTrue(output != NULL, nil);
+        STAssertEquals(outputLength, (vDSP_Length)(sizeof(D) / sizeof(float)), nil);
+        for (int i = 0; i < sizeof(D) / sizeof(float); i++) {
+            STAssertEqualsWithAccuracy(output[i], D[i], 0.0001, nil);
+        }
+    });
+    vMAT_pdist2(B, vMAT_MakeSize(8, 1), A, vMAT_MakeSize(8, 2), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+        const float D[] = {
+            1.17015, 1.37500,
+        };
+        STAssertTrue(output != NULL, nil);
+        STAssertEquals(outputLength, (vDSP_Length)(sizeof(D) / sizeof(float)), nil);
+        for (int i = 0; i < sizeof(D) / sizeof(float); i++) {
+            STAssertEqualsWithAccuracy(output[i], D[i], 0.0001, nil);
+        }
+    });
 }
 
 - (void)test_vMAT_v4si_dot;
 {
-    // Let's try the index transposition computations for a 4x3x2 array.
+    // Let's try some index transposition computations for a 4x3x2 array.
     __v4si ixmulC = { 1, 1 * 4, 1 * 4 * 3, 0 };
     __v4si ixmulM = { 1 * 3, 1, 1 * 4 * 3, 0 };
     int C[4 * 3 * 2] = { -1 };
