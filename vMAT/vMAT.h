@@ -53,6 +53,14 @@
 typedef __v4si vMAT_Size;
 
 /*!
+ @brief This macro reflects the maximum number of dimensions that can be expressed using a <code>vMAT_Size</code>.
+ @discussion
+ This is effectively the limit of how many dimensions vMAT can handle. Four seems pretty reasonable,
+ but if more were really needed it would be possible to increase this by using a wider vector type.
+ */
+#define vMAT_MAXDIMS (4)
+
+/*!
  @brief Convenience macro for creating a <code>vMAT_Size</code>.
  */
 #define vMAT_MakeSize(dims...) ((vMAT_Size){ dims })

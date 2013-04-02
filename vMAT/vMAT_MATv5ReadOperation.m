@@ -244,7 +244,7 @@ static void (^ unexpectedEOS)() = ^ {
     [self matchTagType:&type length:&length];
     [self readComplete:flagsOut length:8];
     if (_swapBytes) vMAT_swapbytes(flagsOut, 2);
-    int32_t dimensions[8] = { };
+    int32_t dimensions[vMAT_MAXDIMS] = { };
     type = miINT32; length = 0;
     [self matchTagType:&type length:&length];
     if (length > sizeof(dimensions)) {
@@ -252,8 +252,8 @@ static void (^ unexpectedEOS)() = ^ {
                                    code:vMAT_ErrorCodeUnsupportedMATv5Element
                                userInfo:
                 @{ NSLocalizedFailureReasonErrorKey:
-                [NSString stringWithFormat:@"MATv5 array element has %ld dimensions (can only read up to %ld).",
-                 length / sizeof(*dimensions), sizeof(dimensions) / sizeof(*dimensions)],
+                [NSString stringWithFormat:@"MATv5 array element has %ld dimensions (can only read up to %d).",
+                 length / sizeof(*dimensions), vMAT_MAXDIMS],
                 }];
     }
     [self readComplete:dimensions length:length];
