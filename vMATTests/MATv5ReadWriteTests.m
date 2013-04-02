@@ -81,4 +81,32 @@
     }), NSException, NSInternalInconsistencyException, nil);
 }
 
+- (void)test_vMAT_load_order_5x4x3x2_v6;
+{
+    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-order-5x4x3x2-v6"
+                                                           withExtension:@"mat"];
+    NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
+    [stream open];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    vMAT_load(stream, @[@"ND4"], ^(NSDictionary *workspace, NSError *error) {
+        vMAT_MATv5NumericArray * varM = [workspace objectForKey:@"ND4"];
+        uint8_t * matM = varM.arrayData.mutableBytes;
+        STAssertNotNil(varM, nil);
+        STAssertNil(error, nil);
+        STAssertEquals(varM.size, vMAT_MakeSize(5, 4, 3, 2), nil);
+        STAssertEquals(varM.arrayData.length, (NSUInteger)120, nil);
+        STAssertEquals(matM[0], (uint8_t)0, nil);
+        STAssertEquals(matM[20], (uint8_t)20, nil);
+        STAssertEquals(matM[40], (uint8_t)40, nil);
+        STAssertEquals(matM[60], (uint8_t)60, nil);
+        STAssertEquals(matM[80], (uint8_t)80, nil);
+        STAssertEquals(matM[100], (uint8_t)100, nil);
+        [stream close];
+        dispatch_semaphore_signal(semaphore);
+    });
+    long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
+                                                                     1 * NSEC_PER_SEC));
+    STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
 @end
