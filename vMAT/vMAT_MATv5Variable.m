@@ -167,7 +167,6 @@
             D[row * cols + col] = C[row]; // Note this transposes D!
         }
     }
-    
 }
 
 @end

@@ -14,19 +14,20 @@
 
 
 void
-vMAT_eye(vDSP_Length rows,
-         vDSP_Length cols,
+vMAT_eye(vMAT_Size mxn,
          void (^outputBlock)(float output[],
                              vDSP_Length outputLength,
                              bool * keepOutput))
 {
-    long lenE = rows * cols;
+    if (mxn[1] == 0) mxn[1] = mxn[0];
+    long lenE = mxn[0] * mxn[1];
+    NSCAssert(lenE > 0, @"Invalid size parameter");
     float * E = calloc(lenE, sizeof(*E));
-    long diag = fminf(rows, cols);
-    for (int row = 0;
-         row < diag;
-         row++) {
-        E[row * cols + row] = 1.f;
+    long diag = MIN(mxn[0], mxn[1]);
+    for (int n = 0;
+         n < diag;
+         n++) {
+        E[n * mxn[0] + n] = 1.f;
     }
     bool keepOutput = false;
     outputBlock(E, lenE, &keepOutput);
@@ -215,17 +216,16 @@ vMAT_load(NSInputStream * stream,
 
 void
 vMAT_pdist(const float sample[],
-           vDSP_Length rows,
-           vDSP_Length cols,
+           vMAT_Size mxn,
            void (^outputBlock)(float output[],
                                vDSP_Length outputLength,
                                bool * keepOutput))
 {
     __block float * D = NULL;
     __block long lenD = 0;
-    vMAT_pdist2(sample, rows, sample, rows, cols, ^(float * output,
-                                                    vDSP_Length outputLength,
-                                                    bool * keepOutput) {
+    vMAT_pdist2(sample, mxn, sample, mxn, ^(float * output,
+                                            vDSP_Length outputLength,
+                                            bool * keepOutput) {
         D = output;
         lenD = outputLength;
         *keepOutput = true;
@@ -256,25 +256,25 @@ vMAT_pdist(const float sample[],
 
 void
 vMAT_pdist2(const float sampleA[],
-            vDSP_Length rowsA,
+            vMAT_Size mxnA,
             const float sampleB[],
-            vDSP_Length rowsB,
-            vDSP_Length cols,
+            vMAT_Size mxnB,
             void (^outputBlock)(float output[],
                                 vDSP_Length outputLength,
                                 bool * keepOutput))
 {
+    NSCAssert(mxnA[1] == mxnB[1], @"Mismatched n dimensions");
     // We need space to store a full distance matrix (D).
-    long lenD = rowsA * rowsB;
+    long lenD = mxnA[0] * mxnB[0];
     float * D = calloc(lenD, sizeof(*D));
     long idxD = 0;
     for (long idxA = 0;
-         idxA < rowsA;
+         idxA < mxnA[0];
          idxA++) {
         for (long idxB = 0;
-             idxB < rowsB;
+             idxB < mxnB[0];
              idxB++) {
-            vDSP_distancesq(&sampleA[idxA * cols], 1, &sampleB[idxB * cols], 1, &D[idxD], cols);
+            vDSP_distancesq(&sampleA[idxA], mxnA[0], &sampleB[idxB], mxnB[0], &D[idxD], mxnA[1]);
             D[idxD] = sqrtf(D[idxD]);
             ++idxD;
         }

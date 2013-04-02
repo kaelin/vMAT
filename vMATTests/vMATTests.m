@@ -32,49 +32,50 @@
 
 - (void)test_vMAT_eye;
 {
-    vMAT_eye(1, 1, ^(float * output,
-                     vDSP_Length outputLength,
-                     bool * keepOutput) {
+    vMAT_eye(vMAT_MakeSize(1, 1), ^(float * output,
+                                    vDSP_Length outputLength,
+                                    bool * keepOutput) {
         STAssertTrue(output != NULL, nil);
         STAssertEquals(outputLength, (vDSP_Length)1, nil);
         STAssertEquals(output[0], 1.f, nil);
     });
-    vMAT_eye(3, 3, ^(float * output,
-                     vDSP_Length outputLength,
-                     bool * keepOutput) {
+    vMAT_eye(vMAT_MakeSize(3, 3), ^(float * output,
+                                    vDSP_Length outputLength,
+                                    bool * keepOutput) {
         STAssertTrue(output != NULL, nil);
         const float EYE[] = {
-            1.00000,   0.00000,   0.00000,
-            0.00000,   1.00000,   0.00000,
-            0.00000,   0.00000,   1.00000,
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1,
         };
         STAssertEquals(outputLength, (vDSP_Length)(sizeof(EYE) / sizeof(float)), nil);
         for (int i = 0; i < sizeof(EYE) / sizeof(float); i++) {
             STAssertEquals(output[i], EYE[i], nil);
         }
     });
-    vMAT_eye(3, 5, ^(float * output,
-                     vDSP_Length outputLength,
-                     bool * keepOutput) {
+    vMAT_eye(vMAT_MakeSize(3, 5), ^(float * output,
+                                    vDSP_Length outputLength,
+                                    bool * keepOutput) {
         STAssertTrue(output != NULL, nil);
         const float EYE[] = {
-            1.00000,   0.00000,   0.00000,   0.00000,   0.00000,
-            0.00000,   1.00000,   0.00000,   0.00000,   0.00000,
-            0.00000,   0.00000,   1.00000,   0.00000,   0.00000,
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1,
+            0, 0, 0,
+            0, 0, 0,
         };
         STAssertEquals(outputLength, (vDSP_Length)(sizeof(EYE) / sizeof(float)), nil);
         for (int i = 0; i < sizeof(EYE) / sizeof(float); i++) {
             STAssertEquals(output[i], EYE[i], nil);
         }
     });
-    vMAT_eye(3, 2, ^(float * output,
-                     vDSP_Length outputLength,
-                     bool * keepOutput) {
+    vMAT_eye(vMAT_MakeSize(3, 2), ^(float * output,
+                                     vDSP_Length outputLength,
+                                     bool * keepOutput) {
         STAssertTrue(output != NULL, nil);
         const float EYE[] = {
-            1.00000,   0.00000,
-            0.00000,   1.00000,
-            0.00000,   0.00000,
+            1, 0, 0,
+            0, 1, 0,
         };
         STAssertEquals(outputLength, (vDSP_Length)(sizeof(EYE) / sizeof(float)), nil);
         for (int i = 0; i < sizeof(EYE) / sizeof(float); i++) {
@@ -387,8 +388,8 @@
 
 - (void)test_vMAT_pdist;
 {
-    vMAT_eye(3, 2, ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
-        vMAT_pdist(output, 3, 2, ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+    vMAT_eye(vMAT_MakeSize(3, 2), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+        vMAT_pdist(output, vMAT_MakeSize(3, 2), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
             STAssertTrue(output != NULL, nil);
             const float Y[] = {
                 1.41421,   1.00000,   1.00000,
@@ -405,7 +406,7 @@
 {
     NSMutableData * samplesA = [NSMutableData data];
     NSMutableData * samplesB = [NSMutableData data];
-    vMAT_eye(3, 2, ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+    vMAT_eye(vMAT_MakeSize(3, 2), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
         [samplesA appendBytes:output
                        length:outputLength * sizeof(*output)];
         [samplesB appendBytes:output
@@ -427,20 +428,50 @@
         vDSP_vsmul(part3, 1, &k, part3, 1, outputLength);
     });
     STAssertTrue([samplesB length] == 3 * [samplesA length], nil);
-    vMAT_pdist2([samplesA mutableBytes], 3, [samplesB mutableBytes], 3 * 3, 2, ^(float * output,
-                                                                                 vDSP_Length outputLength,
-                                                                                 bool *keepOutput) {
-        STAssertTrue(output != NULL, nil);
-        const float Y[] = {
-            0.00000,   1.41421,   1.00000,   0.50000,   1.11803,   0.70711,   2.69258,   2.50000,   2.23607,
-            1.41421,   0.00000,   1.00000,   1.11803,   0.50000,   0.70711,   2.50000,   2.69258,   2.23607,
-            1.00000,   1.00000,   0.00000,   1.11803,   1.11803,   0.70711,   1.80278,   1.80278,   1.41421,
-        };
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(Y) / sizeof(float)), nil);
-        for (int i = 0; i < sizeof(Y) / sizeof(float); i++) {
-            STAssertEqualsWithAccuracy(output[i], Y[i], 0.00001, nil);
+    vMAT_pdist2([samplesA mutableBytes], vMAT_MakeSize(3, 2),
+                [samplesB mutableBytes], vMAT_MakeSize(3 * 3, 2),
+                ^(float * output,
+                  vDSP_Length outputLength,
+                  bool *keepOutput)
+                {
+                    STAssertTrue(output != NULL, nil);
+                    const float Y[] = {
+                        0.00000,   1.41421,   1.00000,   0.50000,   1.11803,   0.70711,   2.69258,   2.50000,   2.23607,
+                        1.41421,   0.00000,   1.00000,   1.11803,   0.50000,   0.70711,   2.50000,   2.69258,   2.23607,
+                        1.00000,   1.00000,   0.00000,   1.11803,   1.11803,   0.70711,   1.80278,   1.80278,   1.41421,
+                    };
+                    STAssertEquals(outputLength, (vDSP_Length)(sizeof(Y) / sizeof(float)), nil);
+                    for (int i = 0; i < sizeof(Y) / sizeof(float); i++) {
+                        STAssertEqualsWithAccuracy(output[i], Y[i], 0.00001, nil);
+                    }
+                });
+}
+
+- (void)test_vMAT_v4si_dot;
+{
+    // Let's try the index transposition computations for a 4x3x2 array.
+    __v4si ixmulC = { 1, 1 * 4, 1 * 4 * 3, 0 };
+    __v4si ixmulM = { 1 * 3, 1, 1 * 4 * 3, 0 };
+    int C[4 * 3 * 2] = { -1 };
+    int M[3 * 4 * 2] = { -1 };
+    int count = 0;
+    for (int p = 0; p < 1; p++) {
+        for (int o = 0; o < 2; o++) {
+            for (int n = 0; n < 3; n++) {
+                for (int m = 0; m < 4; m++) {
+                    __v4si ixvecD = { m, n, o, p };
+                    long idxC = vMAT_v4si_dot(ixmulC, ixvecD);
+                    long idxM = vMAT_v4si_dot(ixmulM, ixvecD);
+                    C[idxC] = count;
+                    M[idxM] = count;
+                    ++count;
+                }
+            }
         }
-    });
+    }
+    
+    long dotA = vMAT_v4si_dot(vMAT_MakeSize(INT_MAX / 3, 1, 3), vMAT_MakeSize(3, 1, 1));
+    STAssertEquals(dotA, (long)INT_MAX + 3, @"Result truncated?");
 }
 
 @end
