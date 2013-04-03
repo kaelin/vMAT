@@ -13,20 +13,37 @@
 #import <BlocksKit/BlocksKit.h>
 
 
+NSString *
+vMAT_StringFromSize(vMAT_Size size)
+{
+    NSMutableString * string = [NSMutableString stringWithString:@"["];
+    char * sep = "";
+    for (int i = 0;
+         i < vMAT_MAXDIMS;
+         i++) {
+        if (size[i] > 0) [string appendFormat:@"%s%d", sep, size[i]];
+        else break;
+        sep = " ";
+    }
+    [string appendString:@"]"];
+    return string;
+}
+
 void
-vMAT_eye(vDSP_Length rows,
-         vDSP_Length cols,
+vMAT_eye(vMAT_Size mxn,
          void (^outputBlock)(float output[],
                              vDSP_Length outputLength,
                              bool * keepOutput))
 {
-    long lenE = rows * cols;
+    if (mxn[1] == 0) mxn[1] = mxn[0];
+    long lenE = mxn[0] * mxn[1];
+    NSCAssert(lenE > 0, @"Invalid size parameter");
     float * E = calloc(lenE, sizeof(*E));
-    long diag = fminf(rows, cols);
-    for (int row = 0;
-         row < diag;
-         row++) {
-        E[row * cols + row] = 1.f;
+    long diag = MIN(mxn[0], mxn[1]);
+    for (int n = 0;
+         n < diag;
+         n++) {
+        E[n * mxn[0] + n] = 1.f;
     }
     bool keepOutput = false;
     outputBlock(E, lenE, &keepOutput);
@@ -44,7 +61,7 @@ vMAT_fread(NSInputStream * stream,
                                     vDSP_Length outputLength,
                                     NSData * outputData,
                                     NSError * error))
-{
+{ // TODO: Convert to vMAT_Size
     vMAT_StreamDelegate * reader = [[vMAT_StreamDelegate alloc] initWithStream:stream
                                                                         rows:rows
                                                                         cols:cols
@@ -63,7 +80,7 @@ vMAT_fwrite(NSOutputStream * stream,
             NSDictionary * options,
             void (^asyncCompletionBlock)(vDSP_Length outputLength,
                                          NSError * error))
-{
+{ // TODO: Convert to vMAT_Size
     vMAT_StreamDelegate * writer = [[vMAT_StreamDelegate alloc] initWithStream:stream
                                                                           rows:rows
                                                                           cols:cols
@@ -85,7 +102,7 @@ vMAT_linkage(const float pdistv[],
              void (^outputBlock)(float output[],
                                  vDSP_Length outputLength,
                                  bool * keepOutput))
-{
+{ // TODO: Use pdist output vector
     long n = ceil(sqrt(pdistvLength));
     long idx;
     // First we need to reduce distanceMatrix to a vector (Y).
@@ -204,9 +221,9 @@ vMAT_load(NSInputStream * stream,
           void (^asyncCompletionBlock)(NSDictionary * workspace,
                                        NSError * error))
 {
-    NSCAssert([variableNames isEqual:@[]], @"Actually loading something is not yet implemented!!!");
     vMAT_MATv5ReadOperation * operation = [[vMAT_MATv5ReadOperation alloc] initWithInputStream:stream];
     vMAT_MATv5ReadOperationDelegate * reader = [[vMAT_MATv5ReadOperationDelegate alloc] initWithReadOperation:operation];
+    reader.variableNames = variableNames;
     reader.completionBlock = asyncCompletionBlock;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
         [reader start];
@@ -215,34 +232,33 @@ vMAT_load(NSInputStream * stream,
 
 void
 vMAT_pdist(const float sample[],
-           vDSP_Length rows,
-           vDSP_Length cols,
+           vMAT_Size mxn,
            void (^outputBlock)(float output[],
                                vDSP_Length outputLength,
                                bool * keepOutput))
 {
     __block float * D = NULL;
     __block long lenD = 0;
-    vMAT_pdist2(sample, rows, sample, rows, cols, ^(float * output,
-                                                    vDSP_Length outputLength,
-                                                    bool * keepOutput) {
+    vMAT_pdist2(sample, mxn, sample, mxn, ^(float * output,
+                                            vDSP_Length outputLength,
+                                            bool * keepOutput) {
         D = output;
         lenD = outputLength;
         *keepOutput = true;
     });
     // Now reduce the full distance matrix to a vector of lengths (Y).
     // (The order is the same as Matlab's pdist results.)
-    long n = ceil(sqrt(lenD));
-    long lenY = n;
+    long lenN = ceil(sqrt(lenD));
+    long lenY = lenN * (lenN - 1) / 2;
     float * Y = calloc(lenY, sizeof(*Y));
     long idxY = 0;
-    for (long row = 0;
-         row < n;
-         row++) {
-        for (long col = row + 1;
-             col < n;
-             col++) {
-            Y[idxY] = D[row * n + col];
+    for (long n = 0;
+         n < lenN;
+         n++) {
+        for (long m = n + 1;
+             m < lenN;
+             m++) {
+            Y[idxY] = D[n * lenN + m];
             ++idxY;
         }
     }
@@ -256,25 +272,25 @@ vMAT_pdist(const float sample[],
 
 void
 vMAT_pdist2(const float sampleA[],
-            vDSP_Length rowsA,
+            vMAT_Size mxnA,
             const float sampleB[],
-            vDSP_Length rowsB,
-            vDSP_Length cols,
+            vMAT_Size mxnB,
             void (^outputBlock)(float output[],
                                 vDSP_Length outputLength,
                                 bool * keepOutput))
 {
+    NSCAssert(mxnA[0] == mxnB[0], @"Mismatched m dimensions");
     // We need space to store a full distance matrix (D).
-    long lenD = rowsA * rowsB;
+    long lenD = mxnA[1] * mxnB[1];
     float * D = calloc(lenD, sizeof(*D));
     long idxD = 0;
-    for (long idxA = 0;
-         idxA < rowsA;
-         idxA++) {
-        for (long idxB = 0;
-             idxB < rowsB;
-             idxB++) {
-            vDSP_distancesq(&sampleA[idxA * cols], 1, &sampleB[idxB * cols], 1, &D[idxD], cols);
+    for (long idxB = 0;
+         idxB < mxnB[1];
+         idxB++) {
+        for (long idxA = 0;
+             idxA < mxnA[1];
+             idxA++) {
+            vDSP_distancesq(&sampleA[idxA * mxnA[0]], 1, &sampleB[idxB * mxnB[0]], 1, &D[idxD], mxnA[0]);
             D[idxD] = sqrtf(D[idxD]);
             ++idxD;
         }
@@ -289,7 +305,7 @@ vMAT_pdist2(const float sampleA[],
 void
 vMAT_swapbytes(void * vector32,
                vDSP_Length vectorLength)
-{
+{ // TODO: Convert to vMAT_Size
     uint32_t * vswap = vector32;
     for (long i = 0;
          i < vectorLength;

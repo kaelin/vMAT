@@ -92,7 +92,7 @@ dispatch_semaphore_t semaphore = NULL;
                 if (room == 0) {
                     NSMutableData * outputData = [NSMutableData dataWithCapacity:lenD];
                     [outputData setLength:lenD];
-                    // Matlab writes data in column order, whereas C stores it in row order.
+                    // MATLAB writes data in column order, whereas C stores it in row order.
                     vDSP_mtrans([_bufferData mutableBytes], 1, [outputData mutableBytes], 1, _rows, _cols);
                     _outputBlock([outputData mutableBytes],
                                  lenD / sizeof(float),

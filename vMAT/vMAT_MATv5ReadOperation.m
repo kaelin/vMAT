@@ -10,6 +10,7 @@
 
 #import <BlocksKit/BlocksKit.h>
 
+
 @interface vMAT_MATv5ReadOperation (Private)
 
 - (void)readElementType:(vMAT_MIType *)typeInOut
@@ -235,7 +236,7 @@ static void (^ unexpectedEOS)() = ^ {
 }
 
 - (void)matchArrayFlags:(uint32_t *)flagsOut
-             dimensions:(NSArray **)dimensionsOut
+             dimensions:(vMAT_Size *)sizeOut
                    name:(NSString **)nameOut;     // Optional
 {
     __block uint32_t type = 0, length = 0;
@@ -243,7 +244,7 @@ static void (^ unexpectedEOS)() = ^ {
     [self matchTagType:&type length:&length];
     [self readComplete:flagsOut length:8];
     if (_swapBytes) vMAT_swapbytes(flagsOut, 2);
-    int32_t dimensions[8] = { };
+    int32_t dimensions[vMAT_MAXDIMS] = { };
     type = miINT32; length = 0;
     [self matchTagType:&type length:&length];
     if (length > sizeof(dimensions)) {
@@ -251,20 +252,17 @@ static void (^ unexpectedEOS)() = ^ {
                                    code:vMAT_ErrorCodeUnsupportedMATv5Element
                                userInfo:
                 @{ NSLocalizedFailureReasonErrorKey:
-                [NSString stringWithFormat:@"MATv5 array element has %ld dimensions (can only read up to %ld).",
-                 length / sizeof(*dimensions), sizeof(dimensions) / sizeof(*dimensions)],
+                [NSString stringWithFormat:@"MATv5 array element has %ld dimensions (can only read up to %d).",
+                 length / sizeof(*dimensions), vMAT_MAXDIMS],
                 }];
     }
     [self readComplete:dimensions length:length];
-    long dimensionsLength = length / sizeof(*dimensions);
-    if (_swapBytes) vMAT_swapbytes(dimensions, dimensionsLength);
-    NSNumber * values[8] = { };
+    if (_swapBytes) vMAT_swapbytes(dimensions, vMAT_MAXDIMS);
     for (int i = 0;
-         i < dimensionsLength;
+         i < vMAT_MAXDIMS;
          i++) {
-        values[i] = [NSNumber numberWithInt:dimensions[i]];
+        (*sizeOut)[i] = dimensions[i];
     }
-    *dimensionsOut = [NSArray arrayWithObjects:values count:dimensionsLength];
     if (nameOut != NULL) {
         type = miINT8; length = 0;
         [self readElementType:&type
@@ -380,16 +378,13 @@ static void (^ unexpectedEOS)() = ^ {
     if (_variable == nil) {
         NSAssert(type == miMATRIX, @"Top-level element is not an miMATRIX; implementation not complete!");
         uint32_t flags[2] = { };
-        NSArray * dimensions = nil;
+        vMAT_Size size = { };
         NSString * name = nil;
-        [self matchArrayFlags:flags dimensions:&dimensions name:&name];
-        _variable = [[vMAT_MATv5Variable alloc] initWithReadOperation:self];
-        _variable.isComplex = (flags[0] & 0x800) == 0x800;
-        _variable.isGlobal  = (flags[0] & 0x400) == 0x400;
-        _variable.isLogical = (flags[0] & 0x200) == 0x200;
-        _variable.mxClass = flags[0] & 0xff;
-        _variable.dimensions = dimensions;
-        _variable.name = name;
+        [self matchArrayFlags:flags dimensions:&size name:&name];
+        _variable = [vMAT_MATv5Variable variableWithMXClass:flags[0] & 0xff
+                                                 arrayFlags:flags[0]
+                                                 dimensions:size
+                                                       name:name];
         [_delegate operation:self
               handleVariable:_variable];
     }
@@ -447,23 +442,29 @@ static void (^ unexpectedEOS)() = ^ {
     if ((self = [super init]) != nil) {
         _operation = operation;
         _operation.delegate = self;
+        _workspace = [NSMutableDictionary dictionary];
     }
     return self;
 }
 
 - (void)start;
 {
-    NSOperationQueue * queue = [[NSOperationQueue alloc] init];
-    [queue setName:@"com.ohmware.vMAT_MATv5ReadOperationDelegate"];
-    [queue addOperation:_operation];
-    [queue waitUntilAllOperationsAreFinished];
-    _completionBlock(@{ }, nil);
+    [_operation start];
+//    NSOperationQueue * queue = [[NSOperationQueue alloc] init];
+//    [queue setName:@"com.ohmware.vMAT_MATv5ReadOperationDelegate"];
+//    [queue addOperation:_operation];
+//    [queue waitUntilAllOperationsAreFinished];
+    _completionBlock(_workspace, nil);
 }
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation
    handleVariable:(vMAT_MATv5Variable *)variable;
 {
-    NSLog(@"Reading %@", variable);
+    if (![_variableNames containsObject:variable.name]) return;
+    vMAT_MATv5NumericArray * array = [variable toNumericArray];
+    [array loadFromOperation:operation];
+    [_workspace setObject:array
+                   forKey:array.name];
 }
 
 - (void)operation:(vMAT_MATv5ReadOperation *)operation
@@ -471,36 +472,6 @@ static void (^ unexpectedEOS)() = ^ {
 {
     _completionBlock(@{ }, error);
     _completionBlock = nil;
-}
-
-@end
-
-@implementation vMAT_MATv5Variable
-
-- (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;
-{
-    if ((self = [super init]) != nil) {
-        _operation = operation;
-    }
-    return self;
-}
-
-- (NSString *)description;
-{
-    NSString * prefix = [super description];
-    NSMutableString * size = [NSMutableString stringWithString:@"["];
-    char * sep = "";
-    for (NSNumber * number in _dimensions) {
-        [size appendFormat:@"%s%@", sep, number];
-        sep = " ";
-    }
-    [size appendString:@"]"];
-    NSString * string = [NSString stringWithFormat:@"%.*s; mxClass: %@, size: %@, name: \"%@\">",
-                         (int)[prefix length] - 1, [prefix UTF8String],
-                         vMAT_MXClassDescription(_mxClass),
-                         size,
-                         _name];
-    return string;
 }
 
 @end
