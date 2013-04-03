@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		05433CC9170BA08300F23FEF /* test-order-5x4x3x2-v6.mat in Resources */ = {isa = PBXBuildFile; fileRef = 05433CC8170BA08300F23FEF /* test-order-5x4x3x2-v6.mat */; };
+		05433CCB170BA96300F23FEF /* test-float-55x57-v6.mat in Resources */ = {isa = PBXBuildFile; fileRef = 05433CCA170BA96300F23FEF /* test-float-55x57-v6.mat */; };
 		054359481700B41A0037AAC4 /* vMAT_StreamDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */; };
 		054359491700B41A0037AAC4 /* vMAT_StreamDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */; };
 		0543594B1701D2140037AAC4 /* test-float-4x3.dat in Resources */ = {isa = PBXBuildFile; fileRef = 0543594A1701D2140037AAC4 /* test-float-4x3.dat */; };
@@ -29,6 +31,8 @@
 		0568E81B170015CF00AE99F4 /* BlocksKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E819170015A900AE99F4 /* BlocksKit.framework */; };
 		058C5E651706891B00A65E82 /* MATv5ReadWriteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 058C5E641706891B00A65E82 /* MATv5ReadWriteTests.m */; };
 		058C5E6717069F8900A65E82 /* test-magic-4x4-v6.mat in Resources */ = {isa = PBXBuildFile; fileRef = 058C5E6617069F8900A65E82 /* test-magic-4x4-v6.mat */; };
+		058C5E6A1708E46900A65E82 /* vMAT_MATv5Variable.h in Headers */ = {isa = PBXBuildFile; fileRef = 058C5E681708E46900A65E82 /* vMAT_MATv5Variable.h */; };
+		058C5E6B1708E46900A65E82 /* vMAT_MATv5Variable.m in Sources */ = {isa = PBXBuildFile; fileRef = 058C5E691708E46900A65E82 /* vMAT_MATv5Variable.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +59,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		05433CC8170BA08300F23FEF /* test-order-5x4x3x2-v6.mat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-order-5x4x3x2-v6.mat"; sourceTree = "<group>"; };
+		05433CCA170BA96300F23FEF /* test-float-55x57-v6.mat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-float-55x57-v6.mat"; sourceTree = "<group>"; };
 		054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_StreamDelegate.h; sourceTree = "<group>"; };
 		054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vMAT_StreamDelegate.m; sourceTree = "<group>"; };
 		0543594A1701D2140037AAC4 /* test-float-4x3.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-float-4x3.dat"; sourceTree = "<group>"; };
@@ -88,6 +94,8 @@
 		058C5E631706891B00A65E82 /* MATv5ReadWriteTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MATv5ReadWriteTests.h; sourceTree = "<group>"; };
 		058C5E641706891B00A65E82 /* MATv5ReadWriteTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MATv5ReadWriteTests.m; sourceTree = "<group>"; };
 		058C5E6617069F8900A65E82 /* test-magic-4x4-v6.mat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-magic-4x4-v6.mat"; sourceTree = "<group>"; };
+		058C5E681708E46900A65E82 /* vMAT_MATv5Variable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_MATv5Variable.h; sourceTree = "<group>"; };
+		058C5E691708E46900A65E82 /* vMAT_MATv5Variable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vMAT_MATv5Variable.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +205,8 @@
 				0568E7F61700124400AE99F4 /* vMAT.m */,
 				0543596217032C9A0037AAC4 /* vMAT_MATv5ReadOperation.h */,
 				0543596317032C9A0037AAC4 /* vMAT_MATv5ReadOperation.m */,
+				058C5E681708E46900A65E82 /* vMAT_MATv5Variable.h */,
+				058C5E691708E46900A65E82 /* vMAT_MATv5Variable.m */,
 				054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */,
 				054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */,
 				0568E7F31700124400AE99F4 /* Supporting Files */,
@@ -228,7 +238,9 @@
 			isa = PBXGroup;
 			children = (
 				0543594A1701D2140037AAC4 /* test-float-4x3.dat */,
+				05433CCA170BA96300F23FEF /* test-float-55x57-v6.mat */,
 				058C5E6617069F8900A65E82 /* test-magic-4x4-v6.mat */,
+				05433CC8170BA08300F23FEF /* test-order-5x4x3x2-v6.mat */,
 				0568E8061700124400AE99F4 /* vMATTests-Info.plist */,
 				0568E8071700124400AE99F4 /* InfoPlist.strings */,
 			);
@@ -244,6 +256,7 @@
 			files = (
 				054359481700B41A0037AAC4 /* vMAT_StreamDelegate.h in Headers */,
 				0543596417032C9A0037AAC4 /* vMAT_MATv5ReadOperation.h in Headers */,
+				058C5E6A1708E46900A65E82 /* vMAT_MATv5Variable.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +352,8 @@
 				0568E8091700124400AE99F4 /* InfoPlist.strings in Resources */,
 				0543594B1701D2140037AAC4 /* test-float-4x3.dat in Resources */,
 				058C5E6717069F8900A65E82 /* test-magic-4x4-v6.mat in Resources */,
+				05433CC9170BA08300F23FEF /* test-order-5x4x3x2-v6.mat in Resources */,
+				05433CCB170BA96300F23FEF /* test-float-55x57-v6.mat in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,6 +392,7 @@
 				0568E7F71700124400AE99F4 /* vMAT.m in Sources */,
 				054359491700B41A0037AAC4 /* vMAT_StreamDelegate.m in Sources */,
 				0543596517032C9A0037AAC4 /* vMAT_MATv5ReadOperation.m in Sources */,
+				058C5E6B1708E46900A65E82 /* vMAT_MATv5Variable.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

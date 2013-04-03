@@ -33,24 +33,59 @@
 #import <Accelerate/Accelerate.h>
 #import <Foundation/Foundation.h>
 
+/*!
+ @header vMAT Library
+ @encoding utf-8
+ @copyright 2013 Kaelin Colclasure. All rights reserved.
+ @updated 2013-04-01
+ @abstract The vMAT library implements a grab-bag of mathematical functions inspired by MATLAB™.
+ @discussion
+ 
+ This library is being developed as part of a facial recognition project. As such, it
+ contains a small (but growing) set of matrix functions and related utilities which that project happens to use. In its present
+ state, there's probably not enough here to be of much interest to anyone outside of that effort, except perhaps as an
+ example of how MATLAB™ code can be expressed in vectorized Objective-C.
+ */
 
-/*! Make a float identity matrix.
- 
- @param rows Number of rows.
- @param cols Number of columns.
+/*!
+ @brief Type for array size (dimensions).
+ */
+typedef __v4si vMAT_Size;
+
+/*!
+ @brief This macro reflects the maximum number of dimensions that can be expressed using a <code>vMAT_Size</code>.
+ @discussion
+ This is effectively the limit of how many dimensions vMAT can handle. Four seems pretty reasonable,
+ but if more were really needed it would be possible to increase this by using a wider vector type.
+ */
+#define vMAT_MAXDIMS (4)
+
+/*!
+ @brief Convenience macro for creating a <code>vMAT_Size</code>.
+ */
+#define vMAT_MakeSize(dims...) ((vMAT_Size){ dims })
+
+extern NSString *
+vMAT_StringFromSize(vMAT_Size size);
+
+/*!
+ @brief Make a float identity matrix.
+ @discussion
+ This function outputs a float identity matrix of the specified size to the caller-provided output block.
+ @param mxn Size specification (2D); if only the first dimension is provided, defaults to a square matrix.
  @param outputBlock A block for receiving the output identity matrix.
- 
  */
 extern void
-vMAT_eye(vDSP_Length rows,
-         vDSP_Length cols,
+vMAT_eye(vMAT_Size mxn,
          void (^outputBlock)(float output[],
                              vDSP_Length outputLength,
                              bool * keepOutput));
 
-/*! Read a float matrix asynchronously from a stream.
- 
- @param stream An `NSInputStream` (must already be opened).
+/*!
+ @brief Read a float matrix asynchronously from a stream.
+ @discussion
+ TBD.
+ @param stream An <code>NSInputStream</code> (must already be opened).
  @param rows The number of rows to be read.
  @param cols The number of columns to be read.
  @param options A dictionary of options (not presently implemented; must be nil).
@@ -67,9 +102,11 @@ vMAT_fread(NSInputStream * stream,
                                     NSData * outputData,
                                     NSError * error));
 
-/* Write a float matrix asynchronously to a stream.
- 
- @param stream An `NSOutputStream` (must already be opened).
+/*
+ @brief Write a float matrix asynchronously to a stream.
+ @discussion
+ TBD.
+ @param stream An <code>NSOutputStream</code> (must already be opened).
  @param matrix A float matrix.
  @param rows The number of rows to be written.
  @param cols The number of columns to be written.
@@ -86,10 +123,12 @@ vMAT_fwrite(NSOutputStream * stream,
             void (^asyncCompletionBlock)(vDSP_Length outputLength,
                                          NSError * error));
 
-/*! Compute a hierarchical cluster tree from a float distance matrix.
- 
+/*!
+ @brief Compute a hierarchical cluster tree from a float distance matrix.
+ @discussion
+ TBD.
  @param pdistv A (square, for now) distance matrix.
- @param pdistvLength The number of elements in `pdistv`.
+ @param pdistvLength The number of elements in <code>pdistv</code>.
  @param outputBlock A block for receiving the output hierarchical cluster tree matrix.
  
  */
@@ -100,10 +139,12 @@ vMAT_linkage(const float pdistv[],
                                  vDSP_Length outputLength,
                                  bool * keepOutput));
 
-/*! Load variables asynchronously from a MAT (v5) file into a workspace dictionary.
-
- @param stream An `NSInputStream` (must already be opened).
- @param variableNames An `NSArray` containing a list of the workspace variable names to be loaded.
+/*!
+ @brief Load variables asynchronously from a MAT (v5) file into a workspace dictionary.
+ @discussion
+ TBD.
+ @param stream An <code>NSInputStream</code> (must already be opened).
+ @param variableNames An <code>NSArray</code> containing a list of the workspace variable names to be loaded.
  @param asyncCompletionBlock A block to be called asynchronously when the read operation completes.
  
  */
@@ -113,38 +154,38 @@ vMAT_load(NSInputStream * stream,
           void (^asyncCompletionBlock)(NSDictionary * workspace,
                                        NSError * error));
 
-/*! Compute the pairwise distances between the samples in a float matrix.
- 
- @param sample A 2D matrix with variables in columns and samples in rows.
- @param rows The number of samples.
- @param cols The number of variables in each sample.
+/*!
+ @brief Compute the pairwise distances between the samples in a float matrix.
+ @discussion
+ TBD.
+ @param sample A 2D matrix with m samples of n variables.
+ @param mxn Size of <code>sample</code> matrix.
  @param outputBlock A block for receiving the output distances vector.
  
  */
 extern void
 vMAT_pdist(const float sample[],
-           vDSP_Length rows,
-           vDSP_Length cols,
+           vMAT_Size mxn,
            void (^outputBlock)(float output[],
                                vDSP_Length outputLength,
                                bool * keepOutput));
 
-/*! Compute the pairwise distances between two sets of float samples.
- 
- @param sampleA A 2D matrix `A` with variables in columns and samples in rows.
- @param rowsA The number of samples in `A`.
- @param sampleB A 2D matrix `B` with variables in columns and samples in rows.
- @param rowsB The number of samples in `B`.
- @param cols The number of variables in each sample.
+/*!
+ @brief Compute the pairwise distances between two sets of float samples.
+ @discussion
+ TBD.
+ @param sampleA A 2D matrix with m samples of n variables.
+ @param mxnA Size of <code>sampleA</code> matrix.
+ @param sampleB A 2D comparison matrix with m samples of n variables.
+ @param mxnB Size of <code>sampleB</code> matrix; <code>mxnA[1]</code> must be equal to <code>mxnB[1]</code>.
  @param outputBlock A block for receiving the output distances vector.
  
  */
 extern void
 vMAT_pdist2(const float sampleA[],
-            vDSP_Length rowsA,
+            vMAT_Size mxnA,
             const float sampleB[],
-            vDSP_Length rowsB,
-            vDSP_Length cols,
+            vMAT_Size mxnB,
             void (^outputBlock)(float output[],
                                 vDSP_Length outputLength,
                                 bool * keepOutput));
@@ -152,6 +193,23 @@ vMAT_pdist2(const float sampleA[],
 extern void
 vMAT_swapbytes(void * vector32,
                vDSP_Length vectorLength);
+
+static inline long
+vMAT_Size_dot(vMAT_Size a,
+              vMAT_Size b)
+{
+    __v4si c = a * b;
+    return (long)c[0] + c[1] + c[2] + c[3];
+}
+
+static inline long
+vMAT_Size_prod(vMAT_Size size)
+{
+    long d1 = size[1] ? : 1;
+    long d2 = size[2] ? : 1;
+    long d3 = size[3] ? : 1;
+    return (long)size[0] * d1 * d2 * d3;
+}
 
 extern NSString * const vMAT_ErrorDomain;
 
@@ -167,21 +225,22 @@ enum {
 };
 
 typedef enum {
-    miINT8       = 1,
-    miUINT8      = 2,
-    miINT16      = 3,
-    miUINT16     = 4,
-    miINT32      = 5,
-    miUINT32     = 6,
-    miSINGLE     = 7,
-    miDOUBLE     = 9,
-    miINT64      = 12,
-    miUINT64     = 13,
-    miMATRIX     = 14,
-    miCOMPRESSED = 15,
-    miUTF8       = 16,
-    miUTF16      = 17,
-    miUTF32      = 18,
+    miINT8        = 1,
+    miUINT8       = 2,
+    miINT16       = 3,
+    miUINT16      = 4,
+    miINT32       = 5,
+    miUINT32      = 6,
+    miSINGLE      = 7,
+    miDOUBLE      = 9,
+    miINT64       = 12,
+    miUINT64      = 13,
+    miMATRIX      = 14,
+    miCOMPRESSED  = 15,
+    miUTF8        = 16,
+    miUTF16       = 17,
+    miUTF32       = 18,
+    miRANGE_LIMIT
 } vMAT_MIType;
 
 extern NSString *
@@ -203,9 +262,11 @@ typedef enum {
     mxUINT32_CLASS = 13,
     mxINT64_CLASS  = 14,
     mxUINT64_CLASS = 15,
+    mxRANGE_LIMIT
 } vMAT_MXClass;
 
 extern NSString *
 vMAT_MXClassDescription(vMAT_MXClass class);
 
 #import "vMAT_MATv5ReadOperation.h"
+#import "vMAT_MATv5Variable.h"

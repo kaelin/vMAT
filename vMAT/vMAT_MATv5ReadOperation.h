@@ -78,30 +78,21 @@
 - (void)readComplete:(void *)buffer
               length:(long)length;
 - (void)readElement;
+- (void)readElementType:(vMAT_MIType *)typeInOut
+                 length:(uint32_t *)lengthInOut
+            outputBlock:(void(^)())outputBlock;
 
 @end
 
 @interface vMAT_MATv5ReadOperationDelegate : NSObject <vMAT_MATv5ReadOperationDelegate>
 
 @property (readonly) vMAT_MATv5ReadOperation * operation;
+@property (retain) NSArray * variableNames;
+@property (readonly, retain) NSMutableDictionary * workspace;
 @property (copy) void (^ completionBlock)(NSDictionary * workspace, NSError * error);
 
 - (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;
 
 - (void)start;
-
-@end
-
-@interface vMAT_MATv5Variable : NSObject
-
-@property (readonly, weak) vMAT_MATv5ReadOperation * operation;
-@property (assign) BOOL isComplex;
-@property (assign) BOOL isGlobal;
-@property (assign) BOOL isLogical;
-@property (assign) vMAT_MXClass mxClass;
-@property (retain) NSArray * dimensions;
-@property (retain) NSString * name;
-
-- (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;
 
 @end
