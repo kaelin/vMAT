@@ -81,12 +81,12 @@
 - (SEL)loadCmdForType:(vMAT_MIType)type
               mxClass:(vMAT_MXClass)mxClass;
 {
-    const int rows = mxRANGE_LIMIT;
-    const int cols = miRANGE_LIMIT;
-    static SEL cache[rows * cols];
+    const int m = mxRANGE_LIMIT;
+    const int n = miRANGE_LIMIT;
+    static SEL cache[m * n];
     SEL loadCmd = nil;
     @synchronized ([self class]) {
-        loadCmd = cache[mxClass * rows + type];
+        loadCmd = cache[mxClass * m + type];
         if (loadCmd == nil) {
             NSString * descriptions = [vMAT_MITypeDescription(type) stringByAppendingString:vMAT_MXClassDescription(mxClass)];
             NSRegularExpression * regex = [NSRegularExpression regularExpressionWithPattern:@"\\[[0-9]+\\]([A-Z0-9]+)"
@@ -99,7 +99,7 @@
             NSString * loadCmdString = [NSString stringWithFormat:@"_load_%@_%@_fromOperation:",
                                         [descriptions substringWithRange:r1], [descriptions substringWithRange:r2]];
             loadCmd = NSSelectorFromString(loadCmdString);
-            cache[mxClass * rows + type] = loadCmd;
+            cache[mxClass * m + type] = loadCmd;
         }
     }
     return loadCmd;
@@ -189,18 +189,21 @@ vMAT_Size123Iterator(vMAT_Size size,
 }
 
 - (void)_load_miUINT8_mxDOUBLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
-{ // TODO: Use the template
-    long lenC = _size[0] * sizeof(uint8_t);
-    uint8_t * C = malloc(lenC);
-    long lenD = vMAT_Size_prod(_size) * sizeof(double);
+{
+#define SwapA(A, lenA) ; // No need for swapping with 1-byte elements.
+#define TypeA uint8_t
+#define TypeB double
+    long lenC = _size[0] * sizeof(TypeA);
+    TypeA * C = malloc(lenC);
+    long lenD = vMAT_Size_prod(_size) * sizeof(TypeB);
     _arrayData = [NSMutableData dataWithCapacity:lenD];
     _arrayData.length = lenD;
-    double * D = [_arrayData mutableBytes];
+    TypeB * D = [_arrayData mutableBytes];
     __block long idxD = 0;
     vMAT_Size123Iterator(_size, ^(int32_t n, int32_t o, int32_t p) {
         [operation readComplete:C
                          length:lenC];
-        // No need for swapping with 1-byte elements.
+        if (operation.swapBytes) { SwapA(C, lenC / sizeof(TypeA)); }
         for (int m = 0;
              m < _size[0];
              m++) {
@@ -209,6 +212,9 @@ vMAT_Size123Iterator(vMAT_Size size,
         }
     });
     free(C);
+#undef SwapA
+#undef TypeA
+#undef TypeB
 }
 
 - (void)_load_miUINT8_mxUINT8_fromOperation:(vMAT_MATv5ReadOperation *)operation;
