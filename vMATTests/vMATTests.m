@@ -32,56 +32,58 @@
 
 - (void)test_vMAT_eye;
 {
-    vMAT_eye(vMAT_MakeSize(1, 1), ^(float * output,
-                                    vDSP_Length outputLength,
-                                    bool * keepOutput) {
-        STAssertTrue(output != NULL, nil);
-        STAssertEquals(outputLength, (vDSP_Length)1, nil);
-        STAssertEquals(output[0], 1.f, nil);
-    });
-    vMAT_eye(vMAT_MakeSize(3, 3), ^(float * output,
-                                    vDSP_Length outputLength,
-                                    bool * keepOutput) {
-        STAssertTrue(output != NULL, nil);
-        const float EYE[] = {
+    vMAT_Array * matE = nil;
+    const double * E = NULL;
+    matE = vMAT_eye(vMAT_MakeSize(1));
+    {
+        E = matE.data.bytes;
+        STAssertNotNil(matE, nil);
+        STAssertEquals(matE.data.length, sizeof(double), nil);
+        STAssertEquals(E[0], 1.0, nil);
+    }
+    matE = vMAT_eye(vMAT_MakeSize(3));
+    {
+        const double EYE[] = {
             1, 0, 0,
             0, 1, 0,
             0, 0, 1,
         };
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(EYE) / sizeof(float)), nil);
-        for (int i = 0; i < sizeof(EYE) / sizeof(float); i++) {
-            STAssertEquals(output[i], EYE[i], nil);
+        E = matE.data.bytes;
+        STAssertNotNil(matE, nil);
+        STAssertEquals(matE.data.length, sizeof(EYE), nil);
+        for (int i = 0; i < sizeof(EYE) / sizeof(*EYE); i++) {
+            STAssertEquals(E[i], EYE[i], nil);
         }
-    });
-    vMAT_eye(vMAT_MakeSize(3, 5), ^(float * output,
-                                    vDSP_Length outputLength,
-                                    bool * keepOutput) {
-        STAssertTrue(output != NULL, nil);
-        const float EYE[] = {
+    }
+    matE = vMAT_eye(vMAT_MakeSize(3, 5));
+    {
+        const double EYE[] = {
             1, 0, 0,
             0, 1, 0,
             0, 0, 1,
             0, 0, 0,
             0, 0, 0,
         };
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(EYE) / sizeof(float)), nil);
-        for (int i = 0; i < sizeof(EYE) / sizeof(float); i++) {
-            STAssertEquals(output[i], EYE[i], nil);
+        E = matE.data.bytes;
+        STAssertNotNil(matE, nil);
+        STAssertEquals(matE.data.length, sizeof(EYE), nil);
+        for (int i = 0; i < sizeof(EYE) / sizeof(*EYE); i++) {
+            STAssertEquals(E[i], EYE[i], nil);
         }
-    });
-    vMAT_eye(vMAT_MakeSize(3, 2), ^(float * output,
-                                     vDSP_Length outputLength,
-                                     bool * keepOutput) {
-        STAssertTrue(output != NULL, nil);
-        const float EYE[] = {
+    }
+    matE = vMAT_eye(vMAT_MakeSize(3, 2));
+    {
+        const double EYE[] = {
             1, 0, 0,
             0, 1, 0,
         };
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(EYE) / sizeof(float)), nil);
-        for (int i = 0; i < sizeof(EYE) / sizeof(float); i++) {
-            STAssertEquals(output[i], EYE[i], nil);
+        E = matE.data.bytes;
+        STAssertNotNil(matE, nil);
+        STAssertEquals(matE.data.length, sizeof(EYE), nil);
+        for (int i = 0; i < sizeof(EYE) / sizeof(*EYE); i++) {
+            STAssertEquals(E[i], EYE[i], nil);
         }
-    });
+    }
 }
 
 - (void)test_vMAT_fread;
@@ -388,7 +390,7 @@
 
 - (void)test_vMAT_pdist;
 {
-    vMAT_eye(vMAT_MakeSize(2, 3), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+    vMAT_eye_(vMAT_MakeSize(2, 3), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
         vMAT_pdist(output, vMAT_MakeSize(2, 3), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
             STAssertTrue(output != NULL, nil);
             const float Y[] = {

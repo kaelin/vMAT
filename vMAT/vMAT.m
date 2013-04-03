@@ -30,7 +30,7 @@ vMAT_StringFromSize(vMAT_Size size)
 }
 
 void
-vMAT_eye(vMAT_Size mxn,
+vMAT_eye_(vMAT_Size mxn,
          void (^outputBlock)(float output[],
                              vDSP_Length outputLength,
                              bool * keepOutput))
@@ -50,6 +50,21 @@ vMAT_eye(vMAT_Size mxn,
     if (!keepOutput) {
         free(E);
     }
+}
+
+vMAT_Array *
+vMAT_eye(vMAT_Size mxn)
+{
+    if (mxn[1] == 0) mxn[1] = mxn[0];
+    vMAT_Array * array = [vMAT_Array arrayWithSize:mxn type:miDOUBLE];
+    double * A = array.data.mutableBytes;
+    long diag = MIN(mxn[0], mxn[1]);
+    for (int n = 0;
+         n < diag;
+         n++) {
+        A[n * mxn[0] + n] = 1;
+    }
+    return array;
 }
 
 void
@@ -319,7 +334,7 @@ NSString * const vMAT_ErrorDomain = @"com.ohmware.vMAT";
 NSString *
 vMAT_MITypeDescription(vMAT_MIType type)
 {
-    static NSString * const desc[] = {
+    static NSString * const desc[miRANGE_LIMIT] = {
         nil,
         @"[1]miINT8",
         @"[2]miUINT8",
@@ -340,8 +355,36 @@ vMAT_MITypeDescription(vMAT_MIType type)
         @"[17]miUTF16",
         @"[18]miUTF32",
     };
-    if (type > 0 && type < 19) return desc[type];
+    if (type > 0 && type < miRANGE_LIMIT) return desc[type];
     else return nil;
+}
+
+size_t
+vMAT_MITypeSizeof(vMAT_MIType type)
+{
+    static const size_t size[miRANGE_LIMIT] = {
+        0,
+        sizeof(int8_t),
+        sizeof(uint8_t),
+        sizeof(int16_t),
+        sizeof(uint16_t),
+        sizeof(int32_t),
+        sizeof(uint32_t),
+        sizeof(float),
+        0,
+        sizeof(double),
+        0,
+        0,
+        sizeof(int64_t),
+        sizeof(uint64_t),
+        0,
+        0,
+        sizeof(uint8_t),
+        sizeof(uint16_t),
+        sizeof(uint32_t),
+    };
+    if (type > 0 && type < miRANGE_LIMIT) return size[type];
+    else return 0;
 }
 
 NSString *
@@ -368,3 +411,37 @@ vMAT_MXClassDescription(vMAT_MXClass class)
     if (class > 0 && class < 16) return desc[class];
     else return nil;
 }
+
+@implementation vMAT_Array
+
++ (vMAT_Array *)arrayWithSize:(vMAT_Size)size
+                         type:(vMAT_MIType)type;
+{
+    return [[vMAT_Array alloc] initWithSize:size
+                                       type:type];
+}
+
+- (id)initWithSize:(vMAT_Size)size
+              type:(vMAT_MIType)type
+              data:(NSMutableData *)data;
+{
+    long lenA = vMAT_Size_prod(size) * vMAT_MITypeSizeof(type);
+    NSParameterAssert(lenA >= 0);
+    NSParameterAssert(vMAT_MITypeSizeof(type) != 0);
+    if ((self = [super init]) != nil) {
+        _size = size;
+        _type = type;
+        _data = data ? : [NSMutableData dataWithCapacity:lenA];
+        if (_data.length == 0) _data.length = lenA;
+        else NSParameterAssert(_data.length == lenA);
+    }
+    return self;
+}
+
+- (id)initWithSize:(vMAT_Size)size
+              type:(vMAT_MIType)type;
+{
+    return [self initWithSize:size type:type data:nil];
+}
+
+@end

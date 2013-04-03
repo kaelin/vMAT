@@ -68,6 +68,67 @@ typedef __v4si vMAT_Size;
 extern NSString *
 vMAT_StringFromSize(vMAT_Size size);
 
+typedef enum {
+    miINT8        = 1,
+    miUINT8       = 2,
+    miINT16       = 3,
+    miUINT16      = 4,
+    miINT32       = 5,
+    miUINT32      = 6,
+    miSINGLE      = 7,
+    miDOUBLE      = 9,
+    miINT64       = 12,
+    miUINT64      = 13,
+    miMATRIX      = 14,
+    miCOMPRESSED  = 15,
+    miUTF8        = 16,
+    miUTF16       = 17,
+    miUTF32       = 18,
+    miRANGE_LIMIT
+} vMAT_MIType;
+
+extern NSString *
+vMAT_MITypeDescription(vMAT_MIType type);
+
+extern size_t
+vMAT_MITypeSizeof(vMAT_MIType type);
+
+typedef enum {
+    mxCELL_CLASS   = 1,
+    mxSTRUCT_CLASS = 2,
+    mxOBJECT_CLASS = 3,
+    mxCHAR_CLASS   = 4,
+    mxSPARSE_CLASS = 5,
+    mxDOUBLE_CLASS = 6,
+    mxSINGLE_CLASS = 7,
+    mxINT8_CLASS   = 8,
+    mxUINT8_CLASS  = 9,
+    mxINT16_CLASS  = 10,
+    mxUINT16_CLASS = 11,
+    mxINT32_CLASS  = 12,
+    mxUINT32_CLASS = 13,
+    mxINT64_CLASS  = 14,
+    mxUINT64_CLASS = 15,
+    mxRANGE_LIMIT
+} vMAT_MXClass;
+
+extern NSString *
+vMAT_MXClassDescription(vMAT_MXClass class);
+
+@interface vMAT_Array : NSObject
+
+@property (readonly, retain) NSMutableData * data;
+@property (readonly) vMAT_Size size;
+@property (readonly) vMAT_MIType type;
+
++ (vMAT_Array *)arrayWithSize:(vMAT_Size)size
+                         type:(vMAT_MIType)type;
+
+- (id)initWithSize:(vMAT_Size)size
+              type:(vMAT_MIType)type;
+
+@end
+
 /*!
  @brief Make a float identity matrix.
  @discussion
@@ -76,10 +137,13 @@ vMAT_StringFromSize(vMAT_Size size);
  @param outputBlock A block for receiving the output identity matrix.
  */
 extern void
-vMAT_eye(vMAT_Size mxn,
+vMAT_eye_(vMAT_Size mxn,
          void (^outputBlock)(float output[],
                              vDSP_Length outputLength,
                              bool * keepOutput));
+
+extern vMAT_Array *
+vMAT_eye(vMAT_Size mxn);
 
 /*!
  @brief Read a float matrix asynchronously from a stream.
@@ -205,10 +269,9 @@ vMAT_Size_dot(vMAT_Size a,
 static inline long
 vMAT_Size_prod(vMAT_Size size)
 {
-    long d1 = size[1] ? : 1;
     long d2 = size[2] ? : 1;
     long d3 = size[3] ? : 1;
-    return (long)size[0] * d1 * d2 * d3;
+    return (long)size[0] * (long)size[1] * d2 * d3;
 }
 
 extern NSString * const vMAT_ErrorDomain;
@@ -223,50 +286,6 @@ enum {
     vMAT_ErrorCodeInvalidMATv5Element     = 303,
     vMAT_ErrorCodeUnsupportedMATv5Element = 304,
 };
-
-typedef enum {
-    miINT8        = 1,
-    miUINT8       = 2,
-    miINT16       = 3,
-    miUINT16      = 4,
-    miINT32       = 5,
-    miUINT32      = 6,
-    miSINGLE      = 7,
-    miDOUBLE      = 9,
-    miINT64       = 12,
-    miUINT64      = 13,
-    miMATRIX      = 14,
-    miCOMPRESSED  = 15,
-    miUTF8        = 16,
-    miUTF16       = 17,
-    miUTF32       = 18,
-    miRANGE_LIMIT
-} vMAT_MIType;
-
-extern NSString *
-vMAT_MITypeDescription(vMAT_MIType type);
-
-typedef enum {
-    mxCELL_CLASS   = 1,
-    mxSTRUCT_CLASS = 2,
-    mxOBJECT_CLASS = 3,
-    mxCHAR_CLASS   = 4,
-    mxSPARSE_CLASS = 5,
-    mxDOUBLE_CLASS = 6,
-    mxSINGLE_CLASS = 7,
-    mxINT8_CLASS   = 8,
-    mxUINT8_CLASS  = 9,
-    mxINT16_CLASS  = 10,
-    mxUINT16_CLASS = 11,
-    mxINT32_CLASS  = 12,
-    mxUINT32_CLASS = 13,
-    mxINT64_CLASS  = 14,
-    mxUINT64_CLASS = 15,
-    mxRANGE_LIMIT
-} vMAT_MXClass;
-
-extern NSString *
-vMAT_MXClassDescription(vMAT_MXClass class);
 
 #import "vMAT_MATv5ReadOperation.h"
 #import "vMAT_MATv5Variable.h"
