@@ -174,7 +174,7 @@ vMAT_Size123Iterator(vMAT_Size size,
     vMAT_Size123Iterator(_size, ^(int32_t n, int32_t o, int32_t p) {
         [operation readComplete:C
                          length:lenC];
-        if (operation.swapBytes) { SwapA(C, lenC); }
+        if (operation.swapBytes) { SwapA(C, lenC / sizeof(TypeA)); }
         for (int m = 0;
              m < _size[0];
              m++) {
@@ -226,7 +226,7 @@ vMAT_Size123Iterator(vMAT_Size size,
     vMAT_Size123Iterator(_size, ^(int32_t n, int32_t o, int32_t p) {
         [operation readComplete:C
                          length:lenC];
-        if (operation.swapBytes) { SwapA(C, lenC); }
+        if (operation.swapBytes) { SwapA(C, lenC / sizeof(TypeA)); }
         for (int m = 0;
              m < _size[0];
              m++) {
