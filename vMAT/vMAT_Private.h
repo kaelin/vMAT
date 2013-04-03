@@ -33,3 +33,15 @@
 #import <BlocksKit/BlocksKit.h>
 
 #import "vMAT.h"
+
+extern void
+vMAT_byteswap16(void * vector,
+                vDSP_Length vectorLength);
+
+extern void
+vMAT_byteswap32(void * vector,
+                vDSP_Length vectorLength);
+
+extern void
+vMAT_byteswap64(void * vector,
+                vDSP_Length vectorLength);

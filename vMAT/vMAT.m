@@ -301,14 +301,38 @@ vMAT_single(vMAT_Array * matrix)
 }
 
 void
-vMAT_swapbytes(void * vector32,
-               vDSP_Length vectorLength)
-{ // TODO: Convert to vMAT_Size
-    uint32_t * vswap = vector32;
+vMAT_byteswap16(void * vector,
+                vDSP_Length vectorLength)
+{
+    uint16_t * vswap = vector;
+    for (long i = 0;
+         i < vectorLength;
+         i++) {
+        vswap[i] = OSSwapConstInt16(vswap[i]);
+    }
+}
+
+void
+vMAT_byteswap32(void * vector,
+                vDSP_Length vectorLength)
+{
+    uint32_t * vswap = vector;
     for (long i = 0;
          i < vectorLength;
          i++) {
         vswap[i] = OSSwapConstInt32(vswap[i]);
+    }
+}
+
+void
+vMAT_byteswap64(void * vector,
+                vDSP_Length vectorLength)
+{
+    uint64_t * vswap = vector;
+    for (long i = 0;
+         i < vectorLength;
+         i++) {
+        vswap[i] = OSSwapConstInt64(vswap[i]);
     }
 }
 

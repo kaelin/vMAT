@@ -189,7 +189,7 @@ static void (^ unexpectedEOS)() = ^ {
      }];
     if (didHandleError) return;
     uint32_t smallElementBytes = tag.length;
-    if (_swapBytes) vMAT_swapbytes(&tag, 2);
+    if (_swapBytes) vMAT_byteswap32(&tag, 2);
     BOOL isSmallElement = tag.type > 0xffff;
     vMAT_MIType type = isSmallElement ? (tag.type & 0xffff) : tag.type;
     uint32_t length = isSmallElement ? (tag.type >> 16) & 0b11 : tag.length;
@@ -243,7 +243,7 @@ static void (^ unexpectedEOS)() = ^ {
     type = miUINT32; length = 8;
     [self matchTagType:&type length:&length];
     [self readComplete:flagsOut length:8];
-    if (_swapBytes) vMAT_swapbytes(flagsOut, 2);
+    if (_swapBytes) vMAT_byteswap32(flagsOut, 2);
     int32_t dimensions[vMAT_MAXDIMS] = { };
     type = miINT32; length = 0;
     [self matchTagType:&type length:&length];
@@ -257,7 +257,7 @@ static void (^ unexpectedEOS)() = ^ {
                 }];
     }
     [self readComplete:dimensions length:length];
-    if (_swapBytes) vMAT_swapbytes(dimensions, vMAT_MAXDIMS);
+    if (_swapBytes) vMAT_byteswap32(dimensions, vMAT_MAXDIMS);
     for (int i = 0;
          i < vMAT_MAXDIMS;
          i++) {

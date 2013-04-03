@@ -163,7 +163,7 @@ vMAT_Size123Iterator(vMAT_Size size,
 
 - (void)_load_miDOUBLE_mxDOUBLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
 {
-#define SwapA(A, lenA) vMAT_swapbytes(A, lenA);
+#define SwapA(A, lenA) vMAT_byteswap64(A, lenA);
 #define TypeA double
 #define TypeB double
     long lenC = _size[0] * sizeof(TypeA);
@@ -192,7 +192,7 @@ vMAT_Size123Iterator(vMAT_Size size,
 
 - (void)_load_miSINGLE_mxSINGLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
 {
-#define SwapA(A, lenA) vMAT_swapbytes(A, lenA);
+#define SwapA(A, lenA) vMAT_byteswap32(A, lenA);
 #define TypeA float
 #define TypeB float
     long lenC = _size[0] * sizeof(TypeA);

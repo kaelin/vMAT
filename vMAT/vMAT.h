@@ -174,8 +174,4 @@ vMAT_pdist2(const float sampleA[],
 extern vMAT_Array *
 vMAT_single(vMAT_Array * matrix);
 
-extern void
-vMAT_swapbytes(void * vector32,
-               vDSP_Length vectorLength);
-
 #endif // vMAT_H
