@@ -390,17 +390,16 @@
 
 - (void)test_vMAT_pdist;
 {
-    vMAT_eye_(vMAT_MakeSize(2, 3), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
-        vMAT_pdist(output, vMAT_MakeSize(2, 3), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
-            STAssertTrue(output != NULL, nil);
-            const float Y[] = {
-                1.41421,   1.00000,   1.00000,
-            };
-            STAssertEquals(outputLength, (vDSP_Length)(sizeof(Y) / sizeof(float)), nil);
-            for (int i = 0; i < sizeof(Y) / sizeof(float); i++) {
-                STAssertEqualsWithAccuracy(output[i], Y[i], 0.0001, nil);
-            }
-        });
+    vMAT_Array * matE = vMAT_single(vMAT_eye(vMAT_MakeSize(2, 3)));
+    vMAT_pdist(matE.data.bytes, matE.size, ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
+        STAssertTrue(output != NULL, nil);
+        const float Y[] = {
+            1.41421,   1.00000,   1.00000,
+        };
+        STAssertEquals(outputLength, (vDSP_Length)(sizeof(Y) / sizeof(float)), nil);
+        for (int i = 0; i < sizeof(Y) / sizeof(float); i++) {
+            STAssertEqualsWithAccuracy(output[i], Y[i], 0.0001, nil);
+        }
     });
     const float X[] = { // Random 8x5
         0.21350,   0.37459,   0.17548,   0.69542,   0.10375,   0.31814,   0.25488,   0.12684,

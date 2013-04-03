@@ -6,11 +6,9 @@
 //  Copyright (c) 2013 Kaelin Colclasure. All rights reserved.
 //
 
-#import "vMAT.h"
+#import "vMAT_Private.h"
 
 #import "vMAT_StreamDelegate.h"
-
-#import <BlocksKit/BlocksKit.h>
 
 
 NSString *
@@ -27,29 +25,6 @@ vMAT_StringFromSize(vMAT_Size size)
     }
     [string appendString:@"]"];
     return string;
-}
-
-void
-vMAT_eye_(vMAT_Size mxn,
-         void (^outputBlock)(float output[],
-                             vDSP_Length outputLength,
-                             bool * keepOutput))
-{
-    if (mxn[1] == 0) mxn[1] = mxn[0];
-    long lenE = mxn[0] * mxn[1];
-    NSCAssert(lenE > 0, @"Invalid size parameter");
-    float * E = calloc(lenE, sizeof(*E));
-    long diag = MIN(mxn[0], mxn[1]);
-    for (int n = 0;
-         n < diag;
-         n++) {
-        E[n * mxn[0] + n] = 1.f;
-    }
-    bool keepOutput = false;
-    outputBlock(E, lenE, &keepOutput);
-    if (!keepOutput) {
-        free(E);
-    }
 }
 
 vMAT_Array *
@@ -317,6 +292,14 @@ vMAT_pdist2(const float sampleA[],
     }
 }
 
+vMAT_Array *
+vMAT_single(vMAT_Array * matrix)
+{
+    vMAT_Array * array = [vMAT_Array arrayWithSize:matrix.size type:miSINGLE];
+    [array copyFrom:matrix];
+    return array;
+}
+
 void
 vMAT_swapbytes(void * vector32,
                vDSP_Length vectorLength)
@@ -344,7 +327,7 @@ vMAT_MITypeDescription(vMAT_MIType type)
         @"[6]miUINT32",
         @"[7]miSINGLE",
         nil,
-        @"[9]miDOUBLE9",
+        @"[9]miDOUBLE",
         nil,
         nil,
         @"[12]miINT64",
@@ -411,37 +394,3 @@ vMAT_MXClassDescription(vMAT_MXClass class)
     if (class > 0 && class < 16) return desc[class];
     else return nil;
 }
-
-@implementation vMAT_Array
-
-+ (vMAT_Array *)arrayWithSize:(vMAT_Size)size
-                         type:(vMAT_MIType)type;
-{
-    return [[vMAT_Array alloc] initWithSize:size
-                                       type:type];
-}
-
-- (id)initWithSize:(vMAT_Size)size
-              type:(vMAT_MIType)type
-              data:(NSMutableData *)data;
-{
-    long lenA = vMAT_Size_prod(size) * vMAT_MITypeSizeof(type);
-    NSParameterAssert(lenA >= 0);
-    NSParameterAssert(vMAT_MITypeSizeof(type) != 0);
-    if ((self = [super init]) != nil) {
-        _size = size;
-        _type = type;
-        _data = data ? : [NSMutableData dataWithCapacity:lenA];
-        if (_data.length == 0) _data.length = lenA;
-        else NSParameterAssert(_data.length == lenA);
-    }
-    return self;
-}
-
-- (id)initWithSize:(vMAT_Size)size
-              type:(vMAT_MIType)type;
-{
-    return [self initWithSize:size type:type data:nil];
-}
-
-@end

@@ -1,8 +1,8 @@
 //
-//  vMAT_MATv5Variable.h
+//  vMAT_Array.h
 //  vMAT
 //
-//  Created by Kaelin Colclasure on 3/31/13.
+//  Created by Kaelin Colclasure on 4/3/13.
 //  Copyright (c) 2013 Kaelin Colclasure. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -33,42 +33,18 @@
 #import "vMAT_Types.h"
 
 
-@class vMAT_MATv5ReadOperation;
-@class vMAT_MATv5NumericArray;
+@interface vMAT_Array : NSObject
 
-@interface vMAT_MATv5Variable : NSObject {
-@protected
-    BOOL _isComplex;
-    BOOL _isGlobal;
-    BOOL _isLogical;
-    vMAT_MXClass _mxClass;
-    vMAT_Size _size;
-    NSString * _name;
-}
-
-@property (readonly) BOOL isComplex;
-@property (readonly) BOOL isGlobal;
-@property (readonly) BOOL isLogical;
-@property (readonly) vMAT_MXClass mxClass;
+@property (readonly, retain) NSMutableData * data;
 @property (readonly) vMAT_Size size;
-@property (readonly, retain) NSString * name;
+@property (readonly) vMAT_MIType type;
 
-+ (vMAT_MATv5Variable *)variableWithMXClass:(vMAT_MXClass)mxClass
-                                 arrayFlags:(uint32_t)flags
-                                 dimensions:(vMAT_Size)size
-                                       name:(NSString *)name;
++ (vMAT_Array *)arrayWithSize:(vMAT_Size)size
+                         type:(vMAT_MIType)type;
 
-- (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation;
+- (id)initWithSize:(vMAT_Size)size
+              type:(vMAT_MIType)type;
 
-- (vMAT_MATv5NumericArray *)toNumericArray;
-
-@end
-
-@interface vMAT_MATv5NumericArray : vMAT_MATv5Variable
-
-@property (readonly, retain) NSMutableData * arrayData;
-
-- (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation
-              withMXClass:(vMAT_MXClass)mxClass;
+- (void)copyFrom:(vMAT_Array *)matrix;
 
 @end

@@ -8,7 +8,7 @@
 
 #import "vMAT_MATv5ReadOperation.h"
 
-#import <BlocksKit/BlocksKit.h>
+#import "vMAT_Private.h"
 
 
 @interface vMAT_MATv5ReadOperation (Private)

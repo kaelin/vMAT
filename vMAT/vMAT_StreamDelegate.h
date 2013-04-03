@@ -30,7 +30,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "vMAT.h"
+#import "vMAT_Types.h"
 
 
 #define vMAT_LIMIT_CONCURRENT_STREAMS (4)

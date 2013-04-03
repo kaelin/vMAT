@@ -8,6 +8,8 @@
 
 #import "vMAT_MATv5Variable.h"
 
+#import "vMAT_Private.h"
+
 
 @implementation vMAT_MATv5Variable
 

@@ -30,7 +30,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "vMAT.h"
+#import "vMAT_Types.h"
 
 
 @class vMAT_MATv5ReadOperation;

@@ -30,8 +30,8 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <Accelerate/Accelerate.h>
-#import <Foundation/Foundation.h>
+#ifndef vMAT_H
+#define vMAT_H
 
 /*!
  @header vMAT Library
@@ -40,108 +40,25 @@
  @updated 2013-04-01
  @abstract The vMAT library implements a grab-bag of mathematical functions inspired by MATLAB™.
  @discussion
- 
  This library is being developed as part of a facial recognition project. As such, it
  contains a small (but growing) set of matrix functions and related utilities which that project happens to use. In its present
  state, there's probably not enough here to be of much interest to anyone outside of that effort, except perhaps as an
  example of how MATLAB™ code can be expressed in vectorized Objective-C.
  */
 
-/*!
- @brief Type for array size (dimensions).
- */
-typedef __v4si vMAT_Size;
+#import "vMAT_Types.h"
+
+#import "vMAT_Array.h"
+#import "vMAT_MATv5ReadOperation.h"
+#import "vMAT_MATv5Variable.h"
+
 
 /*!
- @brief This macro reflects the maximum number of dimensions that can be expressed using a <code>vMAT_Size</code>.
+ @brief Make an identity matrix.
  @discussion
- This is effectively the limit of how many dimensions vMAT can handle. Four seems pretty reasonable,
- but if more were really needed it would be possible to increase this by using a wider vector type.
- */
-#define vMAT_MAXDIMS (4)
-
-/*!
- @brief Convenience macro for creating a <code>vMAT_Size</code>.
- */
-#define vMAT_MakeSize(dims...) ((vMAT_Size){ dims })
-
-extern NSString *
-vMAT_StringFromSize(vMAT_Size size);
-
-typedef enum {
-    miINT8        = 1,
-    miUINT8       = 2,
-    miINT16       = 3,
-    miUINT16      = 4,
-    miINT32       = 5,
-    miUINT32      = 6,
-    miSINGLE      = 7,
-    miDOUBLE      = 9,
-    miINT64       = 12,
-    miUINT64      = 13,
-    miMATRIX      = 14,
-    miCOMPRESSED  = 15,
-    miUTF8        = 16,
-    miUTF16       = 17,
-    miUTF32       = 18,
-    miRANGE_LIMIT
-} vMAT_MIType;
-
-extern NSString *
-vMAT_MITypeDescription(vMAT_MIType type);
-
-extern size_t
-vMAT_MITypeSizeof(vMAT_MIType type);
-
-typedef enum {
-    mxCELL_CLASS   = 1,
-    mxSTRUCT_CLASS = 2,
-    mxOBJECT_CLASS = 3,
-    mxCHAR_CLASS   = 4,
-    mxSPARSE_CLASS = 5,
-    mxDOUBLE_CLASS = 6,
-    mxSINGLE_CLASS = 7,
-    mxINT8_CLASS   = 8,
-    mxUINT8_CLASS  = 9,
-    mxINT16_CLASS  = 10,
-    mxUINT16_CLASS = 11,
-    mxINT32_CLASS  = 12,
-    mxUINT32_CLASS = 13,
-    mxINT64_CLASS  = 14,
-    mxUINT64_CLASS = 15,
-    mxRANGE_LIMIT
-} vMAT_MXClass;
-
-extern NSString *
-vMAT_MXClassDescription(vMAT_MXClass class);
-
-@interface vMAT_Array : NSObject
-
-@property (readonly, retain) NSMutableData * data;
-@property (readonly) vMAT_Size size;
-@property (readonly) vMAT_MIType type;
-
-+ (vMAT_Array *)arrayWithSize:(vMAT_Size)size
-                         type:(vMAT_MIType)type;
-
-- (id)initWithSize:(vMAT_Size)size
-              type:(vMAT_MIType)type;
-
-@end
-
-/*!
- @brief Make a float identity matrix.
- @discussion
- This function outputs a float identity matrix of the specified size to the caller-provided output block.
+ This function returns an identity matrix of the specified size.
  @param mxn Size specification (2D); if only the first dimension is provided, defaults to a square matrix.
- @param outputBlock A block for receiving the output identity matrix.
  */
-extern void
-vMAT_eye_(vMAT_Size mxn,
-         void (^outputBlock)(float output[],
-                             vDSP_Length outputLength,
-                             bool * keepOutput));
-
 extern vMAT_Array *
 vMAT_eye(vMAT_Size mxn);
 
@@ -254,38 +171,11 @@ vMAT_pdist2(const float sampleA[],
                                 vDSP_Length outputLength,
                                 bool * keepOutput));
 
+extern vMAT_Array *
+vMAT_single(vMAT_Array * matrix);
+
 extern void
 vMAT_swapbytes(void * vector32,
                vDSP_Length vectorLength);
 
-static inline long
-vMAT_Size_dot(vMAT_Size a,
-              vMAT_Size b)
-{
-    __v4si c = a * b;
-    return (long)c[0] + c[1] + c[2] + c[3];
-}
-
-static inline long
-vMAT_Size_prod(vMAT_Size size)
-{
-    long d2 = size[2] ? : 1;
-    long d3 = size[3] ? : 1;
-    return (long)size[0] * (long)size[1] * d2 * d3;
-}
-
-extern NSString * const vMAT_ErrorDomain;
-
-enum {
-    vMAT_ErrorCodeNone                    = 0,
-    vMAT_ErrorCodeEndOfStream             = 1,
-    vMAT_ErrorCodeOperationCancelled      = 2,
-    
-    vMAT_ErrorCodeInvalidMATv5Header      = 301,
-    vMAT_ErrorCodeInvalidMATv5Tag         = 302,
-    vMAT_ErrorCodeInvalidMATv5Element     = 303,
-    vMAT_ErrorCodeUnsupportedMATv5Element = 304,
-};
-
-#import "vMAT_MATv5ReadOperation.h"
-#import "vMAT_MATv5Variable.h"
+#endif // vMAT_H
