@@ -27,6 +27,45 @@
     [super tearDown];
 }
 
+- (void)test_vMAT_load_float_55x57_v6;
+{
+    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-float-55x57-v6"
+                                                           withExtension:@"mat"];
+    NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
+    [stream open];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    vMAT_load(stream, @[@"I"], ^(NSDictionary *workspace, NSError *error) {
+        vMAT_MATv5NumericArray * varM = [workspace objectForKey:@"I"];
+        float * matM = varM.arrayData.mutableBytes;
+        STAssertNotNil(varM, nil);
+        STAssertNil(error, nil);
+        STAssertEquals(varM.size, vMAT_MakeSize(55, 57), nil);
+        [stream close];
+        dispatch_semaphore_signal(semaphore);
+    });
+    long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
+                                                                     1 * NSEC_PER_SEC));
+    STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
+- (void)test_vMAT_load_float_55x57_v6_no_variables;
+{
+    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-float-55x57-v6"
+                                                           withExtension:@"mat"];
+    NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
+    [stream open];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    vMAT_load(stream, @[], ^(NSDictionary *workspace, NSError *error) {
+        STAssertEqualObjects(workspace, @{ }, nil);
+        STAssertNil(error, nil);
+        [stream close];
+        dispatch_semaphore_signal(semaphore);
+    });
+    long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
+                                                                     1 * NSEC_PER_SEC));
+    STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
 - (void)test_vMAT_load_magic_4x4_v6;
 {
     NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-magic-4x4-v6"

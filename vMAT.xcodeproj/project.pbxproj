@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		05433CC9170BA08300F23FEF /* test-order-5x4x3x2-v6.mat in Resources */ = {isa = PBXBuildFile; fileRef = 05433CC8170BA08300F23FEF /* test-order-5x4x3x2-v6.mat */; };
+		05433CCB170BA96300F23FEF /* test-float-55x57-v6.mat in Resources */ = {isa = PBXBuildFile; fileRef = 05433CCA170BA96300F23FEF /* test-float-55x57-v6.mat */; };
 		054359481700B41A0037AAC4 /* vMAT_StreamDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */; };
 		054359491700B41A0037AAC4 /* vMAT_StreamDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */; };
 		0543594B1701D2140037AAC4 /* test-float-4x3.dat in Resources */ = {isa = PBXBuildFile; fileRef = 0543594A1701D2140037AAC4 /* test-float-4x3.dat */; };
@@ -59,6 +60,7 @@
 
 /* Begin PBXFileReference section */
 		05433CC8170BA08300F23FEF /* test-order-5x4x3x2-v6.mat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-order-5x4x3x2-v6.mat"; sourceTree = "<group>"; };
+		05433CCA170BA96300F23FEF /* test-float-55x57-v6.mat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-float-55x57-v6.mat"; sourceTree = "<group>"; };
 		054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_StreamDelegate.h; sourceTree = "<group>"; };
 		054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vMAT_StreamDelegate.m; sourceTree = "<group>"; };
 		0543594A1701D2140037AAC4 /* test-float-4x3.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-float-4x3.dat"; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				0543594A1701D2140037AAC4 /* test-float-4x3.dat */,
+				05433CCA170BA96300F23FEF /* test-float-55x57-v6.mat */,
 				058C5E6617069F8900A65E82 /* test-magic-4x4-v6.mat */,
 				05433CC8170BA08300F23FEF /* test-order-5x4x3x2-v6.mat */,
 				0568E8061700124400AE99F4 /* vMATTests-Info.plist */,
@@ -350,6 +353,7 @@
 				0543594B1701D2140037AAC4 /* test-float-4x3.dat in Resources */,
 				058C5E6717069F8900A65E82 /* test-magic-4x4-v6.mat in Resources */,
 				05433CC9170BA08300F23FEF /* test-order-5x4x3x2-v6.mat in Resources */,
+				05433CCB170BA96300F23FEF /* test-float-55x57-v6.mat in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -159,6 +159,35 @@ vMAT_Size123Iterator(vMAT_Size size,
     }
 }
 
+- (void)_load_miSINGLE_mxSINGLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
+{
+#define SwapA(A, lenA) vMAT_swapbytes(A, lenA);
+#define TypeA float
+#define TypeB float
+    long lenC = _size[0] * sizeof(TypeA);
+    TypeA * C = malloc(lenC);
+    long lenD = vMAT_Size_prod(_size) * sizeof(TypeB);
+    _arrayData = [NSMutableData dataWithCapacity:lenD];
+    _arrayData.length = lenD;
+    TypeB * D = [_arrayData mutableBytes];
+    __block long idxD = 0;
+    vMAT_Size123Iterator(_size, ^(int32_t n, int32_t o, int32_t p) {
+        [operation readComplete:C
+                         length:lenC];
+        if (operation.swapBytes) { SwapA(C, lenC); }
+        for (int m = 0;
+             m < _size[0];
+             m++) {
+            D[idxD] = C[m];
+            ++idxD;
+        }
+    });
+    free(C);
+#undef SwapA
+#undef TypeA
+#undef TypeB
+}
+
 - (void)_load_miUINT8_mxDOUBLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
 { // TODO: Use the template
     long lenC = _size[0] * sizeof(uint8_t);
@@ -184,7 +213,7 @@ vMAT_Size123Iterator(vMAT_Size size,
 
 - (void)_load_miUINT8_mxUINT8_fromOperation:(vMAT_MATv5ReadOperation *)operation;
 {
-#define SwapA ; // No need for swapping with 1-byte elements.
+#define SwapA(A, lenA) ; // No need for swapping with 1-byte elements.
 #define TypeA uint8_t
 #define TypeB uint8_t
     long lenC = _size[0] * sizeof(TypeA);
@@ -197,7 +226,7 @@ vMAT_Size123Iterator(vMAT_Size size,
     vMAT_Size123Iterator(_size, ^(int32_t n, int32_t o, int32_t p) {
         [operation readComplete:C
                          length:lenC];
-        if (operation.swapBytes) { SwapA; }
+        if (operation.swapBytes) { SwapA(C, lenC); }
         for (int m = 0;
              m < _size[0];
              m++) {
