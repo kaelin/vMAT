@@ -159,6 +159,35 @@ vMAT_Size123Iterator(vMAT_Size size,
     }
 }
 
+- (void)_load_miDOUBLE_mxDOUBLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
+{
+#define SwapA(A, lenA) vMAT_swapbytes(A, lenA);
+#define TypeA double
+#define TypeB double
+    long lenC = _size[0] * sizeof(TypeA);
+    TypeA * C = malloc(lenC);
+    long lenD = vMAT_Size_prod(_size) * sizeof(TypeB);
+    _arrayData = [NSMutableData dataWithCapacity:lenD];
+    _arrayData.length = lenD;
+    TypeB * D = [_arrayData mutableBytes];
+    __block long idxD = 0;
+    vMAT_Size123Iterator(_size, ^(int32_t n, int32_t o, int32_t p) {
+        [operation readComplete:C
+                         length:lenC];
+        if (operation.swapBytes) { SwapA(C, lenC / sizeof(TypeA)); }
+        for (int m = 0;
+             m < _size[0];
+             m++) {
+            D[idxD] = C[m];
+            ++idxD;
+        }
+    });
+    free(C);
+#undef SwapA
+#undef TypeA
+#undef TypeB
+}
+
 - (void)_load_miSINGLE_mxSINGLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
 {
 #define SwapA(A, lenA) vMAT_swapbytes(A, lenA);
