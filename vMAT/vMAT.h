@@ -63,43 +63,54 @@ extern vMAT_Array *
 vMAT_eye(vMAT_Size mxn);
 
 /*!
- @brief Read a float matrix asynchronously from a stream.
+ @brief Read matrix data asynchronously from a stream.
  @discussion
- TBD.
+ This function reads data from an open <code>NSInputStream</code> into a pre-specified <code>vMAT_Array</code> matrix.
+ The matrix is populated with elements from the stream in column-major order.
+ The type and size of the matrix determine how much data will be read from the stream, and how it will be interpreted.
+ It is possible to read into a matrix with only the m dimension of the size specified (e.g. n and all subsequent
+ dimensions equal to zeros). In this case, the matrix data will be read one column at a time, until the end of the
+ input stream is encountered (or until an error occurs).
+ 
+ The caller-provided <code>asyncOutputBlock</code> is invoked either when the matrix had been fully read, or when an
+ error occurs. As the block name implies, input from the stream will be handled asynchronously, and the block will be
+ invoked from a global GCD work queue when the operation is finished.
+ 
+ The stream passed to this function should be closed only after the completion block has been invoked. Closing it
+ prematurely will result in undefined behavior.
  @param stream An <code>NSInputStream</code> (must already be opened).
- @param rows The number of rows to be read.
- @param cols The number of columns to be read.
+ @param matrix A <code>vMAT_Array</code> specifying the type and dimensions of the input matrix data.
  @param options A dictionary of options (not presently implemented; must be nil).
  @param asyncOutputBlock A block to be called asynchronously once the data is available.
- 
  */
 extern void
 vMAT_fread(NSInputStream * stream,
-           vDSP_Length rows,
-           vDSP_Length cols,
+           vMAT_Array * matrix,
            NSDictionary * options,
-           void (^asyncOutputBlock)(float output[],
-                                    vDSP_Length outputLength,
-                                    NSData * outputData,
+           void (^asyncOutputBlock)(vMAT_Array * matrix,
                                     NSError * error));
 
 /*
- @brief Write a float matrix asynchronously to a stream.
+ @brief Write matrix data asynchronously to a stream.
  @discussion
- TBD.
+ This functions writes the matrix data from a <code>vMAT_Array</code> to an open <code>NSOutputStream</code>.
+ The elements of the matrix are written to the stream in column-major order.
+ The type and size of the matrix determine how much data will be written to the stream.
+ 
+ The called-provided <code>asyncCompletionBlock</code> is invoked either when the matrix data has been fully written,
+ or when an error occurs. As the block name implies, output to the stream will be handled asynchronously, and the
+ block will be invoked from a global GCD work queue when the operation is finished.
+ 
+ The stream passed to this function should be closed only after the completion block has been invoked. Closing it
+ prematurely will result in undefined behavior.
  @param stream An <code>NSOutputStream</code> (must already be opened).
- @param matrix A float matrix.
- @param rows The number of rows to be written.
- @param cols The number of columns to be written.
+ @param matrix A <code>vMAT_Array</code> containing the matrix data to be output.
  @param options A dictionary of options (not presently implemented; must be nil).
  @param asyncCompletionBlock A block to be called asynchronously once the data is written.
- 
  */
-void
+extern void
 vMAT_fwrite(NSOutputStream * stream,
-            const float matrix[],
-            vDSP_Length rows,
-            vDSP_Length cols,
+            vMAT_Array * matrix,
             NSDictionary * options,
             void (^asyncCompletionBlock)(vDSP_Length outputLength,
                                          NSError * error));

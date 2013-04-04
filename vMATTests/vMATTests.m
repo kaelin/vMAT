@@ -93,15 +93,13 @@
                                                                                length:sizeof(identity)]];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_fread(stream, 1, 1, nil, ^(float *output,
-                                    vDSP_Length outputLength,
-                                    NSData *outputData,
-                                    NSError *error) {
-        STAssertTrue(output != NULL, nil);
-        STAssertEquals(outputLength, (vDSP_Length)1, nil);
-        STAssertNotNil(outputData, nil);
+    vMAT_Array * matI = [vMAT_Array arrayWithSize:vMAT_MakeSize(1, 1) type:miSINGLE];
+    vMAT_fread(stream, matI, nil, ^(vMAT_Array * matI, NSError * error) {
+        const float * I = matI.data.bytes;
+        STAssertNotNil(matI, nil);
         STAssertNil(error, nil);
-        STAssertEquals(output[0], identity, nil);
+        STAssertEqualObjects(vMAT_StringFromSize(matI.size), @"[1 1]", nil);
+        STAssertEquals(I[0], identity, nil);
         [stream close];
         dispatch_semaphore_signal(semaphore);
         sleep(3); // Tie up one concurrent vMATStreamWorker worker slot…
@@ -118,15 +116,13 @@
                                                                                length:sizeof(identity)]];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_fread(stream, 1, 1, nil, ^(float *output,
-                                    vDSP_Length outputLength,
-                                    NSData *outputData,
-                                    NSError *error) {
-        STAssertTrue(output != NULL, nil);
-        STAssertEquals(outputLength, (vDSP_Length)1, nil);
-        STAssertNotNil(outputData, nil);
+    vMAT_Array * matI = [vMAT_Array arrayWithSize:vMAT_MakeSize(1) type:miSINGLE];
+    vMAT_fread(stream, matI, nil, ^(vMAT_Array * matI, NSError * error) {
+        const float * I = matI.data.bytes;
+        STAssertNotNil(matI, nil);
         STAssertNil(error, nil);
-        STAssertEquals(output[0], identity, nil);
+        STAssertEqualObjects(vMAT_StringFromSize(matI.size), @"[1 1]", nil);
+        STAssertEquals(I[0], identity, nil);
         [stream close];
         dispatch_semaphore_signal(semaphore);
     });
@@ -137,27 +133,25 @@
 
 - (void)test_vMAT_fread_matlab_dat;
 {
-    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-float-4x3"
+    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-single-4x3"
                                                            withExtension:@"dat"];
     NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_fread(stream, 4, 3, nil, ^(float *output,
-                                    vDSP_Length outputLength,
-                                    NSData *outputData,
-                                    NSError *error) {
-        STAssertTrue(output != NULL, nil);
+    vMAT_Array * matI = [vMAT_Array arrayWithSize:vMAT_MakeSize(4) type:miSINGLE];
+    
+    vMAT_fread(stream, matI, nil, ^(vMAT_Array * matI, NSError * error) {
         const float M[] = {
-             2.00000,   3.00000,  13.00000,
-            11.00000,  10.00000,   8.00000,
-             7.00000,   6.00000,  12.00000,
-            14.00000,  15.00000,   1.00000,
+             2, 11,  7, 14,
+             3, 10,  6, 15,
+            13,  8, 12,  1,
         };
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(M) / sizeof(*M)), nil);
-        STAssertNotNil(outputData, nil);
+        const float * I = matI.data.bytes;
+        STAssertNotNil(matI, nil);
         STAssertNil(error, nil);
-        for (int i = 0; i < outputLength; i++) {
-            STAssertEqualsWithAccuracy(output[i], M[i], 0.0001, nil);
+        STAssertEqualObjects(vMAT_StringFromSize(matI.size), @"[4 3]", nil);
+        for (int i = 0; i < sizeof(M) / sizeof(*M); i++) {
+            STAssertEqualsWithAccuracy(I[i], M[i], 0.0001, nil);
         }
         [stream close];
         dispatch_semaphore_signal(semaphore);
@@ -190,17 +184,15 @@
     NSInputStream * stream = [NSInputStream inputStreamWithFileAtPath:pipePath];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_fread(stream, 1, 3, nil, ^(float *output,
-                                    vDSP_Length outputLength,
-                                    NSData *outputData,
-                                    NSError *error) {
+    vMAT_Array * matI = [vMAT_Array arrayWithSize:vMAT_MakeSize(3) type:miSINGLE];
+    vMAT_fread(stream, matI, nil, ^(vMAT_Array * matI, NSError * error) {
         const float O[] = { 1, 3, 5 };
-        STAssertTrue(output != NULL, nil);
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(O) / sizeof(float)), nil);
-        STAssertNotNil(outputData, nil);
+        const float * I = matI.data.bytes;
+        STAssertNotNil(matI, nil);
         STAssertNil(error, nil);
-        for (int i = 0; i < sizeof(O) / sizeof(float); i++) {
-            STAssertEqualsWithAccuracy(output[i], O[i], 0.0001, nil);
+        STAssertEqualObjects(vMAT_StringFromSize(matI.size), @"[3 1]", nil);
+        for (int i = 0; i < sizeof(O) / sizeof(*O); i++) {
+            STAssertEqualsWithAccuracy(I[i], O[i], 0.0001, nil);
         }
         [stream close];
         dispatch_semaphore_signal(semaphore);
@@ -213,7 +205,8 @@
 
 - (void)test_vMAT_fread_nil_stream;
 {
-    STAssertThrowsSpecificNamed(vMAT_fread(nil, 1, 1, nil, ^(float *output, vDSP_Length outputLength, NSData *outputData, NSError *error) {
+    vMAT_Array * matI = [vMAT_Array arrayWithSize:vMAT_MakeSize(1) type:miDOUBLE];
+    STAssertThrowsSpecificNamed(vMAT_fread(nil, matI, nil, ^(vMAT_Array * matrix, NSError * error) {
     }), NSException, NSInternalInconsistencyException, nil);
 }
 
@@ -240,13 +233,9 @@
     NSInputStream * stream = [NSInputStream inputStreamWithFileAtPath:pipePath];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_fread(stream, 1, 3, nil, ^(float *output,
-                                    vDSP_Length outputLength,
-                                    NSData *outputData,
-                                    NSError *error) {
-        STAssertTrue(output == NULL, nil);
-        STAssertEquals(outputLength, (vDSP_Length)0, nil);
-        STAssertNotNil(outputData, nil);
+    vMAT_Array * matI = [vMAT_Array arrayWithSize:vMAT_MakeSize(3, 1) type:miSINGLE];
+    vMAT_fread(stream, matI, nil, ^(vMAT_Array * matI, NSError * error) {
+        STAssertNil(matI, nil);
         STAssertNotNil(error, nil);
         STAssertEqualObjects([error domain], vMAT_ErrorDomain, nil);
         STAssertEquals([error code], (NSInteger)vMAT_ErrorCodeEndOfStream, nil);
@@ -262,27 +251,29 @@
 
 - (void)test_vMAT_fwrite;
 {
+    const float M[] = {
+         2, 11,  7, 14,
+         3, 10,  6, 15,
+        13,  8, 12,  1,
+    };
+    vMAT_Array * matM = [vMAT_Array arrayWithSize:vMAT_MakeSize(4, 3)
+                                             type:miSINGLE
+                                             data:[NSData dataWithBytes:M length:sizeof(M)]];
     NSOutputStream * stream = [NSOutputStream outputStreamToMemory];
     [stream open];
-    const float M[] = {
-         2.00000,   3.00000,  13.00000,
-        11.00000,  10.00000,   8.00000,
-         7.00000,   6.00000,  12.00000,
-        14.00000,  15.00000,   1.00000,
-    };
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_fwrite(stream, M, 4, 3, nil, ^(vDSP_Length outputLength,
-                                        NSError *error) {
-        const float Mt[] = {
-             2.00000,  11.00000,   7.00000,  14.00000,
-             3.00000,  10.00000,   6.00000,  15.00000,
-            13.00000,   8.00000,  12.00000,   1.00000,
+    vMAT_fwrite(stream, matM, nil, ^(vDSP_Length outputLength,
+                                     NSError *error) {
+        const float M[] = {
+             2, 11,  7, 14,
+             3, 10,  6, 15,
+            13,  8, 12,  1,
         };
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(Mt) / sizeof(*Mt)), nil);
+        STAssertEquals(outputLength, (vDSP_Length)(sizeof(M) / sizeof(*M)), nil);
         STAssertNil(error, nil);
         float * output = (float *)[[stream propertyForKey:NSStreamDataWrittenToMemoryStreamKey] bytes];
         for (int i = 0; i < outputLength; i++) {
-            STAssertEqualsWithAccuracy(output[i], Mt[i], 0.0001, nil);
+            STAssertEqualsWithAccuracy(output[i], M[i], 0.0001, nil);
         }
         [stream close];
         dispatch_semaphore_signal(semaphore);
@@ -294,7 +285,15 @@
 
 - (void)test_vMAT_fwrite_nil_stream;
 {
-    STAssertThrowsSpecificNamed(vMAT_fwrite(nil, NULL, 1, 1, nil, ^(vDSP_Length outputLength, NSError *error) {
+    const float M[] = {
+         2, 11,  7, 14,
+         3, 10,  6, 15,
+        13,  8, 12,  1,
+    };
+    vMAT_Array * matM = [vMAT_Array arrayWithSize:vMAT_MakeSize(4, 3)
+                                             type:miSINGLE
+                                             data:[NSData dataWithBytes:M length:sizeof(M)]];
+    STAssertThrowsSpecificNamed(vMAT_fwrite(nil, matM, nil, ^(vDSP_Length outputLength, NSError * error) {
     }), NSException, NSInternalInconsistencyException, nil);
 }
 

@@ -11,7 +11,7 @@
 		05433CCB170BA96300F23FEF /* test-float-55x57-v6.mat in Resources */ = {isa = PBXBuildFile; fileRef = 05433CCA170BA96300F23FEF /* test-float-55x57-v6.mat */; };
 		054359481700B41A0037AAC4 /* vMAT_StreamDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		054359491700B41A0037AAC4 /* vMAT_StreamDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */; };
-		0543594B1701D2140037AAC4 /* test-float-4x3.dat in Resources */ = {isa = PBXBuildFile; fileRef = 0543594A1701D2140037AAC4 /* test-float-4x3.dat */; };
+		0543594B1701D2140037AAC4 /* test-single-4x3.dat in Resources */ = {isa = PBXBuildFile; fileRef = 0543594A1701D2140037AAC4 /* test-single-4x3.dat */; };
 		05435952170208FE0037AAC4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05435951170208FE0037AAC4 /* Foundation.framework */; };
 		05435955170208FE0037AAC4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 05435954170208FE0037AAC4 /* main.m */; };
 		05435959170208FE0037AAC4 /* matxd.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05435958170208FE0037AAC4 /* matxd.1 */; };
@@ -68,7 +68,7 @@
 		05433CCA170BA96300F23FEF /* test-float-55x57-v6.mat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-float-55x57-v6.mat"; sourceTree = "<group>"; };
 		054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_StreamDelegate.h; sourceTree = "<group>"; };
 		054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vMAT_StreamDelegate.m; sourceTree = "<group>"; };
-		0543594A1701D2140037AAC4 /* test-float-4x3.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-float-4x3.dat"; sourceTree = "<group>"; };
+		0543594A1701D2140037AAC4 /* test-single-4x3.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-single-4x3.dat"; sourceTree = "<group>"; };
 		05435950170208FE0037AAC4 /* matxd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = matxd; sourceTree = BUILT_PRODUCTS_DIR; };
 		05435951170208FE0037AAC4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		05435954170208FE0037AAC4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -211,8 +211,8 @@
 			isa = PBXGroup;
 			children = (
 				0568E7F51700124400AE99F4 /* vMAT.h */,
-				05453DC3170CE1F600EFCB19 /* vMAT_Private.h */,
 				05453DC5170CE50200EFCB19 /* vMAT_Types.h */,
+				05453DC3170CE1F600EFCB19 /* vMAT_Private.h */,
 				0568E7F61700124400AE99F4 /* vMAT.m */,
 				05453DBF170CDE1200EFCB19 /* vMAT_Array.h */,
 				05453DC0170CDE1200EFCB19 /* vMAT_Array.m */,
@@ -250,7 +250,7 @@
 		0568E8051700124400AE99F4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0543594A1701D2140037AAC4 /* test-float-4x3.dat */,
+				0543594A1701D2140037AAC4 /* test-single-4x3.dat */,
 				05433CCA170BA96300F23FEF /* test-float-55x57-v6.mat */,
 				058C5E6617069F8900A65E82 /* test-magic-4x4-v6.mat */,
 				05433CC8170BA08300F23FEF /* test-order-5x4x3x2-v6.mat */,
@@ -367,7 +367,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0568E8091700124400AE99F4 /* InfoPlist.strings in Resources */,
-				0543594B1701D2140037AAC4 /* test-float-4x3.dat in Resources */,
+				0543594B1701D2140037AAC4 /* test-single-4x3.dat in Resources */,
 				058C5E6717069F8900A65E82 /* test-magic-4x4-v6.mat in Resources */,
 				05433CC9170BA08300F23FEF /* test-order-5x4x3x2-v6.mat in Resources */,
 				05433CCB170BA96300F23FEF /* test-float-55x57-v6.mat in Resources */,
@@ -527,6 +527,7 @@
 		0568E8101700124400AE99F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -543,6 +544,7 @@
 		0568E8111700124400AE99F4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (

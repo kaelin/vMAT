@@ -41,18 +41,22 @@
     long idxD;
 }
 
-@property (retain) NSMutableData * bufferData;
+@property (readonly, retain) NSMutableData * bufferData;
 @property (copy) void (^ completionBlock)(vDSP_Length outputLength, NSError * error);
-@property (copy) void (^ outputBlock)(float output[], vDSP_Length outputLength, NSData * outputData, NSError * error);
+@property (copy) void (^ outputBlock)(vMAT_Array * matrix, NSError * error);
 @property (readonly, retain) NSStream * stream;
-@property (assign) vDSP_Length rows;
-@property (assign) vDSP_Length cols;
+@property (readonly, retain) vMAT_Array * matrix;
 @property (readonly, retain) NSDictionary * options;
+@property (readonly) BOOL isGrowingMatrix;
 
 
 - (id)initWithStream:(NSStream *)stream
                 rows:(vDSP_Length)rows
                 cols:(vDSP_Length)cols
+             options:(NSDictionary *)options;
+
+- (id)initWithStream:(NSStream *)stream
+              matrix:(vMAT_Array *)matrix
              options:(NSDictionary *)options;
 
 - (void)startReading;

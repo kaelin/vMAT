@@ -25,6 +25,15 @@
                                        type:type];
 }
 
++ (vMAT_Array *)arrayWithSize:(vMAT_Size)size
+                         type:(vMAT_MIType)type
+                         data:(NSData *)data;
+{
+    return [[vMAT_Array alloc] initWithSize:size
+                                       type:type
+                                       data:[data mutableCopy]];
+}
+
 + (SEL)copyCmdForType:(vMAT_MIType)typeA
              fromType:(vMAT_MIType)typeB;
 {
@@ -100,6 +109,12 @@
     }
 #undef TypeA
 #undef TypeB
+}
+
+- (void)reshape:(vMAT_Size)size;
+{
+    NSParameterAssert(vMAT_Size_prod(size) * vMAT_MITypeSizeof(_type) == _data.length);
+    _size = size;
 }
 
 @end

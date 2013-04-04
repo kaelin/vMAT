@@ -42,9 +42,15 @@
 + (vMAT_Array *)arrayWithSize:(vMAT_Size)size
                          type:(vMAT_MIType)type;
 
++ (vMAT_Array *)arrayWithSize:(vMAT_Size)size
+                         type:(vMAT_MIType)type
+                         data:(NSData *)data;
+
 - (id)initWithSize:(vMAT_Size)size
               type:(vMAT_MIType)type;
 
 - (void)copyFrom:(vMAT_Array *)matrix;
+
+- (void)reshape:(vMAT_Size)size;
 
 @end

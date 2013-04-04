@@ -44,18 +44,14 @@ vMAT_eye(vMAT_Size mxn)
 
 void
 vMAT_fread(NSInputStream * stream,
-           vDSP_Length rows,
-           vDSP_Length cols,
+           vMAT_Array * matrix,
            NSDictionary * options,
-           void (^asyncOutputBlock)(float output[],
-                                    vDSP_Length outputLength,
-                                    NSData * outputData,
+           void (^asyncOutputBlock)(vMAT_Array * matrix,
                                     NSError * error))
-{ // TODO: Convert to vMAT_Size
+{
     vMAT_StreamDelegate * reader = [[vMAT_StreamDelegate alloc] initWithStream:stream
-                                                                        rows:rows
-                                                                        cols:cols
-                                                                     options:options];
+                                                                        matrix:matrix
+                                                                       options:options];
     reader.outputBlock = asyncOutputBlock;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
         [reader startReading];
@@ -64,22 +60,14 @@ vMAT_fread(NSInputStream * stream,
 
 void
 vMAT_fwrite(NSOutputStream * stream,
-            const float matrix[],
-            vDSP_Length rows,
-            vDSP_Length cols,
+            vMAT_Array * matrix,
             NSDictionary * options,
             void (^asyncCompletionBlock)(vDSP_Length outputLength,
                                          NSError * error))
-{ // TODO: Convert to vMAT_Size
+{
     vMAT_StreamDelegate * writer = [[vMAT_StreamDelegate alloc] initWithStream:stream
-                                                                          rows:rows
-                                                                          cols:cols
+                                                                        matrix:matrix
                                                                        options:options];
-    long lenD = rows * cols * sizeof(*matrix);
-    writer.bufferData = [NSMutableData dataWithCapacity:lenD];
-    [writer.bufferData setLength:lenD];
-    // Matlab reads data in column order, whereas C stores it in row order.
-    vDSP_mtrans((float *)matrix, 1, [writer.bufferData mutableBytes], 1, cols, rows);
     writer.completionBlock = asyncCompletionBlock;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
         [writer startWriting];

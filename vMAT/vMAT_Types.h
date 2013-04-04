@@ -34,6 +34,8 @@
 #import <Foundation/Foundation.h>
 
 
+@class vMAT_Array;
+
 extern NSString * const vMAT_ErrorDomain;
 
 enum {
