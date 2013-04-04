@@ -208,27 +208,17 @@ vMAT_load(NSInputStream * stream,
     });
 }
 
-void
-vMAT_pdist(const float sample[],
-           vMAT_Size mxn,
-           void (^outputBlock)(float output[],
-                               vDSP_Length outputLength,
-                               bool * keepOutput))
+vMAT_Array *
+vMAT_pdist(vMAT_Array * sample)
 {
-    __block float * D = NULL;
-    __block long lenD = 0;
-    vMAT_pdist2(sample, mxn, sample, mxn, ^(float * output,
-                                            vDSP_Length outputLength,
-                                            bool * keepOutput) {
-        D = output;
-        lenD = outputLength;
-        *keepOutput = true;
-    });
+    vMAT_Array * matD = vMAT_pdist2(sample, sample);
     // Now reduce the full distance matrix to a vector of lengths (Y).
     // (The order is the same as Matlab's pdist results.)
-    long lenN = ceil(sqrt(lenD));
+    const float * D = matD.data.bytes;
+    long lenN = matD.size[0];
     long lenY = lenN * (lenN - 1) / 2;
-    float * Y = calloc(lenY, sizeof(*Y));
+    vMAT_Array * matY = [vMAT_Array arrayWithSize:vMAT_MakeSize((int32_t)lenY, 1) type:miSINGLE];
+    float * Y = matY.data.mutableBytes;
     long idxY = 0;
     for (long n = 0;
          n < lenN;
@@ -240,44 +230,33 @@ vMAT_pdist(const float sample[],
             ++idxY;
         }
     }
-    free(D);
-    bool keepOutput = false;
-    outputBlock(Y, lenY, &keepOutput);
-    if (!keepOutput) {
-        free(Y);
-    }
+    return matY;
 }
 
-void
-vMAT_pdist2(const float sampleA[],
-            vMAT_Size mxnA,
-            const float sampleB[],
-            vMAT_Size mxnB,
-            void (^outputBlock)(float output[],
-                                vDSP_Length outputLength,
-                                bool * keepOutput))
+vMAT_Array *
+vMAT_pdist2(vMAT_Array * sampleA,
+            vMAT_Array * sampleB)
 {
-    NSCAssert(mxnA[0] == mxnB[0], @"Mismatched m dimensions");
-    // We need space to store a full distance matrix (D).
-    long lenD = mxnA[1] * mxnB[1];
-    float * D = calloc(lenD, sizeof(*D));
+    long mvars = sampleA.size[0];
+    NSCParameterAssert(sampleB.size[0] == mvars);
+    vMAT_Array * matD = [vMAT_Array arrayWithSize:vMAT_MakeSize(sampleB.size[1], sampleA.size[1])
+                                             type:miSINGLE];
+    const float * A = sampleA.data.bytes;
+    const float * B = sampleB.data.bytes;
+    float * D = matD.data.mutableBytes;
     long idxD = 0;
     for (long idxB = 0;
-         idxB < mxnB[1];
+         idxB < sampleB.size[1];
          idxB++) {
         for (long idxA = 0;
-             idxA < mxnA[1];
+             idxA < sampleA.size[1];
              idxA++) {
-            vDSP_distancesq(&sampleA[idxA * mxnA[0]], 1, &sampleB[idxB * mxnB[0]], 1, &D[idxD], mxnA[0]);
+            vDSP_distancesq(&A[idxA * mvars], 1, &B[idxB * mvars], 1, &D[idxD], mvars);
             D[idxD] = sqrtf(D[idxD]);
             ++idxD;
         }
     }
-    bool keepOutput = false;
-    outputBlock(D, lenD, &keepOutput);
-    if (!keepOutput) {
-        free(D);
-    }
+    return matD;
 }
 
 vMAT_Array *

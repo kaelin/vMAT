@@ -58,6 +58,7 @@
  @discussion
  This function returns an identity matrix of the specified size.
  @param mxn Size specification (2D); if only the first dimension is provided, defaults to a square matrix.
+ @result A <code>vMAT_Array</code> containing the identity matrix.
  */
 vMAT_API vMAT_Array *
 vMAT_eye(vMAT_Size mxn);
@@ -159,40 +160,26 @@ vMAT_load(NSInputStream * stream,
                                        NSError * error));
 
 /*!
- @brief Compute the pairwise distances between the samples in a float matrix.
+ @brief Compute the pairwise distances between the single-precision floating point samples in a matrix.
  @discussion
  TBD.
- @param sample A 2D matrix with m samples of n variables.
- @param mxn Size of <code>sample</code> matrix.
- @param outputBlock A block for receiving the output distances vector.
- 
+ @param sample A 2D single-precision floating point matrix with m samples of n variables.
+ @result TBD.
  */
-extern void
-vMAT_pdist(const float sample[],
-           vMAT_Size mxn,
-           void (^outputBlock)(float output[],
-                               vDSP_Length outputLength,
-                               bool * keepOutput));
+vMAT_API vMAT_Array *
+vMAT_pdist(vMAT_Array * sample);
 
 /*!
- @brief Compute the pairwise distances between two sets of float samples.
+ @brief Compute the pairwise distances between two sets of single-precision floating point samples.
  @discussion
  TBD.
- @param sampleA A 2D matrix with m samples of n variables.
- @param mxnA Size of <code>sampleA</code> matrix.
- @param sampleB A 2D comparison matrix with m samples of n variables.
- @param mxnB Size of <code>sampleB</code> matrix; <code>mxnA[1]</code> must be equal to <code>mxnB[1]</code>.
- @param outputBlock A block for receiving the output distances vector.
- 
+ @param sampleA A 2D single-precision floating point matrix with m samples of n variables.
+ @param sampleB A comparable matrix with m samples of the same n variables; e.g. the n dimension must match <code>sampleA</code>.
+ @result TBD.
  */
-extern void
-vMAT_pdist2(const float sampleA[],
-            vMAT_Size mxnA,
-            const float sampleB[],
-            vMAT_Size mxnB,
-            void (^outputBlock)(float output[],
-                                vDSP_Length outputLength,
-                                bool * keepOutput));
+vMAT_API vMAT_Array *
+vMAT_pdist2(vMAT_Array * sampleA,
+            vMAT_Array * sampleB);
 
 vMAT_API vMAT_Array *
 vMAT_double(vMAT_Array * matrix);

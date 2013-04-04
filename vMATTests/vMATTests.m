@@ -389,17 +389,22 @@
 
 - (void)test_vMAT_pdist;
 {
+    vMAT_Array * matY = nil;
+    const float * Y = NULL;
     vMAT_Array * matE = vMAT_single(vMAT_eye(vMAT_MakeSize(2, 3)));
-    vMAT_pdist(matE.data.bytes, matE.size, ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
-        STAssertTrue(output != NULL, nil);
-        const float Y[] = {
+    matY = vMAT_pdist(matE);
+    {
+        const float Z[] = {
             1.41421,   1.00000,   1.00000,
         };
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(Y) / sizeof(float)), nil);
-        for (int i = 0; i < sizeof(Y) / sizeof(float); i++) {
-            STAssertEqualsWithAccuracy(output[i], Y[i], 0.0001, nil);
+        Y = matY.data.bytes;
+        STAssertNotNil(matY, nil);
+        STAssertEquals(matY.data.length, sizeof(Z), nil);
+        STAssertEqualObjects(vMAT_StringFromSize(matY.size), @"[3 1]", nil);
+        for (int i = 0; i < sizeof(Z) / sizeof(*Z); i++) {
+            STAssertEqualsWithAccuracy(Y[i], Z[i], 0.0001, nil);
         }
-    });
+    }
     const float X[] = { // Random 8x5
         0.21350,   0.37459,   0.17548,   0.69542,   0.10375,   0.31814,   0.25488,   0.12684,
         0.54601,   0.07173,   0.11765,   0.79231,   0.71214,   0.88801,   0.45643,   0.15090,
@@ -407,20 +412,28 @@
         0.15159,   0.38467,   0.29949,   0.93501,   0.88486,   0.92916,   0.88510,   0.56326,
         0.43272,   0.73036,   0.55689,   0.59528,   0.77017,   0.78671,   0.07482,   0.91418,
     };
-    vMAT_pdist(X, vMAT_MakeSize(8, 5), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
-        const float Y[] = {
+    vMAT_Array * matX = [vMAT_Array arrayWithSize:vMAT_MakeSize(8, 5)
+                                             type:miSINGLE
+                                             data:[NSData dataWithBytes:X length:sizeof(X)]];
+    matY = vMAT_pdist(matX);
+    {
+        const float Z[] = {
             0.97525, 0.97998, 1.28368, 1.28301, 0.97138, 0.83201, 1.19173, 1.27148, 1.22583, 1.09240,
         };
-        STAssertTrue(output != NULL, nil);
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(Y) / sizeof(float)), nil);
-        for (int i = 0; i < sizeof(Y) / sizeof(float); i++) {
-            STAssertEqualsWithAccuracy(output[i], Y[i], 0.0001, nil);
+        Y = matY.data.bytes;
+        STAssertNotNil(matY, nil);
+        STAssertEquals(matY.data.length, sizeof(Z), nil);
+        STAssertEqualObjects(vMAT_StringFromSize(matY.size), @"[10 1]", nil);
+        for (int i = 0; i < sizeof(Z) / sizeof(*Z); i++) {
+            STAssertEqualsWithAccuracy(Y[i], Z[i], 0.0001, nil);
         }
-    });
+    }
 }
 
 - (void)test_vMAT_pdist2;
 {
+    vMAT_Array * matD = nil;
+    const float * D = NULL;
     const float A[] = { // Top two rows of magic(4)
         16,  5,
          2, 11,
@@ -433,23 +446,33 @@
          6, 15,
         12,  1,
     };
-    vMAT_pdist2(A, vMAT_MakeSize(2, 4), B, vMAT_MakeSize(2, 4), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
-        const float D[] = {
+    vMAT_Array * matA = [vMAT_Array arrayWithSize:vMAT_MakeSize(2, 4)
+                                             type:miSINGLE
+                                             data:[NSData dataWithBytes:A length:sizeof(A)]];
+    vMAT_Array * matB = [vMAT_Array arrayWithSize:vMAT_MakeSize(2, 4)
+                                             type:miSINGLE
+                                             data:[NSData dataWithBytes:B length:sizeof(B)]];
+    matD = vMAT_pdist2(matA, matB);
+    {
+        const float E[] = {
              7.07107,   9.89949,   8.48528,   5.65685,
             12.72792,   5.83095,   5.65685,   8.48528,
             14.14214,   5.65685,   5.83095,   9.89949,
              5.65685,  14.14214,  12.72792,   7.07107,
         };
-        STAssertTrue(output != NULL, nil);
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(D) / sizeof(float)), nil);
-        for (int i = 0; i < sizeof(D) / sizeof(float); i++) {
-            STAssertEqualsWithAccuracy(output[i], D[i], 0.0001, nil);
+        D = matD.data.bytes;
+        STAssertNotNil(matD, nil);
+        STAssertEquals(matD.data.length, sizeof(E), nil);
+        for (int i = 0; i < sizeof(E) / sizeof(*E); i++) {
+            STAssertEqualsWithAccuracy(D[i], E[i], 0.0001, nil);
         }
-    });
+    }
 }
 
 - (void)test_vMAT_pdist2_asymmetric;
 {
+    vMAT_Array * matD = nil;
+    const float * D = NULL;
     const float A[] = { // rand(8, 2)
         0.89037, 0.52071, 0.49071, 0.56954, 0.59684, 0.30356, 0.72347, 0.49049,
         0.73432, 0.08783, 0.70805, 0.02771, 0.38930, 0.08482, 0.55180, 0.57436,
@@ -457,26 +480,38 @@
     const float B[] = { // rand(8, 1)
         0.04508, 0.52524, 0.87503, 0.81947, 0.87245, 0.30698, 0.21590, 0.15737,
     };
-    vMAT_pdist2(A, vMAT_MakeSize(8, 2), B, vMAT_MakeSize(8, 1), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
-        const float D[] = {
+    vMAT_Array * matA = [vMAT_Array arrayWithSize:vMAT_MakeSize(8, 2)
+                                             type:miSINGLE
+                                             data:[NSData dataWithBytes:A length:sizeof(A)]];
+    vMAT_Array * matB = [vMAT_Array arrayWithSize:vMAT_MakeSize(8, 1)
+                                             type:miSINGLE
+                                             data:[NSData dataWithBytes:B length:sizeof(B)]];
+    matD = vMAT_pdist2(matA, matB);
+    {
+        const float E[] = {
             1.17015, 1.37500,
         };
-        STAssertTrue(output != NULL, nil);
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(D) / sizeof(float)), nil);
-        for (int i = 0; i < sizeof(D) / sizeof(float); i++) {
-            STAssertEqualsWithAccuracy(output[i], D[i], 0.0001, nil);
+        D = matD.data.bytes;
+        STAssertNotNil(matD, nil);
+        STAssertEquals(matD.data.length, sizeof(E), nil);
+        STAssertEqualObjects(vMAT_StringFromSize(matD.size), @"[1 2]", nil);
+        for (int i = 0; i < sizeof(E) / sizeof(*E); i++) {
+            STAssertEqualsWithAccuracy(D[i], E[i], 0.0001, nil);
         }
-    });
-    vMAT_pdist2(B, vMAT_MakeSize(8, 1), A, vMAT_MakeSize(8, 2), ^(float * output, vDSP_Length outputLength, bool * keepOutput) {
-        const float D[] = {
+    }
+    matD = vMAT_pdist2(matB, matA);
+    {
+        const float E[] = {
             1.17015, 1.37500,
         };
-        STAssertTrue(output != NULL, nil);
-        STAssertEquals(outputLength, (vDSP_Length)(sizeof(D) / sizeof(float)), nil);
-        for (int i = 0; i < sizeof(D) / sizeof(float); i++) {
-            STAssertEqualsWithAccuracy(output[i], D[i], 0.0001, nil);
+        D = matD.data.bytes;
+        STAssertNotNil(matD, nil);
+        STAssertEquals(matD.data.length, sizeof(E), nil);
+        STAssertEqualObjects(vMAT_StringFromSize(matD.size), @"[2 1]", nil);
+        for (int i = 0; i < sizeof(E) / sizeof(*E); i++) {
+            STAssertEqualsWithAccuracy(D[i], E[i], 0.0001, nil);
         }
-    });
+    }
 }
 
 - (void)test_vMAT_Size_dot;
