@@ -110,6 +110,7 @@ namespace {
             else NSCAssert(NO, @"Oops!");
         }
         
+        // See <http://stackoverflow.com/questions/15819151/why-does-this-functors-operator-need-the-trailing-const-modifier>.
         void operator()(void * vector, vDSP_Length vectorLength) const
         {
             if (fn != NULL) fn(vector, vectorLength);
