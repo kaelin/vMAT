@@ -393,7 +393,7 @@ vMAT_MITypeSizeof(vMAT_MIType type)
 NSString *
 vMAT_MXClassDescription(vMAT_MXClass mxClass)
 {
-    static NSString * const desc[] = {
+    static NSString * const desc[mxRANGE_LIMIT] = {
         nil,
         @"[1]mxCELL_CLASS",
         @"[2]mxSTRUCT_CLASS",
@@ -413,4 +413,29 @@ vMAT_MXClassDescription(vMAT_MXClass mxClass)
     };
     if (mxClass > 0 && mxClass < 16) return desc[mxClass];
     else return nil;
+}
+
+vMAT_MIType
+vMAT_MXClassType(vMAT_MXClass mxClass)
+{
+    static vMAT_MIType type[mxRANGE_LIMIT] = {
+        miNONE,
+        miNONE,
+        miNONE,
+        miNONE,
+        miUTF8,
+        miNONE,
+        miDOUBLE,
+        miSINGLE,
+        miINT8,
+        miUINT8,
+        miINT16,
+        miUINT16,
+        miINT32,
+        miUINT32,
+        miINT64,
+        miUINT64,
+    };
+    if (mxClass > 0 && mxClass < 16) return type[mxClass];
+    else return miNONE;
 }

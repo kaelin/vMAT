@@ -141,6 +141,9 @@ typedef enum {
 vMAT_API NSString *
 vMAT_MXClassDescription(vMAT_MXClass mxClass);
 
+vMAT_API vMAT_MIType
+vMAT_MXClassType(vMAT_MXClass mxClass);
+
 #ifdef __cplusplus
 
 namespace vMAT {

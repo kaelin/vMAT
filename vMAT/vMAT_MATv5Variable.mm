@@ -42,6 +42,8 @@
     const int numericClasses = 0b1111111111010000;
     NSAssert(numericClasses & (1 << mxClass), @"%@ is not a numeric class", vMAT_MXClassDescription(mxClass));
     _mxClass = mxClass;
+    _array = [vMAT_Array arrayWithSize:self.size
+                                  type:vMAT_MXClassType(self.mxClass)];
     __block vMAT_MIType type = miNONE;
     __block uint32_t length = 0;
     [operation readElementType:&type
@@ -125,9 +127,8 @@ namespace {
         long lenC = self.size[0] * sizeof(TypeA);
         TypeA * C = (TypeA *)malloc(lenC);
         long lenD = vMAT_Size_prod(self.size) * sizeof(ClassB);
-        self.arrayData = [NSMutableData dataWithCapacity:lenD];
-        self.arrayData.length = lenD;
-        ClassB * D = (ClassB *)[self.arrayData mutableBytes];
+        NSCAssert(self.array.data.length == lenD, @"Oops!");
+        ClassB * D = (ClassB *)[self.array.data mutableBytes];
         __block long idxD = 0;
         vMAT_Size123Iterator(self.size, ^(int32_t n, int32_t o, int32_t p) {
             [operation readComplete:C

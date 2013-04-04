@@ -36,7 +36,7 @@
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     vMAT_load(stream, @[@"I"], ^(NSDictionary *workspace, NSError *error) {
         vMAT_MATv5NumericArray * varM = [workspace objectForKey:@"I"];
-        float * matM = varM.arrayData.mutableBytes;
+        float * matM = varM.array.data.mutableBytes;
         STAssertNotNil(varM, nil);
         STAssertNil(error, nil);
         STAssertEquals(varM.size, vMAT_MakeSize(55, 57), nil);
@@ -81,7 +81,7 @@
             13.00000,   8.00000,  12.00000,   1.00000,
         };
         vMAT_MATv5NumericArray * varM = [workspace objectForKey:@"M"];
-        double * matM = varM.arrayData.mutableBytes;
+        double * matM = varM.array.data.mutableBytes;
         STAssertNotNil(varM, nil);
         STAssertNil(error, nil);
         STAssertEquals(varM.size, vMAT_MakeSize(4, 4), nil);
@@ -129,11 +129,11 @@
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     vMAT_load(stream, @[@"ND4"], ^(NSDictionary *workspace, NSError *error) {
         vMAT_MATv5NumericArray * varM = [workspace objectForKey:@"ND4"];
-        uint8_t * matM = varM.arrayData.mutableBytes;
+        uint8_t * matM = varM.array.data.mutableBytes;
         STAssertNotNil(varM, nil);
         STAssertNil(error, nil);
         STAssertEquals(varM.size, vMAT_MakeSize(5, 4, 3, 2), nil);
-        STAssertEquals(varM.arrayData.length, (NSUInteger)120, nil);
+        STAssertEquals(varM.array.data.length, (NSUInteger)120, nil);
         STAssertEquals(matM[0], (uint8_t)0, nil);
         STAssertEquals(matM[20], (uint8_t)20, nil);
         STAssertEquals(matM[40], (uint8_t)40, nil);

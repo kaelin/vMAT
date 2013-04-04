@@ -64,9 +64,12 @@
 
 @end
 
-@interface vMAT_MATv5NumericArray : vMAT_MATv5Variable
+@interface vMAT_MATv5NumericArray : vMAT_MATv5Variable {
+@protected
+    vMAT_Array * _array;
+}
 
-@property (retain) NSMutableData * arrayData;
+@property (readonly, retain) vMAT_Array * array;
 
 @end
 
