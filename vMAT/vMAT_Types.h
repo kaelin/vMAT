@@ -93,6 +93,7 @@ vMAT_API NSString *
 vMAT_StringFromSize(vMAT_Size size);
 
 typedef enum {
+    miNONE        = 0,
     miINT8        = 1,
     miUINT8       = 2,
     miINT16       = 3,
@@ -118,6 +119,7 @@ vMAT_API size_t
 vMAT_MITypeSizeof(vMAT_MIType type);
 
 typedef enum {
+    mxNONE         = 0,
     mxCELL_CLASS   = 1,
     mxSTRUCT_CLASS = 2,
     mxOBJECT_CLASS = 3,
@@ -138,3 +140,32 @@ typedef enum {
 
 vMAT_API NSString *
 vMAT_MXClassDescription(vMAT_MXClass mxClass);
+
+#ifdef __cplusplus
+
+namespace vMAT {
+    
+    NSString *
+    genericDescription(vMAT_MIType type);
+    
+    NSString *
+    genericDescription(vMAT_MXClass mxClass);
+    
+    template <typename A, typename B>
+    SEL
+    genericCmd(NSString * format, A a, B b);
+    
+    extern double   DOUBLE;
+    extern float    SINGLE;
+    extern int8_t   INT8;
+    extern uint8_t  UINT8;
+    extern int16_t  INT16;
+    extern uint16_t UINT16;
+    extern int32_t  INT32;
+    extern uint32_t UINT32;
+    extern int64_t  INT64;
+    extern uint64_t UINT64;
+
+}
+
+#endif

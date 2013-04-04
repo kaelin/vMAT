@@ -66,7 +66,13 @@
 
 @interface vMAT_MATv5NumericArray : vMAT_MATv5Variable
 
-@property (readonly, retain) NSMutableData * arrayData;
+@property (retain) NSMutableData * arrayData;
+
+@end
+
+@interface vMAT_MATv5NumericArray (LoadFromOperation)
+
+- (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation;
 
 - (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation
               withMXClass:(vMAT_MXClass)mxClass;

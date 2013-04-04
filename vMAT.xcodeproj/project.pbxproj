@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0537A9C8170D9F80005B590B /* vMAT_Array.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0537A9C7170D9F80005B590B /* vMAT_Array.mm */; };
+		0537A9CA170DC4D0005B590B /* vMAT_MATv5Variable.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0537A9C9170DC4D0005B590B /* vMAT_MATv5Variable.mm */; };
 		05433CC9170BA08300F23FEF /* test-order-5x4x3x2-v6.mat in Resources */ = {isa = PBXBuildFile; fileRef = 05433CC8170BA08300F23FEF /* test-order-5x4x3x2-v6.mat */; };
 		05433CCB170BA96300F23FEF /* test-single-55x57-v6.mat in Resources */ = {isa = PBXBuildFile; fileRef = 05433CCA170BA96300F23FEF /* test-single-55x57-v6.mat */; };
 		054359481700B41A0037AAC4 /* vMAT_StreamDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -66,6 +67,7 @@
 
 /* Begin PBXFileReference section */
 		0537A9C7170D9F80005B590B /* vMAT_Array.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_Array.mm; sourceTree = "<group>"; };
+		0537A9C9170DC4D0005B590B /* vMAT_MATv5Variable.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_MATv5Variable.mm; sourceTree = "<group>"; };
 		05433CC8170BA08300F23FEF /* test-order-5x4x3x2-v6.mat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-order-5x4x3x2-v6.mat"; sourceTree = "<group>"; };
 		05433CCA170BA96300F23FEF /* test-single-55x57-v6.mat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-single-55x57-v6.mat"; sourceTree = "<group>"; };
 		054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_StreamDelegate.h; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 				0543596317032C9A0037AAC4 /* vMAT_MATv5ReadOperation.m */,
 				058C5E681708E46900A65E82 /* vMAT_MATv5Variable.h */,
 				058C5E691708E46900A65E82 /* vMAT_MATv5Variable.m */,
+				0537A9C9170DC4D0005B590B /* vMAT_MATv5Variable.mm */,
 				054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */,
 				054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */,
 				0568E7F31700124400AE99F4 /* Supporting Files */,
@@ -415,6 +418,7 @@
 				058C5E6B1708E46900A65E82 /* vMAT_MATv5Variable.m in Sources */,
 				05453DC2170CDE1200EFCB19 /* vMAT_Array.m in Sources */,
 				0537A9C8170D9F80005B590B /* vMAT_Array.mm in Sources */,
+				0537A9CA170DC4D0005B590B /* vMAT_MATv5Variable.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
