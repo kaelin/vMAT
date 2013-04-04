@@ -83,16 +83,7 @@ vMAT_Size123Iterator(vMAT_Size size,
 
 namespace {
     
-    using vMAT::DOUBLE;
-    using vMAT::SINGLE;
-    using vMAT::INT8;
-    using vMAT::UINT8;
-    using vMAT::INT16;
-    using vMAT::UINT16;
-    using vMAT::INT32;
-    using vMAT::UINT32;
-    using vMAT::INT64;
-    using vMAT::UINT64;
+    using namespace vMAT;
     
     typedef void (* swapFn)(void * vector, vDSP_Length vectorLength);
     
