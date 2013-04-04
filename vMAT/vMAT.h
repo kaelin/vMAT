@@ -134,11 +134,23 @@ vMAT_linkage(const float pdistv[],
 /*!
  @brief Load variables asynchronously from a MAT (v5) file into a workspace dictionary.
  @discussion
- TBD.
+ This functions reads saved workspace variables from the MAT (v5) file format. The MAT elements are read sequentially
+ from the open <code>NSInputStream</code> provided by the caller. Only the workspace variables designated in the
+ <code>variableNames</code> array are loaded; other variables are skipped without being loaded into memory.
+ 
+ At present, only a subset of the MAT (v5) file specification is supported. Of particular note, <code>miCOMPRESSED</code>
+ elements are *not* yet handled; consequently, it is usually necessary to specify the <code>'-v6'</code> option
+ when saving variables from a MATLAB session to file intended to be read by <code>vMAT_load</code>.
+ 
+ The called-provided <code>asyncCompletionBlock</code> is invoked either when the MAT file has been fully read,
+ or when an error occurs. As the block name implies, input from the stream will be handled asynchronously, and the
+ block will be invoked from a global GCD work queue when the operation is finished.
+ 
+ The stream passed to this function should be closed only after the completion block has been invoked. Closing it
+ prematurely will result in undefined behavior.
  @param stream An <code>NSInputStream</code> (must already be opened).
  @param variableNames An <code>NSArray</code> containing a list of the workspace variable names to be loaded.
  @param asyncCompletionBlock A block to be called asynchronously when the read operation completes.
- 
  */
 extern void
 vMAT_load(NSInputStream * stream,
