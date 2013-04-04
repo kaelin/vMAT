@@ -49,8 +49,15 @@
 - (id)initWithSize:(vMAT_Size)size
               type:(vMAT_MIType)type;
 
-- (void)copyFrom:(vMAT_Array *)matrix;
-
 - (void)reshape:(vMAT_Size)size;
+
+@end
+
+@interface vMAT_Array (CopyFrom)
+
++ (SEL)copyCmdForType:(vMAT_MIType)typeA
+             fromType:(vMAT_MIType)typeB;
+
+- (void)copyFrom:(vMAT_Array *)matrix;
 
 @end

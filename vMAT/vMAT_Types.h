@@ -34,6 +34,12 @@
 #import <Foundation/Foundation.h>
 
 
+#ifdef __cplusplus
+#define vMAT_API extern "C"
+#else
+#define vMAT_API extern
+#endif
+
 @class vMAT_Array;
 
 extern NSString * const vMAT_ErrorDomain;
@@ -83,7 +89,7 @@ vMAT_Size_prod(vMAT_Size size)
     return (long)size[0] * (long)size[1] * d2 * d3;
 }
 
-extern NSString *
+vMAT_API NSString *
 vMAT_StringFromSize(vMAT_Size size);
 
 typedef enum {
@@ -105,10 +111,10 @@ typedef enum {
     miRANGE_LIMIT
 } vMAT_MIType;
 
-extern NSString *
+vMAT_API NSString *
 vMAT_MITypeDescription(vMAT_MIType type);
 
-extern size_t
+vMAT_API size_t
 vMAT_MITypeSizeof(vMAT_MIType type);
 
 typedef enum {
@@ -130,5 +136,5 @@ typedef enum {
     mxRANGE_LIMIT
 } vMAT_MXClass;
 
-extern NSString *
-vMAT_MXClassDescription(vMAT_MXClass class);
+vMAT_API NSString *
+vMAT_MXClassDescription(vMAT_MXClass mxClass);

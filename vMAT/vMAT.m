@@ -281,6 +281,14 @@ vMAT_pdist2(const float sampleA[],
 }
 
 vMAT_Array *
+vMAT_double(vMAT_Array * matrix)
+{
+    vMAT_Array * array = [vMAT_Array arrayWithSize:matrix.size type:miDOUBLE];
+    [array copyFrom:matrix];
+    return array;
+}
+
+vMAT_Array *
 vMAT_single(vMAT_Array * matrix)
 {
     vMAT_Array * array = [vMAT_Array arrayWithSize:matrix.size type:miSINGLE];
@@ -383,7 +391,7 @@ vMAT_MITypeSizeof(vMAT_MIType type)
 }
 
 NSString *
-vMAT_MXClassDescription(vMAT_MXClass class)
+vMAT_MXClassDescription(vMAT_MXClass mxClass)
 {
     static NSString * const desc[] = {
         nil,
@@ -403,6 +411,6 @@ vMAT_MXClassDescription(vMAT_MXClass class)
         @"[14]mxINT64_CLASS",
         @"[15]mxUINT64_CLASS",
     };
-    if (class > 0 && class < 16) return desc[class];
+    if (mxClass > 0 && mxClass < 16) return desc[mxClass];
     else return nil;
 }

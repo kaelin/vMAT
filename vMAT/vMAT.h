@@ -59,7 +59,7 @@
  This function returns an identity matrix of the specified size.
  @param mxn Size specification (2D); if only the first dimension is provided, defaults to a square matrix.
  */
-extern vMAT_Array *
+vMAT_API vMAT_Array *
 vMAT_eye(vMAT_Size mxn);
 
 /*!
@@ -83,7 +83,7 @@ vMAT_eye(vMAT_Size mxn);
  @param options A dictionary of options (not presently implemented; must be nil).
  @param asyncOutputBlock A block to be called asynchronously once the data is available.
  */
-extern void
+vMAT_API void
 vMAT_fread(NSInputStream * stream,
            vMAT_Array * matrix,
            NSDictionary * options,
@@ -108,7 +108,7 @@ vMAT_fread(NSInputStream * stream,
  @param options A dictionary of options (not presently implemented; must be nil).
  @param asyncCompletionBlock A block to be called asynchronously once the data is written.
  */
-extern void
+vMAT_API void
 vMAT_fwrite(NSOutputStream * stream,
             vMAT_Array * matrix,
             NSDictionary * options,
@@ -182,7 +182,10 @@ vMAT_pdist2(const float sampleA[],
                                 vDSP_Length outputLength,
                                 bool * keepOutput));
 
-extern vMAT_Array *
+vMAT_API vMAT_Array *
+vMAT_double(vMAT_Array * matrix);
+
+vMAT_API vMAT_Array *
 vMAT_single(vMAT_Array * matrix);
 
 #endif // vMAT_H
