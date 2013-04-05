@@ -52,6 +52,7 @@
 @property (readonly) vMAT_MXClass mxClass;
 @property (readonly) vMAT_Size size;
 @property (readonly, retain) NSString * name;
+@property (readonly) vMAT_Array * matrix;
 
 + (vMAT_MATv5Variable *)variableWithMXClass:(vMAT_MXClass)mxClass
                                  arrayFlags:(uint32_t)flags
@@ -61,6 +62,12 @@
 - (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation;
 
 - (vMAT_MATv5NumericArray *)toNumericArray;
+
+@end
+
+@interface NSDictionary (Workspace)
+
+- (vMAT_MATv5Variable *)variable:(NSString *)name;
 
 @end
 

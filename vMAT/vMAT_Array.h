@@ -61,3 +61,11 @@
 - (void)copyFrom:(vMAT_Array *)matrix;
 
 @end
+
+@interface vMAT_Array (Transpose)
+
++ (SEL)mtransCmdForType:(vMAT_MIType)type;
+
+- (vMAT_Array *)mtrans;
+
+@end

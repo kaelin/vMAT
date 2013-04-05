@@ -153,6 +153,9 @@ vMAT_load(NSInputStream * stream,
           void (^asyncCompletionBlock)(NSDictionary * workspace,
                                        NSError * error));
 
+vMAT_API vMAT_Array *
+vMAT_mtrans(vMAT_Array * matrix);
+
 /*!
  @brief Compute the pairwise distances between the single-precision floating point samples in a matrix.
  @discussion

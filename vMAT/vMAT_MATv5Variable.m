@@ -71,6 +71,11 @@
     [self doesNotRecognizeSelector:_cmd]; // Subclass responsibility
 }
 
+- (vMAT_Array *)matrix;
+{
+    return nil;                           // Subclass responsibility
+}
+
 - (vMAT_MATv5NumericArray *)toNumericArray;
 {
     return nil;                           // Subclass responsibility
@@ -78,7 +83,21 @@
 
 @end
 
+@implementation NSDictionary (Workspace)
+
+- (vMAT_MATv5Variable *)variable:(NSString *)name;
+{
+    return [self objectForKey:name];      // Gets type right for ARC
+}
+
+@end
+
 @implementation vMAT_MATv5NumericArray
+
+- (vMAT_Array *)matrix;
+{
+    return _array;
+}
 
 - (vMAT_MATv5NumericArray *)toNumericArray;
 {

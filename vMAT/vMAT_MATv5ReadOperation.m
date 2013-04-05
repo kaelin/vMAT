@@ -315,7 +315,7 @@ static void (^ unexpectedEOS)() = ^ {
     long actualLength = (type != miCOMPRESSED
                          ? ((unsigned long)((length) + (8) - 1)) & ~((unsigned long)((8) - 1))
                          : length);
-    if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
+    // if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
     outputBlock();
     if (actualLength > length) {
         [self skipPadBytes:actualLength - length];
@@ -355,7 +355,7 @@ static void (^ unexpectedEOS)() = ^ {
     long actualLength = (type != miCOMPRESSED
                          ? ((unsigned long)((length) + (8) - 1)) & ~((unsigned long)((8) - 1))
                          : length);
-    if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
+    // if (actualLength != length) NSLog(@"%d rounded up to %ld", length, actualLength);
     _elementRemainingLength = length;
     [_elementHandler operation:self
                  handleElement:type

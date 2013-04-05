@@ -313,6 +313,12 @@ vMAT_load(NSInputStream * stream,
 }
 
 vMAT_Array *
+vMAT_mtrans(vMAT_Array * matrix)
+{
+    return [matrix mtrans];
+}
+
+vMAT_Array *
 vMAT_pdist(vMAT_Array * sample)
 {
     vMAT_Array * matD = vMAT_pdist2(sample, sample);

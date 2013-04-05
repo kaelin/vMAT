@@ -13,7 +13,7 @@
 
 @implementation vMAT_MATv5NumericArray (LoadFromOperation)
 
-- (SEL)loadCmdForType:(vMAT_MIType)type
++ (SEL)loadCmdForType:(vMAT_MIType)type
               mxClass:(vMAT_MXClass)mxClass;
 {
     const int m = mxRANGE_LIMIT;
@@ -50,7 +50,7 @@
                         length:&length
                    outputBlock:
      ^ {
-         SEL loadCmd = [self loadCmdForType:type mxClass:_mxClass];
+         SEL loadCmd = [vMAT_MATv5NumericArray loadCmdForType:type mxClass:_mxClass];
          NSLog(@"Loading %@", self);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"

@@ -22,8 +22,17 @@
     NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block vMAT_Array * matX = nil;
+    __block vMAT_Array * matY = nil;
+    __block vMAT_Array * matZ = nil;
     vMAT_load(stream, @[@"X", @"Y", @"Zv"], ^(NSDictionary * workspace, NSError * error) {
-        NSLog(@"%@", workspace);
+        // NSLog(@"%@", workspace);
+        matX = vMAT_mtrans([workspace variable:@"X"].matrix); // Transposed for vMAT_pdist
+        matY = [workspace variable:@"Y"].matrix;
+        matZ = [workspace variable:@"Zv"].matrix;
+        STAssertNotNil(matX, nil);
+        STAssertNotNil(matY, nil);
+        STAssertNotNil(matZ, nil);
         [stream close];
         dispatch_semaphore_signal(semaphore);
     });
@@ -31,12 +40,6 @@
                                                                      1 * NSEC_PER_SEC));
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
     
-    vMAT_Array * matY = nil;
-    const float DX3[] = {
-        0.00000,   0.35890,   0.37169,
-        0.35890,   0.00000,   0.57118,
-        0.37169,   0.57118,   0.00000,
-    };
 #if 0
     matD = [vMAT_Array arrayWithSize:vMAT_MakeSize(3, 3) type:miSINGLE data:<#(NSData *)#>]
     vMAT_linkage(DX3, 3 * 3, ^void(float *outputMatrix,

@@ -154,6 +154,10 @@ namespace vMAT {
     NSString *
     genericDescription(vMAT_MXClass mxClass);
     
+    template <typename A>
+    SEL
+    genericCmd(NSString * format, A a);
+    
     template <typename A, typename B>
     SEL
     genericCmd(NSString * format, A a, B b);
