@@ -117,20 +117,14 @@ vMAT_fwrite(NSOutputStream * stream,
                                          NSError * error));
 
 /*!
- @brief Compute a hierarchical cluster tree from a float distance matrix.
+ @brief Compute a hierarchical cluster tree from the single-precision floating point vector representation of a distance matrix.
  @discussion
  TBD.
- @param pdistv A (square, for now) distance matrix.
- @param pdistvLength The number of elements in <code>pdistv</code>.
- @param outputBlock A block for receiving the output hierarchical cluster tree matrix.
- 
+ @param vecY The single-precision floating point vector representation of a distance matrix.
+ @result TBD.
  */
-extern void
-vMAT_linkage(const float pdistv[],
-             vDSP_Length pdistvLength,
-             void (^outputBlock)(float output[],
-                                 vDSP_Length outputLength,
-                                 bool * keepOutput));
+vMAT_API vMAT_Array *
+vMAT_linkage(vMAT_Array * vecY);
 
 /*!
  @brief Load variables asynchronously from a MAT (v5) file into a workspace dictionary.
@@ -153,7 +147,7 @@ vMAT_linkage(const float pdistv[],
  @param variableNames An <code>NSArray</code> containing a list of the workspace variable names to be loaded.
  @param asyncCompletionBlock A block to be called asynchronously when the read operation completes.
  */
-extern void
+vMAT_API void
 vMAT_load(NSInputStream * stream,
           NSArray * variableNames,
           void (^asyncCompletionBlock)(NSDictionary * workspace,
