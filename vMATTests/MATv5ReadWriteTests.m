@@ -114,6 +114,26 @@
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
 }
 
+- (void)test_vMAT_load_multiple_variables;
+{
+    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"cluster-normaldata-10x3-13"
+                                                           withExtension:@"mat"];
+    NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
+    [stream open];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    vMAT_load(stream, @[@"X", @"Y", @"Zv"], ^(NSDictionary * workspace, NSError * error) {
+        // NSLog(@"%@", workspace);
+        STAssertNotNil([workspace objectForKey:@"X"], nil);
+        STAssertNotNil([workspace objectForKey:@"Y"], nil);
+        STAssertNotNil([workspace objectForKey:@"Zv"], nil);
+        [stream close];
+        dispatch_semaphore_signal(semaphore);
+    });
+    long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
+                                                                     1 * NSEC_PER_SEC));
+    STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
 - (void)test_vMAT_load_nil_stream;
 {
     STAssertThrowsSpecificNamed(vMAT_load(nil, nil, ^(NSDictionary *workspace, NSError *error) {

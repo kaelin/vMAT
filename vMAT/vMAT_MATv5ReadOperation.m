@@ -387,11 +387,13 @@ static void (^ unexpectedEOS)() = ^ {
                                                        name:name];
         [_delegate operation:self
               handleVariable:_variable];
+        _variable = nil;
     }
-    
-    NSMutableData * data = [NSMutableData dataWithCapacity:_elementRemainingLength];
-    data.length = _elementRemainingLength;
-    [self readComplete:[data mutableBytes] length:_elementRemainingLength];
+    if (_elementRemainingLength > 0) {
+        NSMutableData * data = [NSMutableData dataWithCapacity:_elementRemainingLength];
+        data.length = _elementRemainingLength;
+        [self readComplete:[data mutableBytes] length:_elementRemainingLength];
+    }
 }
 
 - (void)main;

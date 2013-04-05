@@ -58,7 +58,7 @@
 - (NSString *)description;
 {
     NSString * prefix = [super description];
-    NSString * string = [NSString stringWithFormat:@"%.*s; mxClass: %@, size: %@, name: \"%@\">",
+    NSString * string = [NSString stringWithFormat:@"%.*s; mxClass: %@, size: %@, name: '%@'>",
                          (int)[prefix length] - 1, [prefix UTF8String],
                          vMAT_MXClassDescription(_mxClass),
                          vMAT_StringFromSize(_size),
