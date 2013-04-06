@@ -6,7 +6,9 @@
 //  Copyright (c) 2013 Kaelin Colclasure. All rights reserved.
 //
 
-#import "vMAT_Types.h"
+#import "vMAT_Private.h"
+
+#import <string>
 
 
 namespace vMAT {
@@ -72,4 +74,164 @@ namespace vMAT {
     int64_t  INT64;
     uint64_t UINT64;
     
+}
+
+void
+vMAT_byteswap16(void * vector,
+                vDSP_Length vectorLength)
+{
+    uint16_t * vswap = (uint16_t *)vector;
+    for (long i = 0;
+         i < vectorLength;
+         i++) {
+        vswap[i] = OSSwapConstInt16(vswap[i]);
+    }
+}
+
+void
+vMAT_byteswap32(void * vector,
+                vDSP_Length vectorLength)
+{
+    uint32_t * vswap = (uint32_t *)vector;
+    for (long i = 0;
+         i < vectorLength;
+         i++) {
+        vswap[i] = OSSwapConstInt32(vswap[i]);
+    }
+}
+
+void
+vMAT_byteswap64(void * vector,
+                vDSP_Length vectorLength)
+{
+    uint64_t * vswap = (uint64_t *)vector;
+    for (long i = 0;
+         i < vectorLength;
+         i++) {
+        vswap[i] = OSSwapConstInt64(vswap[i]);
+    }
+}
+
+NSString *
+vMAT_StringFromSize(vMAT_Size size)
+{
+    NSMutableString * string = [NSMutableString stringWithString:@"["];
+    std::string sep = "";
+    for (int i = 0;
+         i < vMAT_MAXDIMS;
+         i++) {
+        if (size[i] > 0) [string appendFormat:@"%s%d", sep.c_str(), size[i]];
+        else break;
+        sep = " ";
+    }
+    [string appendString:@"]"];
+    return string;
+}
+
+NSString * const vMAT_ErrorDomain = @"com.ohmware.vMAT";
+
+NSString *
+vMAT_MITypeDescription(vMAT_MIType type)
+{
+    static NSString * const desc[miRANGE_LIMIT] = {
+        nil,
+        @"[1]miINT8",
+        @"[2]miUINT8",
+        @"[3]miINT16",
+        @"[4]miUINT16",
+        @"[5]miINT32",
+        @"[6]miUINT32",
+        @"[7]miSINGLE",
+        nil,
+        @"[9]miDOUBLE",
+        nil,
+        nil,
+        @"[12]miINT64",
+        @"[13]miUINT64",
+        @"[14]miMATRIX",
+        @"[15]miCOMPRESSED",
+        @"[16]miUTF8",
+        @"[17]miUTF16",
+        @"[18]miUTF32",
+    };
+    if (type > 0 && type < miRANGE_LIMIT) return desc[type];
+    else return nil;
+}
+
+size_t
+vMAT_MITypeSizeof(vMAT_MIType type)
+{
+    static const size_t size[miRANGE_LIMIT] = {
+        0,
+        sizeof(int8_t),
+        sizeof(uint8_t),
+        sizeof(int16_t),
+        sizeof(uint16_t),
+        sizeof(int32_t),
+        sizeof(uint32_t),
+        sizeof(float),
+        0,
+        sizeof(double),
+        0,
+        0,
+        sizeof(int64_t),
+        sizeof(uint64_t),
+        0,
+        0,
+        sizeof(uint8_t),
+        sizeof(uint16_t),
+        sizeof(uint32_t),
+    };
+    if (type > 0 && type < miRANGE_LIMIT) return size[type];
+    else return 0;
+}
+
+NSString *
+vMAT_MXClassDescription(vMAT_MXClass mxClass)
+{
+    static NSString * const desc[mxRANGE_LIMIT] = {
+        nil,
+        @"[1]mxCELL_CLASS",
+        @"[2]mxSTRUCT_CLASS",
+        @"[3]mxOBJECT_CLASS",
+        @"[4]mxCHAR_CLASS",
+        @"[5]mxSPARSE_CLASS",
+        @"[6]mxDOUBLE_CLASS",
+        @"[7]mxSINGLE_CLASS",
+        @"[8]mxINT8_CLASS",
+        @"[9]mxUINT8_CLASS",
+        @"[10]mxINT16_CLASS",
+        @"[11]mxUINT16_CLASS",
+        @"[12]mxINT32_CLASS",
+        @"[13]mxUINT32_CLASS",
+        @"[14]mxINT64_CLASS",
+        @"[15]mxUINT64_CLASS",
+    };
+    if (mxClass > 0 && mxClass < 16) return desc[mxClass];
+    else return nil;
+}
+
+vMAT_MIType
+vMAT_MXClassType(vMAT_MXClass mxClass)
+{
+    static vMAT_MIType type[mxRANGE_LIMIT] = {
+        miNONE,
+        miNONE,
+        miNONE,
+        miNONE,
+        miUTF8,
+        miNONE,
+        miDOUBLE,
+        miSINGLE,
+        miINT8,
+        miUINT8,
+        miINT16,
+        miUINT16,
+        miINT32,
+        miUINT32,
+        miINT64,
+        miUINT64,
+    };
+    if (mxClass > 0 && mxClass < 16) return type[mxClass];
+    else return miNONE;
 }

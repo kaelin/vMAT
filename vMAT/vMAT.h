@@ -183,6 +183,10 @@ vMAT_pdist2(vMAT_Array * sampleA,
             vMAT_Array * sampleB);
 
 vMAT_API vMAT_Array *
+vMAT_zeros(vMAT_Size size,
+           NSDictionary * options);
+
+vMAT_API vMAT_Array *
 vMAT_double(vMAT_Array * matrix);
 
 vMAT_API vMAT_Array *
