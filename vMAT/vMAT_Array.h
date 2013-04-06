@@ -75,6 +75,8 @@
 
 @interface vMAT_Array (UnaryOps)
 
+- (NSString *)dump;
+
 - (vMAT_Array *)mtrans;
 
 @end
