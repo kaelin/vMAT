@@ -1,8 +1,8 @@
 //
-//  vMAT_Array.h
+//  vMAT_PrivateArray.h
 //  vMAT
 //
-//  Created by Kaelin Colclasure on 4/3/13.
+//  Created by Kaelin Colclasure on 4/6/13.
 //  Copyright (c) 2013 Kaelin Colclasure. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -30,51 +30,45 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "vMAT_Types.h"
+#import "vMAT_Array.h"
 
 
-@interface vMAT_Array : NSObject
-
-@property (readonly, retain) NSMutableData * data;
-@property (readonly) vMAT_Size size;
-@property (readonly) vMAT_MIType type;
-
-+ (vMAT_Array *)arrayWithSize:(vMAT_Size)size
-                         type:(vMAT_MIType)type;
-
-+ (vMAT_Array *)arrayWithSize:(vMAT_Size)size
-                         type:(vMAT_MIType)type
-                         data:(NSData *)data;
-
-- (id)initWithSize:(vMAT_Size)size
-              type:(vMAT_MIType)type
-              data:(NSMutableData *)data;
-
-- (id)initWithSize:(vMAT_Size)size
-              type:(vMAT_MIType)type;
-
-- (void)reshape:(vMAT_Size)size;
+@interface vMAT_DoubleArray : vMAT_Array
 
 @end
 
-@interface vMAT_Array (BinaryOps)
-
-- (BOOL)isEqual:(vMAT_Array *)array
-        epsilon:(double)epsilon;
+@interface vMAT_SingleArray : vMAT_Array
 
 @end
 
-@interface vMAT_Array (CopyFrom)
-
-+ (SEL)copyCmdForType:(vMAT_MIType)typeA
-             fromType:(vMAT_MIType)typeB;
-
-- (void)copyFrom:(vMAT_Array *)matrix;
+@interface vMAT_Int8Array : vMAT_Array
 
 @end
 
-@interface vMAT_Array (UnaryOps)
+@interface vMAT_UInt8Array : vMAT_Array
 
-- (vMAT_Array *)mtrans;
+@end
+
+@interface vMAT_Int16Array : vMAT_Array
+
+@end
+
+@interface vMAT_UInt16Array : vMAT_Array
+
+@end
+
+@interface vMAT_Int32Array : vMAT_Array
+
+@end
+
+@interface vMAT_UInt32Array : vMAT_Array
+
+@end
+
+@interface vMAT_Int64Array : vMAT_Array
+
+@end
+
+@interface vMAT_UInt64Array : vMAT_Array
 
 @end

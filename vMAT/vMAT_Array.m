@@ -6,7 +6,9 @@
 //  Copyright (c) 2013 Kaelin Colclasure. All rights reserved.
 //
 
-#import "vMAT_Array.h"
+#import "vMAT_PrivateArray.h"
+
+#import <objc/objc-class.h>
 
 
 @implementation vMAT_Array
@@ -31,6 +33,20 @@
               type:(vMAT_MIType)type
               data:(NSMutableData *)data;
 {
+    static dispatch_once_t onceToken;
+    static Class privateClass[miRANGE_LIMIT] = { };
+    dispatch_once(&onceToken, ^ {
+        privateClass[miDOUBLE] = objc_getClass("vMAT_DoubleArray");
+        privateClass[miSINGLE] = objc_getClass("vMAT_SingleArray");
+        privateClass[miINT8] = objc_getClass("vMAT_Int8Array");
+        privateClass[miUINT8] = objc_getClass("vMAT_UInt8Array");
+        privateClass[miINT16] = objc_getClass("vMAT_Int16Array");
+        privateClass[miUINT16] = objc_getClass("vMAT_UInt16Array");
+        privateClass[miINT32] = objc_getClass("vMAT_Int32Array");
+        privateClass[miUINT32] = objc_getClass("vMAT_UInt32Array");
+        privateClass[miINT64] = objc_getClass("vMAT_Int64Array");
+        privateClass[miUINT64] = objc_getClass("vMAT_UInt64Array");
+    });
     long lenA = vMAT_Size_prod(size) * vMAT_MITypeSizeof(type);
     NSParameterAssert(lenA >= 0);
     NSParameterAssert(vMAT_MITypeSizeof(type) != 0);
@@ -40,6 +56,9 @@
         _data = data ? : [NSMutableData dataWithCapacity:lenA];
         if (_data.length == 0) _data.length = lenA;
         else NSParameterAssert(_data.length == lenA);
+        if (privateClass[type] != nil) {
+            object_setClass(self, privateClass[type]);
+        }
     }
     return self;
 }
@@ -50,10 +69,46 @@
     return [self initWithSize:size type:type data:nil];
 }
 
+- (NSString *)description;
+{
+    NSString * prefix = [super description];
+    NSString * miType = (object_getClass(self) == objc_getClass("vMAT_Array")
+                         ? [NSString stringWithFormat:@"type: %@, ", vMAT_MITypeDescription(_type)]
+                         : @"");
+    NSString * string = [NSString stringWithFormat:@"%.*s; %@size: %@>",
+                         (int)[prefix length] - 1, [prefix UTF8String],
+                         miType,
+                         vMAT_StringFromSize(_size)];
+    return string;
+}
+
+- (BOOL)isEqual:(id)object;
+{
+    if ([object isKindOfClass:[self class]]) {
+        vMAT_Array * array = object;
+        if (_type == array.type &&
+            _size[0] == array.size[0] &&
+            _size[1] == array.size[1] &&
+            _size[2] == array.size[2] &&
+            _size[3] == array.size[3]) {
+            return [_data isEqual:array.data];
+        }
+    }
+    return NO;
+}
+
 - (void)reshape:(vMAT_Size)size;
 {
     NSParameterAssert(vMAT_Size_prod(size) * vMAT_MITypeSizeof(_type) == _data.length);
     _size = size;
 }
+
+@end
+
+@implementation vMAT_DoubleArray
+
+@end
+
+@implementation vMAT_SingleArray
 
 @end

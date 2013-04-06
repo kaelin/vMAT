@@ -13,8 +13,6 @@
 
 @implementation ClusterTests
 
-// TODO: Make vMAT_linkage use pdist Y vector directly, with appropriate error checking...
-
 - (void)test_vMAT_linkage;
 {
     NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"cluster-normaldata-10x3-13"
@@ -23,23 +21,29 @@
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block vMAT_Array * matX = nil;
-    __block vMAT_Array * matY = nil;
-    __block vMAT_Array * matZ = nil;
+    __block vMAT_Array * matYv = nil;
+    __block vMAT_Array * matZv = nil;
     vMAT_load(stream, @[@"X", @"Y", @"Zv"], ^(NSDictionary * workspace, NSError * error) {
         // NSLog(@"%@", workspace);
-        matX = vMAT_mtrans([workspace variable:@"X"].matrix); // Transposed for vMAT_pdist
-        matY = [workspace variable:@"Y"].matrix;
-        matZ = [workspace variable:@"Zv"].matrix;
+        matX =  [workspace variable:@"X"].matrix.mtrans; // Transposed for vMAT_pdist
+        matYv = [workspace variable:@"Y"].matrix.mtrans; // Transposed for vMAT_pdist
+        matZv = [workspace variable:@"Zv"].matrix;
         STAssertNotNil(matX, nil);
-        STAssertNotNil(matY, nil);
-        STAssertNotNil(matZ, nil);
+        STAssertNotNil(matYv, nil);
+        STAssertNotNil(matZv, nil);
         [stream close];
         dispatch_semaphore_signal(semaphore);
     });
     long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
                                                                      1 * NSEC_PER_SEC));
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
-    
+    NSLog(@"X  = %@", matX);
+    NSLog(@"Yv = %@", matYv);
+    NSLog(@"Zv = %@", matZv);
+    vMAT_Array * matY = vMAT_pdist(matX);
+    NSLog(@"Y  = %@", matY);
+    STAssertTrue([matY isEqual:matYv epsilon:0.0001], @"vMAT_pdist results don't match expected output");
+    // STAssertEqualObjects(matY, matYv, @"vMAT_pdist results don't match expected output");
 #if 0
     matD = [vMAT_Array arrayWithSize:vMAT_MakeSize(3, 3) type:miSINGLE data:<#(NSData *)#>]
     vMAT_linkage(DX3, 3 * 3, ^void(float *outputMatrix,
