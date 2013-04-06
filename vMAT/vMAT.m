@@ -15,7 +15,7 @@ vMAT_Array *
 vMAT_eye(vMAT_Size mxn)
 {
     if (mxn[1] == 0) mxn[1] = mxn[0];
-    vMAT_Array * array = [vMAT_Array arrayWithSize:mxn type:miDOUBLE];
+    vMAT_Array * array = vMAT_zeros(mxn, nil);
     double * A = array.data.mutableBytes;
     long diag = MIN(mxn[0], mxn[1]);
     for (int n = 0;
@@ -79,27 +79,58 @@ vMAT_mtrans(vMAT_Array * matrix)
     return [matrix mtrans];
 }
 
+static vMAT_MIType
+arrayTypeOptions(NSArray * options)
+{
+    vMAT_MIType type = miDOUBLE;
+    if ([options count] != 0) {
+        NSString * spec = [options objectAtIndex:0];
+        NSCParameterAssert([spec respondsToSelector:@selector(caseInsensitiveCompare:)]);
+        NSComparisonResult cmp = [spec caseInsensitiveCompare:@"like:"];
+        if (cmp == 0) {
+            NSCParameterAssert([options count] == 2);
+            vMAT_Array * like = [options objectAtIndex:1];
+            NSCParameterAssert([like respondsToSelector:@selector(type)]);
+            type = like.type;
+        }
+        else type = vMAT_MITypeNamed(spec);
+    }
+    return type;
+}
+
 vMAT_Array *
 vMAT_zeros(vMAT_Size size,
-           NSDictionary * options)
+           NSArray * options)
 {
-    
+    vMAT_MIType type = arrayTypeOptions(options);
+    vMAT_Array * array = [vMAT_Array arrayWithSize:size type:type];
+    return array;
 }
 
 #pragma mark - Matrix Type Coercion
 
 vMAT_Array *
+vMAT_coerce(vMAT_Array * matrix,
+            NSArray * options)
+{
+    vMAT_Array * array = nil;
+    vMAT_MIType type = arrayTypeOptions(options);
+    if (matrix.type != type) {
+        array = [vMAT_Array arrayWithSize:matrix.size type:type];
+        [array copyFrom:matrix];
+    }
+    else array = matrix;
+    return array;
+}
+
+vMAT_Array *
 vMAT_double(vMAT_Array * matrix)
 {
-    vMAT_Array * array = [vMAT_Array arrayWithSize:matrix.size type:miDOUBLE];
-    [array copyFrom:matrix];
-    return array;
+    return vMAT_coerce(matrix, @[ @"double" ]);
 }
 
 vMAT_Array *
 vMAT_single(vMAT_Array * matrix)
 {
-    vMAT_Array * array = [vMAT_Array arrayWithSize:matrix.size type:miSINGLE];
-    [array copyFrom:matrix];
-    return array;
+    return vMAT_coerce(matrix, @[ @"single" ]);
 }

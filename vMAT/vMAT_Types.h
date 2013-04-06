@@ -125,6 +125,9 @@ typedef enum {
 vMAT_API NSString *
 vMAT_MITypeDescription(vMAT_MIType type);
 
+vMAT_API vMAT_MIType
+vMAT_MITypeNamed(NSString * name);
+
 vMAT_API size_t
 vMAT_MITypeSizeof(vMAT_MIType type);
 

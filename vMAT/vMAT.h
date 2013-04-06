@@ -184,7 +184,13 @@ vMAT_pdist2(vMAT_Array * sampleA,
 
 vMAT_API vMAT_Array *
 vMAT_zeros(vMAT_Size size,
-           NSDictionary * options);
+           NSArray * options);
+
+#pragma mark - Matrix Type Coercion
+
+vMAT_API vMAT_Array *
+vMAT_coerce(vMAT_Array * matrix,
+            NSArray * options);
 
 vMAT_API vMAT_Array *
 vMAT_double(vMAT_Array * matrix);

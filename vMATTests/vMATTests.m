@@ -424,6 +424,32 @@
     }
 }
 
+- (void)test_vMAT_zeros;
+{
+    vMAT_Array * matA = nil;
+    matA = vMAT_zeros(vMAT_MakeSize(0), @[ @"double" ]);
+    STAssertTrue(matA.type == miDOUBLE, @"Empty double?");
+    NSLog(@"%@", matA.dump);
+    matA = vMAT_zeros(vMAT_MakeSize(10), @[ @"single" ]);
+    STAssertTrue(matA.type == miSINGLE, @"Empty vector single?");
+    NSLog(@"%@", matA.dump);
+    matA = vMAT_zeros(vMAT_MakeSize(13), @[ @"like:", matA ]);
+    STAssertTrue(matA.type == miSINGLE, @"Empty vector single using like?");
+    NSLog(@"%@", matA.dump);
+}
+
+- (void)test_vMAT_zeros_bad_specs;
+{
+    STAssertThrowsSpecificNamed(vMAT_zeros(vMAT_MakeSize(10, 13, 1964), @[ @"doubgk" ]),
+                                NSException, NSInternalInconsistencyException, @"No bad names");
+    STAssertThrowsSpecificNamed(vMAT_zeros(vMAT_MakeSize(10, 13, 1964), @[ @"like:" ]),
+                                NSException, NSInternalInconsistencyException, @"Missing array");
+    STAssertThrowsSpecificNamed(vMAT_zeros(vMAT_MakeSize(10, 13, 1964), @[ @"like:", @"buttah" ]),
+                                NSException, NSInternalInconsistencyException, @"Bad array");
+    STAssertThrowsSpecificNamed(vMAT_zeros(vMAT_MakeSize(10, 13, 1964), @[ @"like", vMAT_zeros(vMAT_MakeSize(0), nil) ]),
+                                NSException, NSInternalInconsistencyException, @"Missing colon");
+}
+
 - (void)test_vMAT_Size_cmp;
 {
     vMAT_Size a, b;
