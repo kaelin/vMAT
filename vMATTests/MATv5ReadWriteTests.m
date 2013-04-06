@@ -50,7 +50,7 @@
 
 - (void)test_vMAT_load_float_55x57_v6_no_variables;
 {
-    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-float-55x57-v6"
+    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-single-55x57-v6"
                                                            withExtension:@"mat"];
     NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
     [stream open];
