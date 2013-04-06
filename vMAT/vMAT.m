@@ -75,13 +75,13 @@ vMAT_fwrite(NSOutputStream * stream,
 }
 
 vMAT_Array *
-vMAT_linkage(vMAT_Array * vecY)
+vMAT_linkage(vMAT_Array * matY)
 {
-    NSCParameterAssert(vecY.size[1] == 1);
-    NSCParameterAssert(vecY.type == miSINGLE);
-    // We will be updating the contents of Y so make our own mutable copy of vecY first.
-    vecY = [vMAT_Array arrayWithSize:vecY.size type:vecY.type data:vecY.data];
-    long lenY = vecY.size[0];
+    NSCParameterAssert(matY.size[1] == 1);
+    NSCParameterAssert(matY.type == miSINGLE);
+    // We will be updating the contents of Y so make our own mutable copy of matY first.
+    matY = [vMAT_Array arrayWithSize:matY.size type:matY.type data:matY.data];
+    long lenY = matY.size[0];
     long n = ceil(sqrt(2.0 * lenY));
     // We need a vector of indexes for keeping track of the cluster assignments (R).
     long * R = calloc(n, sizeof(*R));
@@ -92,7 +92,7 @@ vMAT_linkage(vMAT_Array * vecY)
     }
     // Now build the cluster tree in an 3x(n-1) matrix (Z).
     vMAT_Array * matZ = [vMAT_Array arrayWithSize:vMAT_MakeSize(3, (int32_t)n - 1) type:miSINGLE];
-    float * Y = vecY.data.mutableBytes;
+    float * Y = matY.data.mutableBytes;
     float * Z = matZ.data.mutableBytes;
     @autoreleasepool {
         NSMutableIndexSet * I1 = [NSMutableIndexSet indexSet];

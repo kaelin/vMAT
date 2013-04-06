@@ -37,7 +37,7 @@
  @header vMAT Library
  @encoding utf-8
  @copyright 2013 Kaelin Colclasure. All rights reserved.
- @updated 2013-04-01
+ @updated 2013-04-06
  @abstract The vMAT library implements a grab-bag of mathematical functions inspired by MATLAB™.
  @discussion
  This library is being developed as part of a facial recognition project. As such, it
@@ -116,15 +116,19 @@ vMAT_fwrite(NSOutputStream * stream,
             void (^asyncCompletionBlock)(vDSP_Length outputLength,
                                          NSError * error));
 
+vMAT_API vMAT_Array *
+vMAT_inconsistent(vMAT_Array * matZ,
+                  unsigned int depth);
+
 /*!
  @brief Compute a hierarchical cluster tree from the single-precision floating point vector representation of a distance matrix.
  @discussion
  TBD.
- @param vecY The single-precision floating point vector representation of a distance matrix.
+ @param matY The single-precision floating point vector representation of a distance matrix.
  @result TBD.
  */
 vMAT_API vMAT_Array *
-vMAT_linkage(vMAT_Array * vecY);
+vMAT_linkage(vMAT_Array * matY);
 
 /*!
  @brief Load variables asynchronously from a MAT (v5) file into a workspace dictionary.
