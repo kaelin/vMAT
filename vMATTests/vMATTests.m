@@ -424,6 +424,26 @@
     }
 }
 
+- (void)test_vMAT_Size_cmp;
+{
+    vMAT_Size a, b;
+    a = vMAT_MakeSize(0);
+    b = vMAT_MakeSize(1);
+    STAssertTrue(vMAT_Size_cmp(a, b) < 0, @"Sign of result points to smaller argument");
+    a = vMAT_MakeSize(2);
+    b = vMAT_MakeSize(2, 1);
+    STAssertTrue(vMAT_Size_cmp(a, b) < 0, @"Sizes are not interpolated");
+    a = vMAT_MakeSize(3, 1);
+    b = vMAT_MakeSize(1, 3);
+    STAssertTrue(vMAT_Size_cmp(a, b) < 0, @"Higher dimensions are more significant");
+    a = vMAT_MakeSize(3, 9);
+    b = vMAT_MakeSize(3, 9);
+    STAssertTrue(vMAT_Size_cmp(a, b) == 0, @"Equal sizes return zero");
+    a = vMAT_MakeSize(3, 3);
+    b = vMAT_MakeSize(3, 2);
+    STAssertTrue(vMAT_Size_cmp(a, b) > 0, @"All signs are go");
+}
+
 - (void)test_vMAT_Size_dot;
 {
     // Let's try some index transposition computations for a 4x3x2 array.

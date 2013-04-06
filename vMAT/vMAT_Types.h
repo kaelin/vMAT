@@ -73,6 +73,16 @@ typedef __v4si vMAT_Size;
  */
 #define vMAT_MakeSize(dims...) ((vMAT_Size){ dims })
 
+static inline int
+vMAT_Size_cmp(vMAT_Size a,
+              vMAT_Size b)
+{
+    if      (a[3] != b[3]) return a[3] - b[3];
+    else if (a[2] != b[2]) return a[2] - b[2];
+    else if (a[1] != b[1]) return a[1] - b[1];
+    else                   return a[0] - b[0];
+}
+
 static inline long
 vMAT_Size_dot(vMAT_Size a,
               vMAT_Size b)

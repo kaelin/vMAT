@@ -87,10 +87,7 @@
     if ([object isKindOfClass:[self class]]) {
         vMAT_Array * array = object;
         if (_type == array.type &&
-            _size[0] == array.size[0] &&
-            _size[1] == array.size[1] &&
-            _size[2] == array.size[2] &&
-            _size[3] == array.size[3]) {
+            vMAT_Size_cmp(_size, array.size) == 0) {
             return [_data isEqual:array.data];
         }
     }

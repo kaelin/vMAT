@@ -39,10 +39,7 @@ namespace {
     BOOL
     isEqualEpsilon(T * A, vMAT_Size sizeA, T * B, vMAT_Size sizeB, double epsilon)
     {
-        if (sizeA[0] == sizeB[0] &&
-            sizeA[1] == sizeB[1] &&
-            sizeA[2] == sizeB[2] &&
-            sizeA[3] == sizeB[3]) {
+        if (vMAT_Size_cmp(sizeA, sizeB) == 0) {
             vector<T> vecA(A, A + vMAT_Size_prod(sizeA));
             vector<T> vecB(B, B + vMAT_Size_prod(sizeB));
             return equal(vecA.begin(), vecA.end(), vecB.begin(), equal_w_epsilon<T>(epsilon));
