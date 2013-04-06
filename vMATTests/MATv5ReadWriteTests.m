@@ -27,7 +27,7 @@
     [super tearDown];
 }
 
-- (void)test_vMAT_load_float_55x57_v6;
+- (void)test_vMAT_load_single_55x57_v6;
 {
     NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-single-55x57-v6"
                                                            withExtension:@"mat"];
@@ -36,10 +36,11 @@
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     vMAT_load(stream, @[@"I"], ^(NSDictionary *workspace, NSError *error) {
         vMAT_MATv5NumericArray * varM = [workspace objectForKey:@"I"];
-        float * matM = varM.array.data.mutableBytes;
+        vMAT_Array * matM = varM.matrix;
         STAssertNotNil(varM, nil);
         STAssertNil(error, nil);
         STAssertEquals(varM.size, vMAT_MakeSize(55, 57), nil);
+        STAssertEquals(matM.size, varM.size, nil);
         [stream close];
         dispatch_semaphore_signal(semaphore);
     });
@@ -48,7 +49,7 @@
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
 }
 
-- (void)test_vMAT_load_float_55x57_v6_no_variables;
+- (void)test_vMAT_load_single_55x57_v6_no_variables;
 {
     NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-single-55x57-v6"
                                                            withExtension:@"mat"];
