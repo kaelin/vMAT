@@ -55,6 +55,24 @@ enum {
     vMAT_ErrorCodeUnsupportedMATv5Element = 304,
 };
 
+typedef struct vMAT_Index {
+    __v4si d;
+#ifdef __cplusplus
+    vMAT_Index(__v4si d) : d(d) { }
+    vMAT_Index(int d0 = 0, int d1 = 0, int d2 = 0, int d3 = 0) : d((__v4si){ d0, d1, d2, d3 }) { }
+#endif
+} vMAT_Index;
+
+#define vMAT_MakeIndex(dims...) ((vMAT_Index){ dims })
+
+static inline long
+vMAT_Index_dot(vMAT_Index a,
+               vMAT_Index b)
+{
+    __v4si c = a.d * b.d;
+    return (long)c[0] + c[1] + c[2] + c[3];
+}
+
 /*!
  @brief Type for array size (dimensions).
  */
@@ -159,7 +177,22 @@ vMAT_MXClassType(vMAT_MXClass mxClass);
 
 #ifdef __cplusplus
 
+#import <vector>
+
 namespace vMAT {
+    
+    template <typename T>
+    struct Matrix {
+        vMAT_Array * matM;
+        T * M;
+        vDSP_Length lenM;
+        vMAT_Size multiM;
+        
+        Matrix(vMAT_Array * matrix);
+        
+        T & operator[](vDSP_Length idx); // M[i]
+        T & operator[](vMAT_Index idxs); // M[{m,n,...}]
+    };
     
     NSString *
     genericDescription(vMAT_MIType type);

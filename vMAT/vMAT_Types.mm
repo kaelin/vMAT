@@ -13,6 +13,31 @@
 
 namespace vMAT {
     
+    template <typename T>
+    Matrix<T>::Matrix(vMAT_Array * matrix) : matM(matrix)
+    {
+        M = static_cast<T *>(matrix.data.mutableBytes);
+        lenM = matrix.data.length / sizeof(*M);
+        multiM = vMAT_MakeSize(1,
+                               matrix.size[0],
+                               matrix.size[0] * matrix.size[1],
+                               matrix.size[0] * matrix.size[1] * matrix.size[2]);
+    }
+    
+    template <typename T>
+    T & Matrix<T>::operator[](vDSP_Length idx)
+    {
+        return M[idx];
+    }
+    
+    template <typename T>
+    T & Matrix<T>::operator[](vMAT_Index idxs)
+    {
+        long idxM = vMAT_Index_dot(multiM, idxs);
+        NSCParameterAssert(idxM >= 0 && idxM < lenM);
+        return M[idxM];
+    }
+    
     NSString *
     genericDescription(vMAT_MIType type)
     {
@@ -59,6 +84,8 @@ namespace vMAT {
     }
     
     // Explicit template expansions. (I suppose it beats the old template code bloat.)
+    template struct Matrix<double>;
+    template struct Matrix<float>;
     template SEL genericCmd(NSString * format, vMAT_MIType type);
     template SEL genericCmd(NSString * format, vMAT_MIType typeA, vMAT_MIType typeB);
     template SEL genericCmd(NSString * format, vMAT_MIType type, vMAT_MXClass mxClass);

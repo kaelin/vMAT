@@ -473,8 +473,8 @@
 - (void)test_vMAT_Size_dot;
 {
     // Let's try some index transposition computations for a 4x3x2 array.
-    vMAT_Size ixmulC = { 1, 1 * 4, 1 * 4 * 3, 0 };
-    vMAT_Size ixmulM = { 1 * 3, 1, 1 * 4 * 3, 0 };
+    vMAT_Index ixmulC = vMAT_MakeIndex(1, 1 * 4, 1 * 4 * 3, 0);
+    vMAT_Index ixmulM = vMAT_MakeIndex(1 * 3, 1, 1 * 4 * 3, 0);
     int C[4 * 3 * 2] = { -1 };
     int M[3 * 4 * 2] = { -1 };
     int count = 0;
@@ -482,9 +482,9 @@
         for (int o = 0; o < 2; o++) {
             for (int n = 0; n < 3; n++) {
                 for (int m = 0; m < 4; m++) {
-                    __v4si ixvecD = { m, n, o, p };
-                    long idxC = vMAT_Size_dot(ixmulC, ixvecD);
-                    long idxM = vMAT_Size_dot(ixmulM, ixvecD);
+                    vMAT_Index ixvecD = { m, n, o, p };
+                    long idxC = vMAT_Index_dot(ixmulC, ixvecD);
+                    long idxM = vMAT_Index_dot(ixmulM, ixvecD);
                     C[idxC] = count;
                     M[idxM] = count;
                     ++count;
