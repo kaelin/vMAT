@@ -116,6 +116,7 @@
 		0568E80B1700124400AE99F4 /* vMATTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = vMATTests.m; sourceTree = "<group>"; };
 		0568E8151700153600AE99F4 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		0568E819170015A900AE99F4 /* BlocksKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BlocksKit.framework; path = "../../../kaelin/Library/Developer/Xcode/DerivedData/OMWorkspace-bzkzcamyqoztgyalubrmemkzmjvk/Build/Products/Debug/BlocksKit.framework"; sourceTree = "<group>"; };
+		057E61C217136C6D00054302 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		058C5E62170610FD00A65E82 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		058C5E631706891B00A65E82 /* MATv5ReadWriteTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MATv5ReadWriteTests.h; sourceTree = "<group>"; };
 		058C5E641706891B00A65E82 /* MATv5ReadWriteTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MATv5ReadWriteTests.m; sourceTree = "<group>"; };
@@ -195,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				058C5E62170610FD00A65E82 /* README.md */,
+				057E61C217136C6D00054302 /* LICENSE */,
 				05CA201517133DA50067AE9E /* vMAT.podspec */,
 				0568E7F21700124400AE99F4 /* vMAT */,
 				0568E8041700124400AE99F4 /* vMATTests */,

@@ -1,19 +1,7 @@
-#
-# Be sure to run `pod spec lint vMAT.podspec' to ensure this is a
-# valid spec and remove all comments before submitting the spec.
-#
-# To learn more about the attributes see http://docs.cocoapods.org/specification.html
-#
 Pod::Spec.new do |s|
   s.name         = "vMAT"
   s.version      = "0.0.1"
   s.summary      = "The vMAT library implements a grab-bag of mathematical functions inspired by MATLAB."
-  # s.description  = <<-DESC
-  #                   An optional longer description of vMAT
-  #
-  #                   * Markdown format.
-  #                   * Don't worry about the indent, we strip it!
-  #                  DESC
   s.homepage     = "http://kaelin.github.io/vMAT/"
   # s.screenshots  = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
 
@@ -93,7 +81,7 @@ Pod::Spec.new do |s|
   # If you need to specify any other build settings, add them to the
   # xcconfig hash.
   #
-  # s.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
+  s.xcconfig = { 'CLANG_CXX_LANGUAGE_STANDARD' => 'gnu++11' }
 
   # Finally, specify any Pods that this Pod depends on.
   #
