@@ -55,7 +55,7 @@ namespace {
         epsilon:(double)epsilon;
 {
     if (self.type != array.type) return NO;
-    else return isEqualEpsilon((float *)self.data.bytes, self.size, (float *)array.data.bytes, array.size, epsilon);
+    else return isEqualEpsilon((double *)self.data.bytes, self.size, (double *)array.data.bytes, array.size, epsilon);
 }
 
 @end
