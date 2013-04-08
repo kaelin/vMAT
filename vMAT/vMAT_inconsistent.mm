@@ -21,12 +21,9 @@ namespace {
     traceTree(Matrix<double> Z, double s[3], int k, unsigned int depth)
     {
         int m = Z.size(1) + 1;
-        // See <http://stackoverflow.com/questions/15868193/why-does-using-an-stl-stdvector-as-a-block-variable-cause-memory-corruption>.
-        // __block vector<int> klist(m, 0);
-        int klist[m]; int * klistPtr = klist;
+        __block vector<int> klist(m, 0);
         klist[0] = k;
-        // __block vector<int> dlist(1, depth);
-        int dlist[depth]; int * dlistPtr = dlist;
+        __block vector<int> dlist(depth, 0);
         dlist[0] = depth;
         __block int topk = 0;
         int currk = 0;
@@ -34,8 +31,8 @@ namespace {
         void (^ subtree)(int i) = ^(int i) {
             if (i >= m) {                // If it's not a leaf...
                 topk += 1;
-                klistPtr[topk] = i - m;
-                dlistPtr[topk] = depth - 1;
+                klist[topk] = i - m;
+                dlist[topk] = depth - 1;
             }
         };
         
