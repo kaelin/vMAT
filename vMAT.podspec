@@ -77,8 +77,8 @@ Pod::Spec.new do |s|
   # Specify a list of frameworks that the application needs to link
   # against for this Pod to work.
   #
-  s.framework  = 'BlocksKit.framework'
-  # s.frameworks = 'SomeFramework', 'AnotherFramework'
+  # s.framework  = 'Accelerate'
+  s.frameworks = 'Accelerate', 'Foundation'
 
   # Specify a list of libraries that the application needs to link
   # against for this Pod to work.
@@ -97,5 +97,5 @@ Pod::Spec.new do |s|
 
   # Finally, specify any Pods that this Pod depends on.
   #
-  # s.dependency 'JSONKit', '~> 1.4'
+  s.dependency 'BlocksKit', '~> 1.8.1'
 end
