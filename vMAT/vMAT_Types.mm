@@ -194,13 +194,13 @@ vMAT_MITypeNamed(NSString * name)
         namedTypes =
         @{ @"double": [NSNumber numberWithInt:miDOUBLE],
            @"single": [NSNumber numberWithInt:miSINGLE],
-           @"int8": [NSNumber numberWithInt:miINT8],
-           @"uint8": [NSNumber numberWithInt:miUINT8],
-           @"int16": [NSNumber numberWithInt:miINT16],
+           @"int8":   [NSNumber numberWithInt:miINT8],
+           @"uint8":  [NSNumber numberWithInt:miUINT8],
+           @"int16":  [NSNumber numberWithInt:miINT16],
            @"uint16": [NSNumber numberWithInt:miUINT16],
-           @"int32": [NSNumber numberWithInt:miINT32],
+           @"int32":  [NSNumber numberWithInt:miINT32],
            @"uint32": [NSNumber numberWithInt:miUINT32],
-           @"int64": [NSNumber numberWithInt:miINT64],
+           @"int64":  [NSNumber numberWithInt:miINT64],
            @"uint64": [NSNumber numberWithInt:miUINT64],
            };
     });

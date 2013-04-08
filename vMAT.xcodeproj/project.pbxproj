@@ -50,6 +50,7 @@
 		05CA200D1710C2760067AE9E /* vMAT_pdist.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CA200C1710C2760067AE9E /* vMAT_pdist.m */; };
 		05CA200F1710C3690067AE9E /* vMAT_inconsistent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA200E1710C3690067AE9E /* vMAT_inconsistent.mm */; };
 		05CA20121710FC500067AE9E /* TypesTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA20111710FC500067AE9E /* TypesTests.mm */; };
+		05CA2014171253950067AE9E /* vMAT_cluster.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA2013171253950067AE9E /* vMAT_cluster.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,6 +132,8 @@
 		05CA200E1710C3690067AE9E /* vMAT_inconsistent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_inconsistent.mm; sourceTree = "<group>"; };
 		05CA20101710FC500067AE9E /* TypesTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypesTests.h; sourceTree = "<group>"; };
 		05CA20111710FC500067AE9E /* TypesTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TypesTests.mm; sourceTree = "<group>"; };
+		05CA2013171253950067AE9E /* vMAT_cluster.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_cluster.mm; sourceTree = "<group>"; };
+		05CA201517133DA50067AE9E /* vMAT.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vMAT.podspec; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				058C5E62170610FD00A65E82 /* README.md */,
+				05CA201517133DA50067AE9E /* vMAT.podspec */,
 				0568E7F21700124400AE99F4 /* vMAT */,
 				0568E8041700124400AE99F4 /* vMATTests */,
 				05435953170208FE0037AAC4 /* matxd */,
@@ -315,8 +319,9 @@
 				0568E7F51700124400AE99F4 /* vMAT.h */,
 				05453DC5170CE50200EFCB19 /* vMAT_Types.h */,
 				05453DC3170CE1F600EFCB19 /* vMAT_Private.h */,
-				0568E7F61700124400AE99F4 /* vMAT.m */,
 				05CA1FFF170F7F1D0067AE9E /* vMAT_Types.mm */,
+				0568E7F61700124400AE99F4 /* vMAT.m */,
+				05CA2013171253950067AE9E /* vMAT_cluster.mm */,
 				05CA200E1710C3690067AE9E /* vMAT_inconsistent.mm */,
 				05CA200A1710C1880067AE9E /* vMAT_linkage.m */,
 				05CA200C1710C2760067AE9E /* vMAT_pdist.m */,
@@ -485,6 +490,7 @@
 				05CA200B1710C1880067AE9E /* vMAT_linkage.m in Sources */,
 				05CA200D1710C2760067AE9E /* vMAT_pdist.m in Sources */,
 				05CA200F1710C3690067AE9E /* vMAT_inconsistent.mm in Sources */,
+				05CA2014171253950067AE9E /* vMAT_cluster.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

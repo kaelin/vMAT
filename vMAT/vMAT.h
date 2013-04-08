@@ -53,6 +53,10 @@
 #import "vMAT_MATv5Variable.h"
 
 
+vMAT_API vMAT_Array *
+vMAT_cluster(vMAT_Array * matZ,
+             NSArray * options);
+
 /*!
  @brief Make an identity matrix.
  @discussion
