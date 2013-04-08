@@ -68,12 +68,14 @@ vMAT_inconsistent(vMAT_Array * matZ,
          k < n;
          k++) {
         traceTree(Z, s, k, depth);
-        Y[{0,k}] = s[0] / s[2];          // Compute the average edge length
+        double mean = s[0] / s[2];       // Compute the average edge length
         double v = (s[1] - (s[0] * s[0]) / s[2]) / (s[2] - (s[2] != 1));
-        Y[{1,k}] = sqrt(max(0.0, v));    // Standard deviation (avoid roundoff to negative number)
+        double std = sqrt(max(0.0, v));  // Standard deviation (avoid roundoff to negative number)
+        Y[{0,k}] = mean;
+        Y[{1,k}] = std;
         Y[{2,k}] = s[2];                 // Count of the edges
-        if (Y[{1,k}] > 0) {
-            Y[{3,k}] = (Z[{2,k}] - Y[{0,k}]) / Y[{1,k}];
+        if (std > 0) {
+            Y[{3,k}] = (Z[{2,k}] - mean) / std;
         }
         s[0] = s[1] = s[2] = 0;
     }
