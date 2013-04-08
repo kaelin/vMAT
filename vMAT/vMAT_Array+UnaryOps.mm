@@ -35,12 +35,18 @@ namespace {
     template <typename T>
     struct render {
         NSMutableString * dump;
-        render(NSMutableString * dump) : dump(dump) { }
-        void operator()(T a) const
+        const int columns;
+        long count;
+        render(NSMutableString * dump, int columns) : dump(dump), columns(columns), count(0) { }
+        void operator()(T a)
         {
             stringstream out;
+            out.width(13);
+            out.fill(' ');
             out << a;
-            [dump appendFormat:@"%s ", out.str().c_str()];
+            if (++count % columns == 0) out << "\n";
+            else out << " ";
+            [dump appendFormat:@"%s", out.str().c_str()];
         }
     };
     
@@ -51,7 +57,8 @@ namespace {
         NSMutableString * dump = [NSMutableString stringWithString:prefix];
         [dump appendString:@" = \n"];
         vector<T> vecA(A, A + vMAT_Size_prod(sizeA));
-        for_each(vecA.begin(), vecA.end(), render<T>(dump));
+        render<T> renderer(dump, sizeA[0]);
+        for_each(vecA.begin(), vecA.end(), renderer);
         return dump;
     }
     
