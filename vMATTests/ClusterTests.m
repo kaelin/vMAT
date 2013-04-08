@@ -40,17 +40,17 @@
     STAssertNotNil(matWv, nil);
     // NSLog(@"X  = %@", matX);
     vMAT_Array * matY = vMAT_pdist(matX);
-    // NSLog(@"Yv = %@", matYv);
-    NSLog(@"Y  = %@", matY);
+    // NSLog(@"Yv = %@", matYv.dump);
+    // NSLog(@"Y  = %@", matY.dump);
     STAssertTrue([matY isEqual:matYv epsilon:0.0001], @"vMAT_pdist results don't match expected output");
     vMAT_Array * matZ = vMAT_linkage(matY);
     // NSLog(@"Zv = %@", matZv.dump);
     NSLog(@"Z  = %@", matZ.dump);
     STAssertTrue([matZ isEqual:matZv epsilon:0.0001], @"vMAT_linkage results don't match expected output");
     vMAT_Array * matW = vMAT_inconsistent(matZ, 0);
-    NSLog(@"Wv = %@", matWv.dump);
+    // NSLog(@"Wv = %@", matWv.dump);
     NSLog(@"W  = %@", matW.dump);
-    STAssertTrue([matW isEqual:matWv epsilon:0.0001], @"vMAT_inconsistent results don't match expected output");
+    STAssertTrue([matW isEqual:matWv epsilon:0.005], @"vMAT_inconsistent results don't match expected output");
 }
 
 @end
