@@ -8,8 +8,7 @@
 
 #import "vMAT_Private.h"
 
-#import <cmath>
-#import <vector>
+#import <algorithm>
 
 
 namespace {
@@ -21,9 +20,9 @@ namespace {
     traceTree(Matrix<double> Z, double s[3], int k, unsigned int depth)
     {
         int m = Z.size(1) + 1;
-        __block vector<int> klist(m, 0);
+        int alloc_klist[m], * klist = alloc_klist;
         klist[0] = k;
-        __block vector<int> dlist(depth, 0);
+        int alloc_dlist[depth], * dlist = alloc_dlist;
         dlist[0] = depth;
         __block int topk = 0;
         int currk = 0;
