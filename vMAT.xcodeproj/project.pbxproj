@@ -620,6 +620,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "vMAT/vMAT-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"_LIBCPP_DEBUG2=0",
+					"$(inherited)",
+				);
 				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
 				OTHER_CFLAGS = "-fstack-protector";
 				PRODUCT_NAME = "$(TARGET_NAME)";

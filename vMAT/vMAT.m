@@ -79,6 +79,12 @@ vMAT_mtrans(vMAT_Array * matrix)
     return [matrix mtrans];
 }
 
+vDSP_Length
+vMAT_numel(vMAT_Array * matrix)
+{
+    return vMAT_Size_prod(matrix.size);
+}
+
 static vMAT_MIType
 arrayTypeOptions(NSArray * options)
 {
