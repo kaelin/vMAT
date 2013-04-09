@@ -9,6 +9,7 @@
 #import "vMAT_Private.h"
 
 #import <algorithm>
+#import <vector>
 
 
 namespace {
@@ -20,10 +21,8 @@ namespace {
     traceTree(Matrix<double> Z, double s[3], int k, unsigned int depth)
     {
         int m = Z.size(1) + 1;
-        int alloc_klist[m], * klist = alloc_klist;
-        klist[0] = k;
-        int alloc_dlist[depth], * dlist = alloc_dlist;
-        dlist[0] = depth;
+        __block vector<int> klist(m, k);
+        __block vector<int> dlist(m, depth);
         __block int topk = 0;
         int currk = 0;
         
@@ -41,7 +40,7 @@ namespace {
             s[0] += Z[{2,k}];            // Sum of the edge lengths so far
             s[1] += Z[{2,k}] * Z[{2,k}]; // ... and the sum of the squares
             s[2] += 1;                   // ... and the count of the edges
-            if (depth > 0) {
+            if (depth > 1) {
                 subtree(Z[{0,k}]);       // Consider left subtree
                 subtree(Z[{1,k}]);       // Consider right subtree
             }
@@ -55,7 +54,7 @@ vMAT_Array *
 vMAT_inconsistent(vMAT_Array * matZ,
                   unsigned int depth)
 {
-    if (depth == 0) depth = 1;
+    if (depth == 0) depth = 2;
     Matrix<double> Z = vMAT_double(matZ);
     int32_t n = Z.size(1);
     Matrix<double> Y = vMAT_zeros(vMAT_MakeSize(4, n), nil);
