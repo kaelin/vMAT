@@ -179,24 +179,6 @@ vMAT_MXClassType(vMAT_MXClass mxClass);
 
 namespace vMAT {
     
-    template <typename T>
-    struct Matrix {
-        vMAT_Array * matM;
-        T * M;
-        vDSP_Length lenM;
-        vMAT_Size multiM;
-        
-        Matrix(vMAT_Array * matrix);
-        
-        T & operator[](vDSP_Length idx); // M[i]
-        T & operator[](vMAT_Index idxs); // M[{m,n,...}]
-        
-        inline operator vMAT_Array * () const { return matM; };
-        
-        inline const vMAT_Size size() const { return [matM size]; }
-        inline const int size(int dim) const { vMAT_Size size = [matM size]; return size[dim]; }
-    };
-    
     NSString *
     genericDescription(vMAT_MIType type);
     

@@ -14,11 +14,15 @@
 
 namespace {
     
+    using namespace Eigen;
     using namespace std;
     using namespace vMAT;
     
+    typedef Mat<double, 3, Dynamic> MatZ; // Input is a 3xN hierarchical cluster tree
+    typedef Mat<double, 4, Dynamic> MatY; // Result is a 4x(N+1) inconsistancy matrix
+    
     void
-    traceTree(Matrix<double> Z, double s[3], int k, unsigned int depth)
+    traceTree(MatZ Z, double s[3], int k, unsigned int depth)
     {
         int m = Z.size(1) + 1;
         __block vector<int> klist(m, k);
@@ -55,9 +59,9 @@ vMAT_inconsistent(vMAT_Array * matZ,
                   unsigned int depth)
 {
     if (depth == 0) depth = 2;
-    Matrix<double> Z = vMAT_double(matZ);
+    MatZ Z = vMAT_double(matZ);
     int32_t n = Z.size(1);
-    Matrix<double> Y = vMAT_zeros(vMAT_MakeSize(4, n), nil);
+    MatY Y = vMAT_zeros(vMAT_MakeSize(4, n), nil);
     double s[3] = { };
     for (int k = 0;
          k < n;

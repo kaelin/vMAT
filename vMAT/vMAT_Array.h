@@ -120,9 +120,9 @@ namespace vMAT {
                                    matrix.size[0] * matrix.size[1] * matrix.size[2]);
         }
 
-        inline Scalar & operator[](vDSP_Length idx) { return A[idx]; }
+        inline Scalar & operator[](vDSP_Length idx) { return A[idx]; } // A[idx]
         
-        Scalar & operator[](vMAT_Index idxs)
+        Scalar & operator[](vMAT_Index idxs)                           // A[{m,n,...}]
         {
             long idxA = vMAT_Index_dot(multiA, idxs);
             NSCParameterAssert(idxA >= 0 && idxA < lenA);

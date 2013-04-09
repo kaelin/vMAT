@@ -15,8 +15,13 @@
 
 namespace {
     
+    using namespace Eigen;
     using namespace std;
     using namespace vMAT;
+    
+    typedef Mat<double, 3, Dynamic> MatZ; // Input is a 3xN hierarchical cluster tree
+    typedef Mat<double, 4, Dynamic> MatY; // Result is a 4x(N+1) inconsistancy matrix
+    typedef Mat<double, Dynamic, Dynamic> MatT;
     
     struct Options {
         BOOL useCutoff;
@@ -41,12 +46,12 @@ vMAT_cluster(vMAT_Array * matZ,
 {
     Options opts = clusterOptions(options);
     
-    Matrix<double> Z = vMAT_double(matZ);
+    MatZ Z = vMAT_double(matZ);
     int n = Z.size(1) + 1;
     if (opts.useCutoff) {
-        Matrix<double> T = vMAT_zeros(vMAT_MakeSize(static_cast<int>(opts.cutoff.size()), n), nil);
+        MatT T = vMAT_zeros(vMAT_MakeSize(static_cast<int>(opts.cutoff.size()), n), nil);
         if (opts.useInconsistent) {
-            Matrix<double> Y = vMAT_inconsistent(Z, opts.depth);
+            MatY Y = vMAT_inconsistent(Z, opts.depth);
         }
     }
     return nil;
