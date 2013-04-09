@@ -80,3 +80,56 @@
 - (vMAT_Array *)mtrans;
 
 @end
+
+#ifdef __cplusplus
+
+#import <Eigen/Core>
+
+namespace vMAT {
+    
+    // Why yes, this *does* resemble a burst of line noise!
+    template <typename PlainObjectType, typename StrideType = Eigen::Stride<0, 0>>
+    struct Map : Eigen::Map<PlainObjectType, Eigen::Aligned, StrideType> {
+        typedef typename Eigen::Map<PlainObjectType, Eigen::Aligned, StrideType>::Scalar Scalar;
+        
+        vMAT_Array * matA;
+        
+        Map(vMAT_Array * matrix)
+        : Eigen::Map<PlainObjectType, Eigen::Aligned, StrideType>
+        ((Scalar *)matrix.data.mutableBytes, matrix.size[0], matrix.size[1]), matA(matrix) { }
+
+        inline operator vMAT_Array * () const { return matA; };
+        
+        inline const vMAT_Size size() const { return matA.size; }
+        inline const int size(int dim) const { return matA.size[dim]; }
+    };
+    
+    template <typename Scalar, int M = Eigen::Dynamic, int N = Eigen::Dynamic, int Options = 0>
+    struct Mat : Map<Eigen::Matrix<Scalar, M, N, Options>> {
+        Scalar * A;
+        vDSP_Length lenA;
+        vMAT_Size multiA;
+        
+        Mat(vMAT_Array * matrix)
+        : Map<Eigen::Matrix<Scalar, M, N, Options>>(matrix) {
+            A = static_cast<Scalar *>(matrix.data.mutableBytes);
+            lenA = matrix.data.length / sizeof(*A);
+            multiA = vMAT_MakeSize(1,
+                                   matrix.size[0],
+                                   matrix.size[0] * matrix.size[1],
+                                   matrix.size[0] * matrix.size[1] * matrix.size[2]);
+        }
+
+        inline Scalar & operator[](vDSP_Length idx) { return A[idx]; }
+        
+        Scalar & operator[](vMAT_Index idxs)
+        {
+            long idxA = vMAT_Index_dot(multiA, idxs);
+            NSCParameterAssert(idxA >= 0 && idxA < lenA);
+            return A[idxA];
+        }
+    };
+    
+}
+
+#endif

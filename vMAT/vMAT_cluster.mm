@@ -10,6 +10,8 @@
 
 #import <vector>
 
+#import <Eigen/Dense>
+
 
 namespace {
     
@@ -38,6 +40,7 @@ vMAT_cluster(vMAT_Array * matZ,
              NSArray * options)
 {
     Options opts = clusterOptions(options);
+    
     Matrix<double> Z = vMAT_double(matZ);
     int n = Z.size(1) + 1;
     if (opts.useCutoff) {

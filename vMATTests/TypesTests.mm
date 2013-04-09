@@ -10,19 +10,27 @@
 
 #import "vMAT.h"
 
+#import <iostream>
+
 
 namespace {
     
+    using namespace Eigen;
     using namespace vMAT;
     
 }
 
 @implementation TypesTests
 
-- (void)test_Matrix_indexing;
+- (void)test_Mat;
 {
-    vMAT_Array * matD = vMAT_zeros((vMAT_Size){ 10, 3, 2 }, @[ @"double" ]);
-    Matrix<double> D(matD);
+    Mat<double, 3, Dynamic> I = vMAT_eye(vMAT_MakeSize(3, 5));
+    std::cout << I << std::endl;
+}
+
+- (void)test_Mat_indexing;
+{
+    Mat<double> D = vMAT_zeros((vMAT_Size){ 10, 3, 2 }, @[ @"double" ]);
     {
         int seq = 1;
         for (int p = 0; p < 2; p++) {
@@ -38,10 +46,12 @@ namespace {
         float d = D[{0, 0, 1}];
         float e = D[30];
         STAssertTrue(d == e && e == 31.0, nil);
+        vMAT_Array * matD = D;
         // NSLog(@"%@", matD.dump);
+        STAssertNotNil(matD, nil);
     }
     vMAT_Array * matS = vMAT_zeros((vMAT_Size){ 10, 3, 2 }, @[ @"single" ]);
-    Matrix<float> S(matS);
+    Mat<float> S(matS);
     {
         int seq = 1;
         for (int p = 0; p < 2; p++) {

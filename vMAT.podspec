@@ -12,4 +12,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.xcconfig = { 'CLANG_CXX_LANGUAGE_STANDARD' => 'gnu++11' }
   s.dependency 'BlocksKit', '~> 1.8.1'
+  s.dependency 'eigen', '~> 3.1.2'
 end
