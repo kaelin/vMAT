@@ -22,7 +22,6 @@ namespace {
     
     typedef Mat<double, 3, Dynamic> MatZ; // Input is a 3xN hierarchical cluster tree
     typedef Mat<double, 4, Dynamic> MatY; // Result is a 4x(N+1) inconsistancy matrix
-    typedef Mat<double, Dynamic, 1> MatC;
     typedef Mat<double, Dynamic, Dynamic> MatA; // Result is Mx(N+1) assignment matrix
     
     struct Options {
@@ -52,14 +51,16 @@ vMAT_cluster(vMAT_Array * matZ,
     int n = Z.size(1) + 1;
     if (opts.useCutoff) {
         int m = static_cast<int>(opts.cutoff.size());
-        MatC crit = vMAT_zeros(vMAT_MakeSize(n - 1, 1), nil);
+        VectorXd crit(n - 1);
         MatA A = vMAT_zeros(vMAT_MakeSize(m, n), nil);
         if (opts.useInconsistent) {
             MatY Y = vMAT_inconsistent(Z, opts.depth);
-            cerr << "Y =" << endl << Y << endl;
-            crit.col(0) = Y.row(3);
-            cerr << "crit =" << endl << crit << endl;
+            crit = Y.row(3);
         }
+        else {
+            crit = Z.row(2);
+        }
+        cerr << "crit =" << endl << crit << endl;
     }
     return nil;
 }

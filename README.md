@@ -16,3 +16,5 @@ It's still in development right now, and not terribly useful for anything beyond
 
 
 [^fn]: **MATLAB**® is a registered trademark of **[The MathWorks, Inc.](http://www.mathworks.com/products/matlab/)**
+
+[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/a18bc315ffe0cc33fbb2f6a6b275bf88 "githalytics.com")](http://githalytics.com/kaelin/vMAT)
