@@ -50,7 +50,7 @@
 		05CA200D1710C2760067AE9E /* vMAT_pdist.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CA200C1710C2760067AE9E /* vMAT_pdist.m */; };
 		05CA200F1710C3690067AE9E /* vMAT_inconsistent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA200E1710C3690067AE9E /* vMAT_inconsistent.mm */; };
 		05CA20121710FC500067AE9E /* TypesTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA20111710FC500067AE9E /* TypesTests.mm */; };
-		05CA2014171253950067AE9E /* vMAT_cluster.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA2013171253950067AE9E /* vMAT_cluster.mm */; };
+		05CA2014171253950067AE9E /* vMAT_cluster.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA2013171253950067AE9E /* vMAT_cluster.mm */; settings = {COMPILER_FLAGS = "-DEIGEN_DEBUG_ASSIGN"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

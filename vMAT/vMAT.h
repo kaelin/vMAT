@@ -73,8 +73,8 @@ vMAT_eye(vMAT_Size mxn);
  This function reads data from an open <code>NSInputStream</code> into a pre-specified <code>vMAT_Array</code> matrix.
  The matrix is populated with elements from the stream in column-major order.
  The type and size of the matrix determine how much data will be read from the stream, and how it will be interpreted.
- It is possible to read into a matrix with only the m dimension of the size specified (e.g. n and all subsequent
- dimensions equal to zeros). In this case, the matrix data will be read one column at a time, until the end of the
+ It is possible to read into a matrix with only the columns dimension of the size specified (e.g. rows and all dimensions
+ subsequent to columns equal to zeros). In this case, the matrix data will be read one column at a time, until the end of the
  input stream is encountered (or until an error occurs).
  
  The caller-provided <code>asyncOutputBlock</code> is invoked either when the matrix had been fully read, or when an
@@ -99,7 +99,7 @@ vMAT_fread(NSInputStream * stream,
  @brief Write matrix data asynchronously to a stream.
  @discussion
  This functions writes the matrix data from a <code>vMAT_Array</code> to an open <code>NSOutputStream</code>.
- The elements of the matrix are written to the stream in column-major order.
+ The elements of the matrix are written to the stream in column-major order (the same way vMAT lays out matrices in memory).
  The type and size of the matrix determine how much data will be written to the stream.
  
  The called-provided <code>asyncCompletionBlock</code> is invoked either when the matrix data has been fully written,
@@ -171,7 +171,7 @@ vMAT_numel(vMAT_Array * matrix);
  @brief Compute the pairwise distances between the single-precision floating point samples in a matrix.
  @discussion
  TBD.
- @param sample A 2D single-precision floating point matrix with m samples of n variables.
+ @param sample A 2D single-precision floating point matrix with m observations (rows) of n variables (columns).
  @result TBD.
  */
 vMAT_API vMAT_Array *
@@ -181,8 +181,8 @@ vMAT_pdist(vMAT_Array * sample);
  @brief Compute the pairwise distances between two sets of single-precision floating point samples.
  @discussion
  TBD.
- @param sampleA A 2D single-precision floating point matrix with m samples of n variables.
- @param sampleB A comparable matrix with m samples of the same n variables; e.g. the n dimension must match <code>sampleA</code>.
+ @param sampleA A 2D single-precision floating point matrix with m observations (rows) of n variables (columns).
+ @param sampleB A comparable matrix with m observations of the same n variables; e.g. the n dimension must match <code>sampleA</code>.
  @result TBD.
  */
 vMAT_API vMAT_Array *

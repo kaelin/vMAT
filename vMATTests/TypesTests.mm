@@ -47,7 +47,7 @@ namespace {
         float e = D[30];
         STAssertTrue(d == e && e == 31.0, nil);
         vMAT_Array * matD = D;
-        // NSLog(@"%@", matD.dump);
+        NSLog(@"%@", matD.dump);
         STAssertNotNil(matD, nil);
     }
     vMAT_Array * matS = vMAT_zeros((vMAT_Size){ 10, 3, 2 }, @[ @"single" ]);
@@ -67,7 +67,7 @@ namespace {
         float d = S[{0, 0, 1}];
         float e = S[30];
         STAssertTrue(d == e && e == 31.0, nil);
-        // NSLog(@"%@", matS.dump);
+        NSLog(@"%@", matS.dump);
     }
 }
 

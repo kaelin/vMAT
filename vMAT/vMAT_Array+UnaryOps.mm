@@ -29,26 +29,9 @@
 
 namespace {
     
+    using namespace Eigen;
     using namespace std;
     using namespace vMAT;
-    
-    template <typename T>
-    struct render {
-        NSMutableString * dump;
-        const int columns;
-        long count;
-        render(NSMutableString * dump, int columns) : dump(dump), columns(columns), count(0) { }
-        void operator()(T a)
-        {
-            stringstream out;
-            out.width(13);
-            out.fill(' ');
-            out << a;
-            if (++count % columns == 0) out << "\n";
-            else out << " ";
-            [dump appendFormat:@"%s", out.str().c_str()];
-        }
-    };
     
     template <typename T>
     NSString *
@@ -56,9 +39,10 @@ namespace {
     {
         NSMutableString * dump = [NSMutableString stringWithString:prefix];
         [dump appendString:@" = \n"];
-        vector<T> vecA(A, A + vMAT_Size_prod(sizeA));
-        render<T> renderer(dump, sizeA[0]);
-        for_each(vecA.begin(), vecA.end(), renderer);
+        Eigen::Map<Matrix<T, Dynamic, Dynamic>> DATA(A, sizeA[0], sizeA[1]);
+        stringstream out;
+        out << DATA << endl;
+        [dump appendFormat:@"%s", out.str().c_str()];
         return dump;
     }
     
