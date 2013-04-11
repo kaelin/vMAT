@@ -67,6 +67,10 @@ vMAT_cluster(vMAT_Array * matZ,
 vMAT_API vMAT_Array *
 vMAT_eye(vMAT_Size mxn);
 
+vMAT_API vMAT_Array *
+vMAT_find(vMAT_Array * matrix,
+          NSArray * options);
+
 /*!
  @brief Read matrix data asynchronously from a stream.
  @discussion

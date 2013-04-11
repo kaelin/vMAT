@@ -28,7 +28,7 @@
 		05453DC6170CE50200EFCB19 /* vMAT_Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 05453DC5170CE50200EFCB19 /* vMAT_Types.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		05453DC7170CEC7700EFCB19 /* vMAT.h in Headers */ = {isa = PBXBuildFile; fileRef = 0568E7F51700124400AE99F4 /* vMAT.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0568E7ED1700124400AE99F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7EC1700124400AE99F4 /* Cocoa.framework */; };
-		0568E7F71700124400AE99F4 /* vMAT.m in Sources */ = {isa = PBXBuildFile; fileRef = 0568E7F61700124400AE99F4 /* vMAT.m */; };
+		0568E7F71700124400AE99F4 /* vMAT.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0568E7F61700124400AE99F4 /* vMAT.mm */; };
 		0568E7FF1700124400AE99F4 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7FE1700124400AE99F4 /* SenTestingKit.framework */; };
 		0568E8001700124400AE99F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7EC1700124400AE99F4 /* Cocoa.framework */; };
 		0568E8031700124400AE99F4 /* vMAT.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0568E7E91700124400AE99F4 /* vMAT.dylib */; };
@@ -50,7 +50,7 @@
 		05CA200D1710C2760067AE9E /* vMAT_pdist.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CA200C1710C2760067AE9E /* vMAT_pdist.m */; };
 		05CA200F1710C3690067AE9E /* vMAT_inconsistent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA200E1710C3690067AE9E /* vMAT_inconsistent.mm */; };
 		05CA20121710FC500067AE9E /* TypesTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA20111710FC500067AE9E /* TypesTests.mm */; };
-		05CA2014171253950067AE9E /* vMAT_cluster.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA2013171253950067AE9E /* vMAT_cluster.mm */; settings = {COMPILER_FLAGS = "-DEIGEN_DEBUG_ASSIGN"; }; };
+		05CA2014171253950067AE9E /* vMAT_cluster.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA2013171253950067AE9E /* vMAT_cluster.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,7 +107,7 @@
 		0568E7F11700124400AE99F4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0568E7F41700124400AE99F4 /* vMAT-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "vMAT-Prefix.pch"; sourceTree = "<group>"; };
 		0568E7F51700124400AE99F4 /* vMAT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vMAT.h; sourceTree = "<group>"; };
-		0568E7F61700124400AE99F4 /* vMAT.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = vMAT.m; sourceTree = "<group>"; };
+		0568E7F61700124400AE99F4 /* vMAT.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT.mm; sourceTree = "<group>"; };
 		0568E7FD1700124400AE99F4 /* vMATTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = vMATTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0568E7FE1700124400AE99F4 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		0568E8061700124400AE99F4 /* vMATTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "vMATTests-Info.plist"; sourceTree = "<group>"; };
@@ -322,7 +322,7 @@
 				05453DC5170CE50200EFCB19 /* vMAT_Types.h */,
 				05453DC3170CE1F600EFCB19 /* vMAT_Private.h */,
 				05CA1FFF170F7F1D0067AE9E /* vMAT_Types.mm */,
-				0568E7F61700124400AE99F4 /* vMAT.m */,
+				0568E7F61700124400AE99F4 /* vMAT.mm */,
 				05CA2013171253950067AE9E /* vMAT_cluster.mm */,
 				05CA200E1710C3690067AE9E /* vMAT_inconsistent.mm */,
 				05CA200A1710C1880067AE9E /* vMAT_linkage.m */,
@@ -479,7 +479,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0568E7F71700124400AE99F4 /* vMAT.m in Sources */,
+				0568E7F71700124400AE99F4 /* vMAT.mm in Sources */,
 				054359491700B41A0037AAC4 /* vMAT_StreamDelegate.m in Sources */,
 				0543596517032C9A0037AAC4 /* vMAT_MATv5ReadOperation.m in Sources */,
 				058C5E6B1708E46900A65E82 /* vMAT_MATv5Variable.m in Sources */,

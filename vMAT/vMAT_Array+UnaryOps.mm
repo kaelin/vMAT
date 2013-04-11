@@ -83,3 +83,37 @@ namespace {
 }
 
 @end
+
+@implementation vMAT_Int8Array (UnaryOps)
+
+- (NSString *)dump;
+{
+    return dump([self description], (int8_t *)self.data.bytes, self.size);
+}
+
+- (vMAT_Array *)mtrans;
+{
+    Mat<int8_t, Dynamic, Dynamic> A = self;
+    Matrix<int8_t, Dynamic, Dynamic> B = A.transpose();
+    return vMAT_cast(B);
+}
+
+@end
+
+@implementation vMAT_Int32Array (UnaryOps)
+
+- (NSString *)dump;
+{
+    return dump([self description], (int32_t *)self.data.bytes, self.size);
+}
+
+- (vMAT_Array *)mtrans;
+{
+    vMAT_Array * array = [vMAT_Array arrayWithSize:vMAT_MakeSize(self.size[1], self.size[0]) type:self.type];
+    float * A = (float *)self.data.mutableBytes;
+    float * C = (float *)array.data.mutableBytes;
+    vDSP_mtrans(A, 1, C, 1, self.size[0], self.size[1]);
+    return array;
+}
+
+@end

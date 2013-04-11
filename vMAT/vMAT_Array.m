@@ -109,3 +109,11 @@
 @implementation vMAT_SingleArray
 
 @end
+
+@implementation vMAT_Int8Array
+
+@end
+
+@implementation vMAT_Int32Array
+
+@end
