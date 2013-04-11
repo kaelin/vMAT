@@ -88,15 +88,28 @@
 namespace vMAT {
     
     // Why yes, this *does* resemble a burst of line noise!
-    template <typename PlainObjectType, typename StrideType = Eigen::Stride<0, 0>>
-    struct Map : Eigen::Map<PlainObjectType, Eigen::Aligned, StrideType> {
-        typedef typename Eigen::Map<PlainObjectType, Eigen::Aligned, StrideType>::Scalar Scalar;
+    template <typename EigenObjectType, typename StrideType = Eigen::Stride<0, 0>>
+    struct Map : Eigen::Map<EigenObjectType, Eigen::Aligned, StrideType> {
+        typedef typename Eigen::Map<EigenObjectType, Eigen::Aligned, StrideType>::Scalar Scalar;
         
         vMAT_Array * matA;
         
         Map(vMAT_Array * matrix)
-        : Eigen::Map<PlainObjectType, Eigen::Aligned, StrideType>
+        : Eigen::Map<EigenObjectType, Eigen::Aligned, StrideType>
         ((Scalar *)matrix.data.mutableBytes, matrix.size[0], matrix.size[1]), matA(matrix) { }
+        
+        Map(EigenObjectType matrix)
+        : Eigen::Map<EigenObjectType, Eigen::Aligned, StrideType>
+        (NULL, matrix.rows(), matrix.cols())
+        {
+            typename EigenObjectType::Scalar exemplar = 0;
+            matA = [vMAT_Array arrayWithSize:vMAT_MakeSize((int)matrix.rows(), (int)matrix.cols())
+                                        type:MIType(exemplar)
+                                        data:[NSMutableData dataWithBytes:matrix.data()
+                                                                   length:matrix.size() * sizeof(exemplar)]];
+            new (this) Eigen::Map<EigenObjectType, Eigen::Aligned, StrideType>
+            ((typename EigenObjectType::Scalar *)matA.data.mutableBytes, matrix.rows(), matrix.cols());
+        }
 
         inline operator vMAT_Array * () const { return matA; };
         
@@ -129,6 +142,12 @@ namespace vMAT {
             return A[idxA];
         }
     };
+    
+    template <typename EigenObjectType>
+    vMAT_Array * vMAT_cast(EigenObjectType matrix)
+    {
+        return Map<EigenObjectType>(matrix).matA;
+    }
     
 }
 

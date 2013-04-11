@@ -193,6 +193,19 @@ namespace vMAT {
     SEL
     genericCmd(NSString * format, A a, B b);
     
+    inline vMAT_MIType MIType(double  ) { return miDOUBLE; }
+    inline vMAT_MIType MIType(float   ) { return miSINGLE; }
+    inline vMAT_MIType MIType(int8_t  ) { return miINT8;   }
+    inline vMAT_MIType MIType(uint8_t ) { return miUINT8;  }
+    inline vMAT_MIType MIType(int16_t ) { return miINT16;  }
+    inline vMAT_MIType MIType(uint16_t) { return miUINT16; }
+    inline vMAT_MIType MIType(int32_t ) { return miINT32;  }
+    inline vMAT_MIType MIType(uint32_t) { return miUINT32; }
+    inline vMAT_MIType MIType(int64_t ) { return miINT64;  }
+    inline vMAT_MIType MIType(uint64_t) { return miUINT64; }
+
+    inline vMAT_MIType MIType(bool    ) { return miINT8;   }
+    
     extern double   DOUBLE;
     extern float    SINGLE;
     extern int8_t   INT8;
