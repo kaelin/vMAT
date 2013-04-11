@@ -39,6 +39,24 @@ namespace {
         return opts;
     }
     
+    void
+    checkCut(MatZ Z, double cutoff, VectorXd crit)
+    {
+        double n = Z.size(1); // Indexes are zero-based, so no need to add one
+        Array<bool, Dynamic, 1> conn = crit.array() < cutoff;
+        Array<bool, Dynamic, 1> notLeaf = Z.array().row(0) > n || Z.array().row(1) > n;
+        Array<bool, Dynamic, 1> todo = conn && notLeaf;
+        cerr << "todo = " << todo << endl;
+        while(todo.any()) {
+            Mat<long, Dynamic, 1> rows = vMAT_find(vMAT_cast(todo), nil);
+            for (int j : { 0, 1 }) {
+                cerr << "j = " << j << endl;
+            }
+            todo.fill(false);
+        }
+        
+    }
+    
 }
 
 vMAT_Array *
@@ -60,7 +78,9 @@ vMAT_cluster(vMAT_Array * matZ,
         else {
             crit = Z.row(2);
         }
-        cerr << "crit =" << endl << crit << endl;
+        for (auto cutoff : opts.cutoff) {
+            checkCut(Z, cutoff, crit);
+        }
     }
     return nil;
 }
