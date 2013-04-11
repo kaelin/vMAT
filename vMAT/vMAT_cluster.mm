@@ -22,7 +22,7 @@ namespace {
     
     typedef Mat<double, 3, Dynamic> MatZ; // Input is a 3xN hierarchical cluster tree
     typedef Mat<double, 4, Dynamic> MatY; // Result is a 4x(N+1) inconsistancy matrix
-    typedef Mat<double, Dynamic, Dynamic> MatA; // Result is Mx(N+1) assignment matrix
+    typedef Mat<double> MatA;             // Result is Mx(N+1) assignment matrix
     
     struct Options {
         BOOL useCutoff;
@@ -42,14 +42,16 @@ namespace {
     void
     checkCut(MatZ Z, double cutoff, VectorXd crit)
     {
-        double n = Z.size(1); // Indexes are zero-based, so no need to add one
+        double n = Z.size(1);        // Indexes are zero-based, so no need to add one
         Array<bool, Dynamic, 1> conn = crit.array() < cutoff;
         Array<bool, Dynamic, 1> notLeaf = Z.array().row(0) > n || Z.array().row(1) > n;
         Array<bool, Dynamic, 1> todo = conn && notLeaf;
         cerr << "todo = " << todo << endl;
         while(todo.any()) {
-            Mat<long, Dynamic, 1> rows = vMAT_find(vMAT_cast(todo), nil);
-            for (int j : { 0, 1 }) {
+            Mat<int, Dynamic, 1> rows = vMAT_find(vMAT_cast(todo), nil);
+            cerr << "rows = " << rows << endl;
+            auto cdone = MatrixX2i::Ones(rows.size(), 2);
+            for (int j : { 0, 1 }) { // 0 is left child, 1 is right child
                 cerr << "j = " << j << endl;
             }
             todo.fill(false);

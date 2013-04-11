@@ -113,7 +113,8 @@ namespace vMAT {
 
         inline operator vMAT_Array * () const { return matA; };
         
-        inline const vMAT_Size size() const { return matA.size; }
+        inline const vMAT_Size matsize() const { return matA.size; } // Don't shadow Eigen::Map::size()
+        inline const long size() const { return Eigen::Map<EigenObjectType, Eigen::Aligned, StrideType>::size(); }
         inline const int size(int dim) const { return matA.size[dim]; }
     };
     
