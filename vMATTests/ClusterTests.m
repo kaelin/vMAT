@@ -21,7 +21,7 @@
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSDictionary * ws = nil;
-    vMAT_load(stream, @[@"X", @"Y", @"Zv", @"W", @"Vcpt5", @"Vmax4"], ^(NSDictionary * workspace, NSError * error) {
+    vMAT_load_async(stream, @[@"X", @"Y", @"Zv", @"W", @"Vcpt5", @"Vmax4"], ^(NSDictionary * workspace, NSError * error) {
         NSLog(@"%@", workspace);
         ws = workspace;
         [stream close];

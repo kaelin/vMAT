@@ -92,10 +92,10 @@ vMAT_fwrite(NSOutputStream * stream,
 }
 
 void
-vMAT_load(NSInputStream * stream,
-          NSArray * variableNames,
-          void (^asyncCompletionBlock)(NSDictionary * workspace,
-                                       NSError * error))
+vMAT_load_async(NSInputStream * stream,
+                NSArray * variableNames,
+                void (^asyncCompletionBlock)(NSDictionary * workspace,
+                                             NSError * error))
 {
     vMAT_MATv5ReadOperation * operation = [[vMAT_MATv5ReadOperation alloc] initWithInputStream:stream];
     vMAT_MATv5ReadOperationDelegate * reader = [[vMAT_MATv5ReadOperationDelegate alloc] initWithReadOperation:operation];

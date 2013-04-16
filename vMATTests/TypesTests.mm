@@ -22,6 +22,32 @@ namespace {
 
 @implementation TypesTests
 
+- (void)test_vMAT_manifesto;
+{
+    const float iniM[] = {
+         2, 11,  7, 14,
+         3, 10,  6, 15,
+        13,  8, 12,  1,
+    };
+    vMAT_Array * matM = [vMAT_Array arrayWithSize:vMAT_MakeSize(4, 3)
+                                             type:miSINGLE
+                                             data:[NSData dataWithBytes:iniM length:sizeof(iniM)]];
+    NSLog(@"%@", matM.dump);
+    Mat<float, 4, 3> M = matM;
+    Matrix<float, 4, 3> X = M.array() * M.array();
+    vMAT_Array * matX = vMAT_cast(X);
+    NSLog(@"%@", matX.dump);
+    vMAT_Array * matXv = [vMAT_Array arrayWithSize:vMAT_MakeSize(4, 3)
+                                              type:miSINGLE];
+    Mat<float, 4, 3> Xv = matXv;
+    Xv <<
+      4,   9, 169,
+    121, 100,  64,
+     49,  36, 144,
+    196, 225,   1;
+    STAssertEqualObjects(matX, matXv, @"Ensure equal arrays");
+}
+
 - (void)test_Mat;
 {
     Mat<double, 3, Dynamic> I = vMAT_eye(vMAT_MakeSize(3, 5));

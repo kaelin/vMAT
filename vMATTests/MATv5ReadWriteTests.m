@@ -34,7 +34,7 @@
     NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_load(stream, @[@"I"], ^(NSDictionary *workspace, NSError *error) {
+    vMAT_load_async(stream, @[@"I"], ^(NSDictionary *workspace, NSError *error) {
         vMAT_MATv5NumericArray * varM = [workspace objectForKey:@"I"];
         vMAT_Array * matM = varM.matrix;
         STAssertNotNil(varM, nil);
@@ -56,7 +56,7 @@
     NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_load(stream, @[], ^(NSDictionary *workspace, NSError *error) {
+    vMAT_load_async(stream, @[], ^(NSDictionary *workspace, NSError *error) {
         STAssertEqualObjects(workspace, @{ }, nil);
         STAssertNil(error, nil);
         [stream close];
@@ -74,14 +74,14 @@
     NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_load(stream, @[@"M"], ^(NSDictionary *workspace, NSError *error) {
+    vMAT_load_async(stream, @[ @"M" ], ^(NSDictionary *workspace, NSError *error) {
         const double M[] = {
-            16.00000,   5.00000,   9.00000,   4.00000,
-             2.00000,  11.00000,   7.00000,  14.00000,
-             3.00000,  10.00000,   6.00000,  15.00000,
-            13.00000,   8.00000,  12.00000,   1.00000,
+            16,   5,   9,   4,
+             2,  11,   7,  14,
+             3,  10,   6,  15,
+            13,   8,  12,   1,
         };
-        vMAT_MATv5NumericArray * varM = [workspace objectForKey:@"M"];
+        vMAT_MATv5NumericArray * varM = [workspace variable:@"M"].toNumericArray;
         double * matM = varM.array.data.mutableBytes;
         STAssertNotNil(varM, nil);
         STAssertNil(error, nil);
@@ -104,7 +104,7 @@
     NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_load(stream, @[], ^(NSDictionary *workspace, NSError *error) {
+    vMAT_load_async(stream, @[], ^(NSDictionary *workspace, NSError *error) {
         STAssertEqualObjects(workspace, @{ }, nil);
         STAssertNil(error, nil);
         [stream close];
@@ -122,7 +122,7 @@
     NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_load(stream, @[@"X", @"Y", @"Zv"], ^(NSDictionary * workspace, NSError * error) {
+    vMAT_load_async(stream, @[@"X", @"Y", @"Zv"], ^(NSDictionary * workspace, NSError * error) {
         // NSLog(@"%@", workspace);
         STAssertNotNil([workspace objectForKey:@"X"], nil);
         STAssertNotNil([workspace objectForKey:@"Y"], nil);
@@ -137,7 +137,7 @@
 
 - (void)test_vMAT_load_nil_stream;
 {
-    STAssertThrowsSpecificNamed(vMAT_load(nil, nil, ^(NSDictionary *workspace, NSError *error) {
+    STAssertThrowsSpecificNamed(vMAT_load_async(nil, nil, ^(NSDictionary *workspace, NSError *error) {
     }), NSException, NSInternalInconsistencyException, nil);
 }
 
@@ -148,7 +148,7 @@
     NSInputStream * stream = [NSInputStream inputStreamWithURL:URL];
     [stream open];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    vMAT_load(stream, @[@"ND4"], ^(NSDictionary *workspace, NSError *error) {
+    vMAT_load_async(stream, @[@"ND4"], ^(NSDictionary *workspace, NSError *error) {
         vMAT_MATv5NumericArray * varM = [workspace objectForKey:@"ND4"];
         uint8_t * matM = varM.array.data.mutableBytes;
         STAssertNotNil(varM, nil);

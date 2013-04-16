@@ -160,10 +160,10 @@ vMAT_linkage(vMAT_Array * matY);
  @param asyncCompletionBlock A block to be called asynchronously when the read operation completes.
  */
 vMAT_API void
-vMAT_load(NSInputStream * stream,
-          NSArray * variableNames,
-          void (^asyncCompletionBlock)(NSDictionary * workspace,
-                                       NSError * error));
+vMAT_load_async(NSInputStream * stream,
+                NSArray * variableNames,
+                void (^asyncCompletionBlock)(NSDictionary * workspace,
+                                             NSError * error));
 
 vMAT_API vMAT_Array *
 vMAT_mtrans(vMAT_Array * matrix);
