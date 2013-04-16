@@ -33,10 +33,17 @@
 #import "vMAT_Types.h"
 
 
-@interface vMAT_Array : NSObject
+@interface vMAT_Array : NSObject {
+@protected
+    NSMutableData * _data;
+    vDSP_Length _length;
+    vMAT_Index _multidxs;
+}
 
 @property (readonly, retain) NSMutableData * data;
 @property (readonly) vMAT_Size size;
+@property (readonly) vDSP_Length length;
+@property (readonly) vMAT_Index multidxs;
 @property (readonly) vMAT_MIType type;
 
 + (vMAT_Array *)arrayWithSize:(vMAT_Size)size
@@ -52,6 +59,11 @@
 
 - (id)initWithSize:(vMAT_Size)size
               type:(vMAT_MIType)type;
+
+- (NSNumber *)elementAtIndex:(vMAT_Index)idxs;
+
+- (void)setElement:(NSNumber *)value
+           atIndex:(vMAT_Index)idxs;
 
 - (void)reshape:(vMAT_Size)size;
 

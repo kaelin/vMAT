@@ -52,6 +52,11 @@
     NSParameterAssert(vMAT_MITypeSizeof(type) != 0);
     if ((self = [super init]) != nil) {
         _size = size;
+        _length = vMAT_Size_prod(_size);
+        _multidxs = vMAT_MakeIndex(1,
+                                   _size[0],
+                                   _size[0] * _size[1],
+                                   _size[0] * _size[1] * _size[2]);
         _type = type;
         _data = data ? : [NSMutableData dataWithCapacity:lenA];
         if (_data.length == 0) _data.length = lenA;
@@ -82,6 +87,18 @@
     return string;
 }
 
+- (NSNumber *)elementAtIndex:(vMAT_Index)idxs;
+{
+    [self doesNotRecognizeSelector:_cmd]; // Subclass responsibility
+    return nil;
+}
+
+- (void)setElement:(NSNumber *)value
+           atIndex:(vMAT_Index)idxs;
+{
+    [self doesNotRecognizeSelector:_cmd]; // Subclass responsibility
+}
+
 - (BOOL)isEqual:(id)object;
 {
     if ([object isKindOfClass:[self class]]) {
@@ -98,15 +115,53 @@
 {
     NSParameterAssert(vMAT_Size_prod(size) * vMAT_MITypeSizeof(_type) == _data.length);
     _size = size;
+    _multidxs = vMAT_MakeIndex(1,
+                               _size[0],
+                               _size[0] * _size[1],
+                               _size[0] * _size[1] * _size[2]);
 }
 
 @end
 
 @implementation vMAT_DoubleArray
 
+- (NSNumber *)elementAtIndex:(vMAT_Index)idxs;
+{
+    double * A = (double *)_data.bytes;
+    long idxA = vMAT_Index_dot(_multidxs, idxs);
+    NSCParameterAssert(idxA >= 0 && idxA < _length);
+    return [NSNumber numberWithDouble:A[idxA]];
+}
+
+- (void)setElement:(NSNumber *)value
+           atIndex:(vMAT_Index)idxs;
+{
+    double * A = (double *)_data.bytes;
+    long idxA = vMAT_Index_dot(_multidxs, idxs);
+    NSCParameterAssert(idxA >= 0 && idxA < _length);
+    A[idxA] = [value doubleValue];
+}
+
 @end
 
 @implementation vMAT_SingleArray
+
+- (NSNumber *)elementAtIndex:(vMAT_Index)idxs;
+{
+    float * A = (float *)_data.bytes;
+    long idxA = vMAT_Index_dot(_multidxs, idxs);
+    NSCParameterAssert(idxA >= 0 && idxA < _length);
+    return [NSNumber numberWithFloat:A[idxA]];
+}
+
+- (void)setElement:(NSNumber *)value
+           atIndex:(vMAT_Index)idxs;
+{
+    float * A = (float *)_data.bytes;
+    long idxA = vMAT_Index_dot(_multidxs, idxs);
+    NSCParameterAssert(idxA >= 0 && idxA < _length);
+    A[idxA] = [value floatValue];
+}
 
 @end
 
