@@ -199,6 +199,17 @@ vMAT_pdist2(vMAT_Array * sampleA,
             vMAT_Array * sampleB);
 
 vMAT_API vMAT_Array *
+vMAT_pick(vMAT_Array * matrix,
+          ...);
+
+vMAT_API vMAT_Array *
+vMAT_pick_idxvs(vMAT_Array * matrix,
+                int32_t * M,
+                vDSP_Length lenM,
+                int32_t * N,
+                vDSP_Length lenN);
+
+vMAT_API vMAT_Array *
 vMAT_zeros(vMAT_Size size,
            NSArray * options);
 

@@ -53,6 +53,12 @@ namespace {
             auto cdone = MatrixX2i::Ones(rows.size(), 2);
             for (int j : { 0, 1 }) { // 0 is left child, 1 is right child
                 cerr << "j = " << j << endl;
+                Mat<double, Dynamic, 1> crows = vMAT_pick(Z.matA, j, rows.matA).mtrans;
+                cerr << "crows = " << crows << endl;
+                Array<bool, Dynamic, 1> t = crows.array() > n;
+                if (t.any()) {
+                    cerr << "t = " << t << endl;
+                }
             }
             todo.fill(false);
         }
