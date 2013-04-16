@@ -33,13 +33,13 @@ namespace {
                                              type:miSINGLE
                                              data:[NSData dataWithBytes:iniM length:sizeof(iniM)]];
     NSLog(@"%@", matM.dump);
-    Mat<float, 4, 3> M = matM;
+    Mat<float> M = matM;
     Matrix<float, 4, 3> X = M.array() * M.array();
     vMAT_Array * matX = vMAT_cast(X);
     NSLog(@"%@", matX.dump);
     vMAT_Array * matXv = [vMAT_Array arrayWithSize:vMAT_MakeSize(4, 3)
                                               type:miSINGLE];
-    Mat<float, 4, 3> Xv = matXv;
+    Mat<float> Xv = matXv;
     Xv <<
       4,   9, 169,
     121, 100,  64,
