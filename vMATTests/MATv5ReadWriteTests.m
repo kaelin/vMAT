@@ -27,7 +27,7 @@
     [super tearDown];
 }
 
-- (void)test_vMAT_load_single_55x57_v6;
+- (void)test_vMAT_load_async_single_55x57_v6;
 {
     NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-single-55x57-v6"
                                                            withExtension:@"mat"];
@@ -49,7 +49,7 @@
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
 }
 
-- (void)test_vMAT_load_single_55x57_v6_no_variables;
+- (void)test_vMAT_load_async_single_55x57_v6_no_variables;
 {
     NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-single-55x57-v6"
                                                            withExtension:@"mat"];
@@ -67,7 +67,7 @@
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
 }
 
-- (void)test_vMAT_load_magic_4x4_v6;
+- (void)test_vMAT_load_async_magic_4x4_v6;
 {
     NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-magic-4x4-v6"
                                                            withExtension:@"mat"];
@@ -97,7 +97,7 @@
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
 }
 
-- (void)test_vMAT_load_magic_4x4_v6_no_variables;
+- (void)test_vMAT_load_async_magic_4x4_v6_no_variables;
 {
     NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-magic-4x4-v6"
                                                            withExtension:@"mat"];
@@ -115,7 +115,7 @@
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
 }
 
-- (void)test_vMAT_load_multiple_variables;
+- (void)test_vMAT_load_async_multiple_variables;
 {
     NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"cluster-normaldata-10x3-13"
                                                            withExtension:@"mat"];
@@ -135,13 +135,13 @@
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
 }
 
-- (void)test_vMAT_load_nil_stream;
+- (void)test_vMAT_load_async_nil_stream;
 {
     STAssertThrowsSpecificNamed(vMAT_load_async(nil, nil, ^(NSDictionary *workspace, NSError *error) {
     }), NSException, NSInternalInconsistencyException, nil);
 }
 
-- (void)test_vMAT_load_order_5x4x3x2_v6;
+- (void)test_vMAT_load_async_order_5x4x3x2_v6;
 {
     NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-order-5x4x3x2-v6"
                                                            withExtension:@"mat"];
@@ -167,6 +167,24 @@
     long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
                                                                      1 * NSEC_PER_SEC));
     STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
+- (void)test_vMAT_load_multiple_variables;
+{
+    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"cluster-normaldata-10x3-13"
+                                                           withExtension:@"mat"];
+    NSError * error = nil;
+    NSDictionary * workspace = vMAT_load(URL, @[@"X", @"Y", @"Zv"], &error);
+    // NSLog(@"%@", workspace);
+    STAssertNil(error, nil);
+    STAssertNotNil([workspace objectForKey:@"X"], nil);
+    STAssertNotNil([workspace objectForKey:@"Y"], nil);
+    STAssertNotNil([workspace objectForKey:@"Zv"], nil);
+}
+
+- (void)test_vMAT_load_nil_URL;
+{
+    STAssertThrowsSpecificNamed(vMAT_load(nil, nil, NULL), NSException, NSInternalInconsistencyException, nil);
 }
 
 @end

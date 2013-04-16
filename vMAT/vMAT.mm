@@ -91,6 +91,27 @@ vMAT_fwrite(NSOutputStream * stream,
     });
 }
 
+NSDictionary *
+vMAT_load(NSURL * inputURL,
+          NSArray * variableNames,
+          NSError ** errorOut)
+{
+    NSInputStream * stream = [NSInputStream inputStreamWithURL:inputURL];
+    [stream open];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block NSDictionary * ws = nil;
+    vMAT_load_async(stream, variableNames, ^(NSDictionary * workspace, NSError * error) {
+        ws = workspace;
+        if (errorOut != NULL) {
+            *errorOut = error;
+        }
+        [stream close];
+        dispatch_semaphore_signal(semaphore);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    return ws;
+}
+
 void
 vMAT_load_async(NSInputStream * stream,
                 NSArray * variableNames,

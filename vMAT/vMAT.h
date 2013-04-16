@@ -138,6 +138,11 @@ vMAT_inconsistent(vMAT_Array * matZ,
 vMAT_API vMAT_Array *
 vMAT_linkage(vMAT_Array * matY);
 
+vMAT_API NSDictionary *
+vMAT_load(NSURL * inputURL,
+          NSArray * variableNames,
+          NSError ** errorOut);
+
 /*!
  @brief Load variables asynchronously from a MAT (v5) file into a workspace dictionary.
  @discussion
