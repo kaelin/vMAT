@@ -19,7 +19,6 @@ namespace {
     
 }
 
-
 vMAT_Array *
 vMAT_eye(vMAT_Size mxn)
 {
@@ -137,65 +136,6 @@ vDSP_Length
 vMAT_numel(vMAT_Array * matrix)
 {
     return vMAT_Size_prod(matrix.size);
-}
-
-vMAT_Array *
-vMAT_pick(vMAT_Array * matrix,
-          ...)
-{
-    va_list args;
-    va_start(args, matrix);
-    long argM = va_arg(args, long);
-    long argN = va_arg(args, long);
-    va_end(args);
-    int32_t indexBuffer[2] = { };
-    int32_t * M = NULL;
-    int32_t * N = NULL;
-    vDSP_Length lenM = 0, lenN = 0;
-    vMAT_Array * matM = nil;
-    vMAT_Array * matN = nil;
-    if (argM >= 0 && argM < 0x100) {
-        indexBuffer[0] = (int32_t)argM;
-        M = &indexBuffer[0];
-        lenM = 1;
-    }
-    else {
-        matM = vMAT_coerce((__bridge vMAT_Array *)(void *)argM, @[ @"int32" ]);
-        M = (int32_t *)matM.data.bytes;
-        lenM = vMAT_numel(matM);
-    }
-    if (argN >= 0 && argN < 0x100) {
-        indexBuffer[1] = (int32_t)argN;
-        N = &indexBuffer[1];
-        lenN = 1;
-    }
-    else {
-        matN = vMAT_coerce((__bridge vMAT_Array *)(void *)argN, @[ @"int32" ]);
-        N = (int32_t *)matN.data.bytes;
-        lenN = vMAT_numel(matN);
-    }
-    return vMAT_pick_idxvs(matrix, M, lenM, N, lenN);
-}
-
-vMAT_Array *
-vMAT_pick_idxvs(vMAT_Array * matrix,
-                int32_t * M,
-                vDSP_Length lenM,
-                int32_t * N,
-                vDSP_Length lenN)
-{
-    vMAT_Array * array = vMAT_zeros(vMAT_MakeSize((int32_t)lenM, (int32_t)lenN), @[ @"like:", matrix ]);
-    for (vDSP_Length idxN = 0;
-         idxN < lenN;
-         idxN++) {
-        for (vDSP_Length idxM = 0;
-             idxM < lenM;
-             idxM++) {
-            [array setElement:[matrix elementAtIndex:vMAT_MakeIndex(M[idxM], N[idxN])]
-                      atIndex:vMAT_MakeIndex((int32_t)idxM, (int32_t)idxN)];
-        }
-    }
-    return array;
 }
 
 static vMAT_MIType
