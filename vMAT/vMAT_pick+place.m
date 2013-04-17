@@ -24,14 +24,23 @@ initFlexIndexesFromArgs(vMAT_FlexIndexes * flexidxs,
                         va_list args)
 {
     long argM = va_arg(args, long);
-    long argN = va_arg(args, long);
+    long argN = -1;
     if (argM >= 0 && argM < 0x100) {
         flexidxs->scalarIndex[0] = (int32_t)argM;
         flexidxs->M = &flexidxs->scalarIndex[0];
         flexidxs->lenM = 1;
+        argN = va_arg(args, long);
     }
     else {
-        vMAT_Array * matM = vMAT_coerce((__bridge vMAT_Array *)(void *)argM, @[ @"int32" ]);
+        vMAT_Array * matM = (__bridge vMAT_Array *)(void *)argM;
+        if (matM.isLogical) {
+            matM = vMAT_find(matM, nil);
+            argN = 0;
+        }
+        else {
+            matM = vMAT_coerce(matM, @[ @"int32" ]);
+            argN = va_arg(args, long);
+        }
         flexidxs->M = (int32_t *)matM.data.bytes;
         flexidxs->lenM = vMAT_numel(matM);
         *matMOut = matM;

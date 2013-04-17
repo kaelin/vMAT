@@ -20,6 +20,11 @@
     return [self description];
 }
 
+- (BOOL)isLogical;
+{
+    return NO;
+}
+
 - (vMAT_Array *)mtrans;
 {
     return nil; // Subclass responsibility
@@ -111,9 +116,16 @@ namespace {
     return dump([self description], (int8_t *)self.data.bytes, self.size);
 }
 
+- (BOOL)isLogical;
+{
+    Mat<int8_t> A = self;
+    BOOL maybe = A.unaryExpr([](int8_t elt) { return elt == 1 || elt == 0; }).all();
+    return maybe;
+}
+
 - (vMAT_Array *)mtrans;
 {
-    Mat<int8_t, Dynamic, Dynamic> A = self;
+    Mat<int8_t> A = self;
     Matrix<int8_t, Dynamic, Dynamic> B = A.transpose();
     return vMAT_cast(B);
 }

@@ -89,6 +89,8 @@
 
 - (NSString *)dump;
 
+- (BOOL)isLogical;
+
 - (vMAT_Array *)mtrans;
 
 @end

@@ -20,12 +20,16 @@ namespace {
 
 @implementation EigenTests
 
-- (void)test_vMAT_pick;
+- (void)test_vMAT_pick_logical;
 {
-    Mat<double> I = vMAT_eye(vMAT_MakeSize(10));
-    Array<bool, Dynamic, Dynamic> sel = I.array() == 0.0;
-    vMAT_Array * matS = vMAT_cast(sel);
-    NSLog(@"%@", matS.dump);
+    vMAT_Array * matM = vMAT_cast(VectorXd::LinSpaced(40, 1.0, 40.0).eval());
+    [matM reshape:vMAT_MakeSize(5, 8)];
+    Mat<double> M = matM;
+    Array<bool, Dynamic, Dynamic> sel = M.unaryExpr([](double elt) { return (int)elt % 3 == 0; }).cast<bool>();
+    vMAT_Array * vecN = vMAT_pick(matM, vMAT_cast(sel));
+    NSLog(@"%@", vecN.dump);
+    vMAT_Array * vecNv = vMAT_cast(VectorXd::LinSpaced(13, 3.0, 39.0).eval());
+    STAssertEqualObjects(vecN, vecNv, @"Logical indexing broken");
 }
 
 @end
