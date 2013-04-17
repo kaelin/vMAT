@@ -18,57 +18,64 @@ typedef struct vMAT_FlexIndexes {
 } vMAT_FlexIndexes;
 
 static void
-initFlexIndexesFromArgs(vMAT_FlexIndexes * flexidxs,
-                        vMAT_Array ** matMOut,
-                        vMAT_Array ** matNOut,
-                        va_list args)
+initFlexIndexesFromArray(vMAT_FlexIndexes * flexidxs,
+                         vMAT_Array ** matMOut,
+                         vMAT_Array ** matNOut,
+                         NSArray * args)
 {
-    long argM = va_arg(args, long);
-    long argN = -1;
-    if (argM >= 0 && argM < 0x100) {
-        flexidxs->scalarIndex[0] = (int32_t)argM;
+    id argM = [args objectAtIndex:0];
+    if ([argM respondsToSelector:@selector(intValue)]) {
+        flexidxs->scalarIndex[0] = [argM intValue];
         flexidxs->M = &flexidxs->scalarIndex[0];
         flexidxs->lenM = 1;
-        argN = va_arg(args, long);
     }
-    else {
-        vMAT_Array * matM = (__bridge vMAT_Array *)(void *)argM;
+    else if ([argM respondsToSelector:@selector(isLogical)]) {
+        vMAT_Array * matM = argM;
         if (matM.isLogical) {
             matM = vMAT_find(matM, nil);
-            argN = 0;
         }
         else {
             matM = vMAT_coerce(matM, @[ @"int32" ]);
-            argN = va_arg(args, long);
         }
         flexidxs->M = (int32_t *)matM.data.bytes;
         flexidxs->lenM = vMAT_numel(matM);
         *matMOut = matM;
     }
-    if (argN >= 0 && argN < 0x100) {
-        flexidxs->scalarIndex[1] = (int32_t)argN;
-        flexidxs->N = &flexidxs->scalarIndex[1];
-        flexidxs->lenN = 1;
+    if (args.count >= 2) {
+        id argN = [args objectAtIndex:1];
+        if ([argN respondsToSelector:@selector(intValue)]) {
+            flexidxs->scalarIndex[1] = [argN intValue];
+            flexidxs->N = &flexidxs->scalarIndex[1];
+            flexidxs->lenN = 1;
+        }
+        else if ([argN respondsToSelector:@selector(isLogical)]) {
+            vMAT_Array * matN = argN;
+            if (matN.isLogical) {
+                matN = vMAT_find(matN, nil);
+            }
+            else {
+                matN = vMAT_coerce(matN, @[ @"int32" ]);
+            }
+            flexidxs->N = (int32_t *)matN.data.bytes;
+            flexidxs->lenN = vMAT_numel(matN);
+            *matNOut = matN;
+        }
     }
     else {
-        vMAT_Array * matN = vMAT_coerce((__bridge vMAT_Array *)(void *)argN, @[ @"int32" ]);
-        flexidxs->N = (int32_t *)matN.data.bytes;
-        flexidxs->lenN = vMAT_numel(matN);
-        *matNOut = matN;
+        flexidxs->scalarIndex[1] = 0;
+        flexidxs->N = &flexidxs->scalarIndex[1];
+        flexidxs->lenN = 1;
     }
 }
 
 vMAT_Array *
 vMAT_pick(vMAT_Array * matrix,
-          ...)
+          NSArray * indexes)
 {
     vMAT_FlexIndexes flexidxs = { };
     vMAT_Array * matM = nil;
     vMAT_Array * matN = nil;
-    va_list args;
-    va_start(args, matrix);
-    initFlexIndexesFromArgs(&flexidxs, &matM, &matN, args);
-    va_end(args);
+    initFlexIndexesFromArray(&flexidxs, &matM, &matN, indexes);
     return vMAT_pick_idxvs(matrix, flexidxs.M, flexidxs.lenM, flexidxs.N, flexidxs.lenN);
 }
 
@@ -95,16 +102,13 @@ vMAT_pick_idxvs(vMAT_Array * matrix,
 
 vMAT_Array *
 vMAT_place(vMAT_Array * matrixA,
-           vMAT_Array * matrixB,
-           ...)
+           NSArray * indexes,
+           vMAT_Array * matrixB)
 {
     vMAT_FlexIndexes flexidxs = { };
     vMAT_Array * matM = nil;
     vMAT_Array * matN = nil;
-    va_list args;
-    va_start(args, matrixB);
-    initFlexIndexesFromArgs(&flexidxs, &matM, &matN, args);
-    va_end(args);
+    initFlexIndexesFromArray(&flexidxs, &matM, &matN, indexes);
     
     return nil;
 }

@@ -26,7 +26,7 @@ namespace {
     [matM reshape:vMAT_MakeSize(5, 8)];
     Mat<double> M = matM;
     Array<bool, Dynamic, Dynamic> sel = M.unaryExpr([](double elt) { return (int)elt % 3 == 0; }).cast<bool>();
-    vMAT_Array * vecN = vMAT_pick(matM, vMAT_cast(sel));
+    vMAT_Array * vecN = vMAT_pick(matM, @[ vMAT_cast(sel) ]);
     NSLog(@"%@", vecN.dump);
     vMAT_Array * vecNv = vMAT_cast(VectorXd::LinSpaced(13, 3.0, 39.0).eval());
     STAssertEqualObjects(vecN, vecNv, @"Logical indexing broken");

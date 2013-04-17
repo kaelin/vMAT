@@ -200,7 +200,7 @@ vMAT_pdist2(vMAT_Array * sampleA,
 
 vMAT_API vMAT_Array *
 vMAT_pick(vMAT_Array * matrix,
-          ...);
+          NSArray * indexes);
 
 vMAT_API vMAT_Array *
 vMAT_pick_idxvs(vMAT_Array * matrix,
