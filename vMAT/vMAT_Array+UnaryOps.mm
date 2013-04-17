@@ -34,18 +34,64 @@ namespace {
     using namespace vMAT;
     
     template <typename T>
+    inline Eigen::Map<Matrix<T, Dynamic, Dynamic>> toDump(T * A, int rows, int columns)
+    {
+        Eigen::Map<Matrix<T, Dynamic, Dynamic>> DATA(A, rows, columns);
+        return DATA;
+    }
+    
+    inline Matrix<int32_t, Dynamic, Dynamic> toDump(int8_t * A, int rows, int columns)
+    {
+        Eigen::Map<Matrix<int8_t, Dynamic, Dynamic>> CDATA(A, rows, columns);
+        Matrix<int32_t, Dynamic, Dynamic> DATA(CDATA.cast<int32_t>());
+        return DATA;
+    }
+    
+    inline Matrix<uint32_t, Dynamic, Dynamic> toDump(uint8_t * A, int rows, int columns)
+    {
+        Eigen::Map<Matrix<uint8_t, Dynamic, Dynamic>> CDATA(A, rows, columns);
+        Matrix<uint32_t, Dynamic, Dynamic> DATA(CDATA.cast<uint32_t>());
+        return DATA;
+    }
+    
+    template <typename T>
     NSString *
     dump(NSString * prefix, T * A, vMAT_Size sizeA)
     {
         NSMutableString * dump = [NSMutableString stringWithString:prefix];
         [dump appendString:@" = \n"];
-        Eigen::Map<Matrix<T, Dynamic, Dynamic>> DATA(A, sizeA[0], sizeA[1]);
         stringstream out;
-        out << DATA << endl;
+        out << toDump(A, sizeA[0], sizeA[1]) << endl;
+        [dump appendFormat:@"%s", out.str().c_str()];
+        return dump;
+    }
+#if 0
+    template <> // Specialized so elements print as numbers instead of chars
+    NSString *
+    dump(NSString * prefix, int8_t * A, vMAT_Size sizeA)
+    {
+        NSMutableString * dump = [NSMutableString stringWithString:prefix];
+        [dump appendString:@" = \n"];
+        Eigen::Map<Matrix<int8_t, Dynamic, Dynamic>> DATA(A, sizeA[0], sizeA[1]);
+        stringstream out;
+        out << DATA.cast<int32_t>() << endl;
         [dump appendFormat:@"%s", out.str().c_str()];
         return dump;
     }
     
+    template <> // Specialized so elements print as numbers instead of chars
+    NSString *
+    dump(NSString * prefix, uint8_t * A, vMAT_Size sizeA)
+    {
+        NSMutableString * dump = [NSMutableString stringWithString:prefix];
+        [dump appendString:@" = \n"];
+        Eigen::Map<Matrix<uint8_t, Dynamic, Dynamic>> DATA(A, sizeA[0], sizeA[1]);
+        stringstream out;
+        out << DATA.cast<uint32_t>() << endl;
+        [dump appendFormat:@"%s", out.str().c_str()];
+        return dump;
+    }
+#endif
 }
 
 @implementation vMAT_DoubleArray (UnaryOps)
