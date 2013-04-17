@@ -65,33 +65,7 @@ namespace {
         [dump appendFormat:@"%s", out.str().c_str()];
         return dump;
     }
-#if 0
-    template <> // Specialized so elements print as numbers instead of chars
-    NSString *
-    dump(NSString * prefix, int8_t * A, vMAT_Size sizeA)
-    {
-        NSMutableString * dump = [NSMutableString stringWithString:prefix];
-        [dump appendString:@" = \n"];
-        Eigen::Map<Matrix<int8_t, Dynamic, Dynamic>> DATA(A, sizeA[0], sizeA[1]);
-        stringstream out;
-        out << DATA.cast<int32_t>() << endl;
-        [dump appendFormat:@"%s", out.str().c_str()];
-        return dump;
-    }
     
-    template <> // Specialized so elements print as numbers instead of chars
-    NSString *
-    dump(NSString * prefix, uint8_t * A, vMAT_Size sizeA)
-    {
-        NSMutableString * dump = [NSMutableString stringWithString:prefix];
-        [dump appendString:@" = \n"];
-        Eigen::Map<Matrix<uint8_t, Dynamic, Dynamic>> DATA(A, sizeA[0], sizeA[1]);
-        stringstream out;
-        out << DATA.cast<uint32_t>() << endl;
-        [dump appendFormat:@"%s", out.str().c_str()];
-        return dump;
-    }
-#endif
 }
 
 @implementation vMAT_DoubleArray (UnaryOps)
