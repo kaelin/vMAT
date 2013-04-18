@@ -65,7 +65,8 @@ vMAT_cluster(vMAT_Array * matZ,
  @result A <code>vMAT_Array</code> containing the identity matrix.
  */
 vMAT_API vMAT_Array *
-vMAT_eye(vMAT_Size mxn);
+vMAT_eye(vMAT_Size mxn,
+         NSArray * options);
 
 vMAT_API vMAT_Array *
 vMAT_find(vMAT_Array * matrix,

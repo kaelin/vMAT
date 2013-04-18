@@ -20,7 +20,8 @@ namespace {
 }
 
 vMAT_Array *
-vMAT_eye(vMAT_Size mxn)
+vMAT_eye(vMAT_Size mxn,
+         NSArray * options)
 {
     if (mxn[1] == 0) mxn[1] = mxn[0];
     vMAT_Array * array = vMAT_zeros(mxn, nil);

@@ -50,7 +50,7 @@ namespace {
 
 - (void)test_Mat;
 {
-    Mat<double, 3, Dynamic> I = vMAT_eye(vMAT_MakeSize(3, 5));
+    Mat<double, 3, Dynamic> I = vMAT_eye(vMAT_MakeSize(3, 5), nil);
     std::cout << I << std::endl;
 }
 

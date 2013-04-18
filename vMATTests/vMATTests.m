@@ -34,14 +34,14 @@
 {
     vMAT_Array * matE = nil;
     const double * E = NULL;
-    matE = vMAT_eye(vMAT_MakeSize(1));
+    matE = vMAT_eye(vMAT_MakeSize(1), nil);
     {
         E = matE.data.bytes;
         STAssertNotNil(matE, nil);
         STAssertEquals(matE.data.length, sizeof(double), nil);
         STAssertEquals(E[0], 1.0, nil);
     }
-    matE = vMAT_eye(vMAT_MakeSize(3));
+    matE = vMAT_eye(vMAT_MakeSize(3), nil);
     {
         const double EYE[] = {
             1, 0, 0,
@@ -55,7 +55,7 @@
             STAssertEquals(E[i], EYE[i], nil);
         }
     }
-    matE = vMAT_eye(vMAT_MakeSize(3, 5));
+    matE = vMAT_eye(vMAT_MakeSize(3, 5), nil);
     {
         const double EYE[] = {
             1, 0, 0,
@@ -71,7 +71,7 @@
             STAssertEquals(E[i], EYE[i], nil);
         }
     }
-    matE = vMAT_eye(vMAT_MakeSize(3, 2));
+    matE = vMAT_eye(vMAT_MakeSize(3, 2), nil);
     {
         const double EYE[] = {
             1, 0, 0,
@@ -301,7 +301,7 @@
 {
     vMAT_Array * matY = nil;
     const float * Y = NULL;
-    vMAT_Array * matE = vMAT_single(vMAT_eye(vMAT_MakeSize(2, 3)));
+    vMAT_Array * matE = vMAT_single(vMAT_eye(vMAT_MakeSize(2, 3), nil));
     matY = vMAT_pdist(matE);
     {
         const float Z[] = {

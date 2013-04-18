@@ -101,9 +101,9 @@ vMAT_pick_idxvs(vMAT_Array * matrix,
 }
 
 vMAT_Array *
-vMAT_place(vMAT_Array * matrixA,
+vMAT_place(vMAT_Array * matrix,
            NSArray * indexes,
-           vMAT_Array * matrixB)
+           id source)
 {
     vMAT_FlexIndexes flexidxs = { };
     vMAT_Array * matM = nil;

@@ -187,4 +187,15 @@
     STAssertThrowsSpecificNamed(vMAT_load(nil, nil, NULL), NSException, NSInternalInconsistencyException, nil);
 }
 
+- (void)test_vMAT_manifesto;
+{
+    NSURL * URL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-magic-4x4-v6"
+                                                           withExtension:@"mat"];
+    NSError * error = nil;
+    NSDictionary * workspace = vMAT_load(URL, @[ @"M" ], &error);
+    NSLog(@"workspace = %@", workspace);
+    vMAT_Array * matM = [workspace variable:@"M"].matrix;
+    STAssertNotNil(matM, @"Failed to load M");
+}
+
 @end
