@@ -4,11 +4,13 @@ vMAT
 The **vMAT** library implements a grab-bag of mathematical functions inspired by **MATLAB**[^fn].
 
 This library is being developed as part of a facial recognition project. As such, it
-contains a small (but growing) set of matrix functions and related utilities which that project happens to use. In its present
-state, there's probably not enough here to be of much interest to anyone outside of that effort, except perhaps as an
-example of how **MATLAB** code can be expressed in vectorized **Objective-C**.
+contains a small (but growing) set of matrix functions and related utilities which that project happens to use.
+The project is still in an early, pre-release state right now, but stay tuned...
 
-# matxd
+For an idea of what is to come, have a look at the first draft of [The vMAT Manifesto](http://kaelin.github.io/posts/the-vmat-manifesto/).
+
+
+## matxd
 
 **matxd** is a command-line tool for exploring the layout of the binary `.mat` file format of **MATLAB**.
 It's still in development right now, and not terribly useful for anything beyond validating the
