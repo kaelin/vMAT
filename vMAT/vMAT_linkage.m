@@ -26,7 +26,7 @@ vMAT_linkage(vMAT_Array * matY)
         R[idxN] = idxN;
     }
     // Now build the cluster tree in an 3x(n-1) matrix (Z).
-    vMAT_Array * matZ = [vMAT_Array arrayWithSize:vMAT_MakeSize(3, (int32_t)n - 1) type:miSINGLE];
+    vMAT_Array * matZ = [vMAT_Array arrayWithSize:vMAT_MakeSize(3, (vMAT_idx_t)n - 1) type:miSINGLE];
     float * Y = matY.data.mutableBytes;
     float * Z = matZ.data.mutableBytes;
     @autoreleasepool {

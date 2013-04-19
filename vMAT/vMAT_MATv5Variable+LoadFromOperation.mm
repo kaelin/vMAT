@@ -61,21 +61,21 @@
 
 static void
 vMAT_Size123Iterator(vMAT_Size size,
-                     void (^ block)(int32_t n, int32_t o, int32_t p))
+                     void (^ block)(vMAT_idx_t n, vMAT_idx_t p, vMAT_idx_t q))
 {
-    int32_t limP = size[3] ? : 1;
-    int32_t limO = size[2] ? : 1;
-    int32_t limN = size[1] ? : 1;
-    for (int32_t p = 0;
-         p < limP;
-         p++) {
-        for (int32_t o = 0;
-             o < limO;
-             o++) {
-            for (int32_t n = 0;
+    vMAT_idx_t limQ = size[3] ? : 1;
+    vMAT_idx_t limP = size[2] ? : 1;
+    vMAT_idx_t limN = size[1] ? : 1;
+    for (vMAT_idx_t q = 0;
+         q < limQ;
+         q++) {
+        for (vMAT_idx_t p = 0;
+             p < limP;
+             p++) {
+            for (vMAT_idx_t n = 0;
                  n < limN;
                  n++) {
-                block(n, o, p);
+                block(n, p, q);
             }
         }
     }
@@ -122,11 +122,11 @@ namespace {
         NSCAssert(self.array.data.length == lenD, @"Oops!");
         ClassB * D = (ClassB *)[self.array.data mutableBytes];
         __block long idxD = 0;
-        vMAT_Size123Iterator(self.size, ^(int32_t n, int32_t o, int32_t p) {
+        vMAT_Size123Iterator(self.size, ^(vMAT_idx_t n, vMAT_idx_t p, vMAT_idx_t q) {
             [operation readComplete:C
                              length:lenC];
             if (operation.swapBytes) { SwapA((void *)C, lenC / sizeof(TypeA)); }
-            for (int m = 0;
+            for (vMAT_idx_t m = 0;
                  m < self.size[0];
                  m++) {
                 D[idxD] = C[m];

@@ -27,7 +27,7 @@ vMAT_eye(vMAT_Size mxn,
     vMAT_Array * array = vMAT_zeros(mxn, nil);
     double * A = (double *)array.data.mutableBytes;
     long diag = MIN(mxn[0], mxn[1]);
-    for (int n = 0;
+    for (vMAT_idx_t n = 0;
          n < diag;
          n++) {
         A[n * mxn[0] + n] = 1;
@@ -50,10 +50,10 @@ vMAT_find(vMAT_Array * matrix,
           NSArray * options)
 {
     Mat<bool, Dynamic, Dynamic> S = matrix;
-    int count = S.cast<int>().sum();
-    Mat<int, Dynamic, 1> indexes = vMAT_zeros(vMAT_MakeSize(count, 1), @[ @"int32" ]);
-    int idx = 0;
-    foreach_index(S, [&indexes, &idx] (int idxS, bool & stop) {
+    vMAT_idx_t count = S.cast<vMAT_idx_t>().sum();
+    Mat<vMAT_idx_t, Dynamic, 1> indexes = vMAT_zeros(vMAT_MakeSize(count, 1), @[ @"index" ]);
+    vMAT_idx_t idx = 0;
+    foreach_index(S, [&indexes, &idx] (vMAT_idx_t idxS, bool & stop) {
         indexes[idx++] = idxS;
     });
     return indexes;
@@ -92,11 +92,11 @@ vMAT_fwrite(NSOutputStream * stream,
 }
 
 vMAT_Array *
-vMAT_idxstep(int32_t start,
-             int32_t limit,
-             int32_t step)
+vMAT_idxstep(vMAT_idx_t start,
+             vMAT_idx_t limit,
+             vMAT_idx_t step)
 {
-    vMAT_Array * array = vMAT_cast(VectorXi::LinSpaced(limit - start, start, limit - 1).eval());
+    vMAT_Array * array = vMAT_cast(Matrix<vMAT_idx_t, Dynamic, 1>::LinSpaced(limit - start, start, limit - 1).eval());
     return array;
 }
 
@@ -198,7 +198,7 @@ vMAT_coerce(id source,
         else array = matrix;
     }
     else if ([source respondsToSelector:@selector(objectAtIndex:)]) {
-        array = [vMAT_Array arrayWithSize:vMAT_MakeSize((int32_t)[source count], 1) type:type];
+        array = [vMAT_Array arrayWithSize:vMAT_MakeSize((vMAT_idx_t)[source count], 1) type:type];
         vMAT_place(array, @[ [NSNull null] ], source);
     }
     return array;

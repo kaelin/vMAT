@@ -18,7 +18,7 @@ vMAT_pdist(vMAT_Array * sample)
     const float * D = matD.data.bytes;
     long lenN = matD.size[0];
     long lenY = lenN * (lenN - 1) / 2;
-    vMAT_Array * matY = [vMAT_Array arrayWithSize:vMAT_MakeSize((int32_t)lenY, 1) type:miSINGLE];
+    vMAT_Array * matY = [vMAT_Array arrayWithSize:vMAT_MakeSize((vMAT_idx_t)lenY, 1) type:miSINGLE];
     float * Y = matY.data.mutableBytes;
     long idxY = 0;
     for (long n = 0;

@@ -63,16 +63,17 @@ namespace vMAT {
     template SEL genericCmd(NSString * format, vMAT_MIType typeA, vMAT_MIType typeB);
     template SEL genericCmd(NSString * format, vMAT_MIType type, vMAT_MXClass mxClass);
     
-    double   DOUBLE;
-    float    SINGLE;
-    int8_t   INT8;
-    uint8_t  UINT8;
-    int16_t  INT16;
-    uint16_t UINT16;
-    int32_t  INT32;
-    uint32_t UINT32;
-    int64_t  INT64;
-    uint64_t UINT64;
+    double     DOUBLE;
+    float      SINGLE;
+    int8_t     INT8;
+    uint8_t    UINT8;
+    int16_t    INT16;
+    uint16_t   UINT16;
+    int32_t    INT32;
+    uint32_t   UINT32;
+    int64_t    INT64;
+    uint64_t   UINT64;
+    vMAT_idx_t INDEX;
     
 }
 
@@ -120,7 +121,7 @@ vMAT_StringFromSize(vMAT_Size size)
     for (int i = 0;
          i < vMAT_MAXDIMS;
          i++) {
-        if (size[i] > 0) [string appendFormat:@"%s%d", sep.c_str(), size[i]];
+        if (size[i] > 0) [string appendFormat:@"%s%ld", sep.c_str(), (long)size[i]];
         else break;
         sep = " ";
     }
@@ -175,6 +176,7 @@ vMAT_MITypeNamed(NSString * name)
            @"uint32": [NSNumber numberWithInt:miUINT32],
            @"int64":  [NSNumber numberWithInt:miINT64],
            @"uint64": [NSNumber numberWithInt:miUINT64],
+           @"index":  [NSNumber numberWithInt:vMAT::MIType(vMAT::INDEX)],
            };
     });
     return (vMAT_MIType)[[namedTypes objectForKey:[name lowercaseString]] intValue];

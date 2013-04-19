@@ -143,8 +143,8 @@ dispatch_semaphore_t semaphore = NULL;
             
         case NSStreamEventEndEncountered:
             if (_isGrowingMatrix) {
-                int32_t m = _matrix.size[0];
-                int32_t n = (int32_t)_matrix.data.length / (m * vMAT_MITypeSizeof(_matrix.type));
+                vMAT_idx_t m = _matrix.size[0];
+                vMAT_idx_t n = (vMAT_idx_t)_matrix.data.length / (m * vMAT_MITypeSizeof(_matrix.type));
                 [_matrix reshape:vMAT_MakeSize(m, n)];
                 [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
                                   forMode:NSRunLoopCommonModes];

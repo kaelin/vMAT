@@ -39,20 +39,20 @@ namespace {
     using namespace vMAT;
     
     template <typename T>
-    inline Eigen::Map<Matrix<T, Dynamic, Dynamic>> toDump(T * A, int rows, int columns)
+    inline Eigen::Map<Matrix<T, Dynamic, Dynamic>> toDump(T * A, vMAT_idx_t rows, vMAT_idx_t columns)
     {
         Eigen::Map<Matrix<T, Dynamic, Dynamic>> DATA(A, rows, columns);
         return DATA;
     }
     
-    inline Matrix<int32_t, Dynamic, Dynamic> toDump(int8_t * A, int rows, int columns)
+    inline Matrix<int32_t, Dynamic, Dynamic> toDump(int8_t * A, vMAT_idx_t rows, vMAT_idx_t columns)
     {
         Eigen::Map<Matrix<int8_t, Dynamic, Dynamic>> CDATA(A, rows, columns);
         Matrix<int32_t, Dynamic, Dynamic> DATA(CDATA.cast<int32_t>());
         return DATA;
     }
     
-    inline Matrix<uint32_t, Dynamic, Dynamic> toDump(uint8_t * A, int rows, int columns)
+    inline Matrix<uint32_t, Dynamic, Dynamic> toDump(uint8_t * A, vMAT_idx_t rows, vMAT_idx_t columns)
     {
         Eigen::Map<Matrix<uint8_t, Dynamic, Dynamic>> CDATA(A, rows, columns);
         Matrix<uint32_t, Dynamic, Dynamic> DATA(CDATA.cast<uint32_t>());

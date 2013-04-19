@@ -129,10 +129,10 @@ namespace vMAT {
         
         inline const vMAT_Size matsize() const { return matA.size; } // Don't shadow Eigen::Map::size()
         inline const long size() const { return Eigen::Map<EigenObjectType, Eigen::Aligned, StrideType>::size(); }
-        inline const int size(int dim) const { return matA.size[dim]; }
+        inline const vMAT_idx_t size(int dim) const { return matA.size[dim]; }
     };
     
-    template <typename Scalar, int M = Eigen::Dynamic, int N = Eigen::Dynamic, int Options = 0>
+    template <typename Scalar, long M = Eigen::Dynamic, long N = Eigen::Dynamic, int Options = 0>
     struct Mat : Map<Eigen::Matrix<Scalar, M, N, Options>> {
         Scalar * A;
         vDSP_Length lenA;
@@ -148,9 +148,9 @@ namespace vMAT {
                                    matrix.size[0] * matrix.size[1] * matrix.size[2]);
         }
 
-        inline Scalar & operator[](vDSP_Length idx) { return A[idx]; } // A[idx]
+        inline Scalar & operator[](vMAT_idx_t idx) { return A[idx]; } // A[idx]
         
-        Scalar & operator[](vMAT_Index idxs)                           // A[{m,n,...}]
+        Scalar & operator[](vMAT_Index idxs)                          // A[{m,n,...}]
         {
             long idxA = vMAT_Index_dot(multiA, idxs);
             NSCParameterAssert(idxA >= 0 && idxA < lenA);

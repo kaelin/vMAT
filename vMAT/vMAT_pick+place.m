@@ -10,10 +10,10 @@
 
 
 typedef struct vMAT_FlexIndexes {
-    int32_t scalarIndex[2];
-    int32_t * M;
+    vMAT_idx_t scalarIndex[2];
+    vMAT_idx_t * M;
     vDSP_Length lenM;
-    int32_t * N;
+    vMAT_idx_t * N;
     vDSP_Length lenN;
 } vMAT_FlexIndexes;
 
@@ -27,12 +27,12 @@ initFlexIndexesFromArray(vMAT_FlexIndexes * flexidxs,
     id argM = [args objectAtIndex:0];
     if (argM == [NSNull null]) {
         vMAT_Array * matM = vMAT_idxstep(0, dims[0], 1);
-        flexidxs->M = (int32_t *)matM.data.bytes;
+        flexidxs->M = (vMAT_idx_t *)matM.data.bytes;
         flexidxs->lenM = vMAT_numel(matM);
         *matMOut = matM;
     }
-    else if ([argM respondsToSelector:@selector(intValue)]) {
-        flexidxs->scalarIndex[0] = [argM intValue];
+    else if ([argM respondsToSelector:@selector(longValue)]) {
+        flexidxs->scalarIndex[0] = [argM longValue];
         flexidxs->M = &flexidxs->scalarIndex[0];
         flexidxs->lenM = 1;
     }
@@ -42,22 +42,22 @@ initFlexIndexesFromArray(vMAT_FlexIndexes * flexidxs,
             matM = vMAT_find(matM, nil);
         }
         else {
-            matM = vMAT_coerce(matM, @[ @"int32" ]);
+            matM = vMAT_coerce(matM, @[ @"index" ]);
         }
-        flexidxs->M = (int32_t *)matM.data.bytes;
+        flexidxs->M = (vMAT_idx_t *)matM.data.bytes;
         flexidxs->lenM = vMAT_numel(matM);
         *matMOut = matM;
     }
     else if ([argM respondsToSelector:@selector(objectAtIndex:)]) {
-        vMAT_Array * matM = vMAT_coerce(argM, @[ @"int32" ]);
-        flexidxs->M = (int32_t *)matM.data.bytes;
+        vMAT_Array * matM = vMAT_coerce(argM, @[ @"index" ]);
+        flexidxs->M = (vMAT_idx_t *)matM.data.bytes;
         flexidxs->lenM = vMAT_numel(matM);
         *matMOut = matM;
     }
     if (args.count >= 2) {
         id argN = [args objectAtIndex:1];
-        if ([argN respondsToSelector:@selector(intValue)]) {
-            flexidxs->scalarIndex[1] = [argN intValue];
+        if ([argN respondsToSelector:@selector(longValue)]) {
+            flexidxs->scalarIndex[1] = [argN longValue];
             flexidxs->N = &flexidxs->scalarIndex[1];
             flexidxs->lenN = 1;
         }
@@ -67,9 +67,9 @@ initFlexIndexesFromArray(vMAT_FlexIndexes * flexidxs,
                 matN = vMAT_find(matN, nil);
             }
             else {
-                matN = vMAT_coerce(matN, @[ @"int32" ]);
+                matN = vMAT_coerce(matN, @[ @"index" ]);
             }
-            flexidxs->N = (int32_t *)matN.data.bytes;
+            flexidxs->N = (vMAT_idx_t *)matN.data.bytes;
             flexidxs->lenN = vMAT_numel(matN);
             *matNOut = matN;
         }
@@ -94,12 +94,12 @@ vMAT_pick(vMAT_Array * matrix,
 
 vMAT_Array *
 vMAT_pick_idxvs(vMAT_Array * matrix,
-                int32_t * M,
+                vMAT_idx_t * M,
                 vDSP_Length lenM,
-                int32_t * N,
+                vMAT_idx_t * N,
                 vDSP_Length lenN)
 {
-    vMAT_Array * array = vMAT_zeros(vMAT_MakeSize((int32_t)lenM, (int32_t)lenN), @[ @"like:", matrix ]);
+    vMAT_Array * array = vMAT_zeros(vMAT_MakeSize((vMAT_idx_t)lenM, (vMAT_idx_t)lenN), @[ @"like:", matrix ]);
     for (vDSP_Length idxN = 0;
          idxN < lenN;
          idxN++) {
@@ -107,7 +107,7 @@ vMAT_pick_idxvs(vMAT_Array * matrix,
              idxM < lenM;
              idxM++) {
             [array setElement:[matrix elementAtIndex:vMAT_MakeIndex(M[idxM], N[idxN])]
-                      atIndex:vMAT_MakeIndex((int32_t)idxM, (int32_t)idxN)];
+                      atIndex:vMAT_MakeIndex((vMAT_idx_t)idxM, (vMAT_idx_t)idxN)];
         }
     }
     return array;
@@ -127,9 +127,9 @@ vMAT_place(vMAT_Array * matrix,
 
 vMAT_Array *
 vMAT_place_idxvs(vMAT_Array * matrix,
-                 int32_t * M,
+                 vMAT_idx_t * M,
                  vDSP_Length lenM,
-                 int32_t * N,
+                 vMAT_idx_t * N,
                  vDSP_Length lenN,
                  id source)
 {

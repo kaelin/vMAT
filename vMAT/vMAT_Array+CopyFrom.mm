@@ -51,7 +51,7 @@ namespace {
         long lenB = vMAT_Size_prod(matrix.size);
         SEL _cmd = @selector(copyFrom:);
         NSParameterAssert(lenA == lenB);
-        for (int i = 0;
+        for (vMAT_idx_t i = 0;
              i < lenA;
              i++) {
             A[i] = B[i];

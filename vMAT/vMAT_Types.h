@@ -55,11 +55,19 @@ enum {
     vMAT_ErrorCodeUnsupportedMATv5Element = 304,
 };
 
+#if 1
+typedef long vMAT_idx_t;
+typedef long vMAT_idx_v __attribute__((__vector_size__(32)));
+#else
+typedef int vMAT_idx_t;
+typedef int vMAT_idx_v __attribute__((__vector_size__(16)));
+#endif
+
 typedef struct vMAT_Index {
-    __v4si d;
+    vMAT_idx_v d;
 #ifdef __cplusplus
-    vMAT_Index(__v4si d) : d(d) { }
-    vMAT_Index(int d0 = 0, int d1 = 0, int d2 = 0, int d3 = 0) : d((__v4si){ d0, d1, d2, d3 }) { }
+    vMAT_Index(vMAT_idx_v d) : d(d) { }
+    vMAT_Index(vMAT_idx_t d0 = 0, vMAT_idx_t d1 = 0, vMAT_idx_t d2 = 0, vMAT_idx_t d3 = 0) : d((vMAT_idx_v){ d0, d1, d2, d3 }) { }
 #endif
 } vMAT_Index;
 
@@ -69,14 +77,14 @@ static inline long
 vMAT_Index_dot(vMAT_Index a,
                vMAT_Index b)
 {
-    __v4si c = a.d * b.d;
+    vMAT_idx_v c = a.d * b.d;
     return (long)c[0] + c[1] + c[2] + c[3];
 }
 
 /*!
  @brief Type for array size (dimensions).
  */
-typedef __v4si vMAT_Size;
+typedef vMAT_idx_v vMAT_Size;
 
 /*!
  @brief This macro reflects the maximum number of dimensions that can be expressed using a <code>vMAT_Size</code>.
@@ -91,7 +99,7 @@ typedef __v4si vMAT_Size;
  */
 #define vMAT_MakeSize(dims...) ((vMAT_Size){ dims })
 
-static inline int
+static inline vMAT_idx_t
 vMAT_Size_cmp(vMAT_Size a,
               vMAT_Size b)
 {
@@ -105,7 +113,7 @@ static inline long
 vMAT_Size_dot(vMAT_Size a,
               vMAT_Size b)
 {
-    __v4si c = a * b;
+    vMAT_idx_v c = a * b;
     return (long)c[0] + c[1] + c[2] + c[3];
 }
 
@@ -205,6 +213,7 @@ namespace vMAT {
     inline vMAT_MIType MIType(uint64_t) { return miUINT64; }
 
     inline vMAT_MIType MIType(bool    ) { return miINT8;   }
+    inline vMAT_MIType MIType(long    ) { return miINT64;   }
     
     extern double   DOUBLE;
     extern float    SINGLE;

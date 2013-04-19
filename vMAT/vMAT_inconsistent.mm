@@ -22,15 +22,15 @@ namespace {
     typedef Mat<double, 4, Dynamic> MatY; // Result is a 4x(N+1) inconsistancy matrix
     
     void
-    traceTree(MatZ Z, double s[3], int k, unsigned int depth)
+    traceTree(MatZ Z, double s[3], vMAT_idx_t k, unsigned int depth)
     {
-        int m = Z.size(1) + 1;
-        __block vector<int> klist(m, k);
-        __block vector<int> dlist(m, depth);
-        __block int topk = 0;
-        int currk = 0;
+        vMAT_idx_t m = Z.size(1) + 1;
+        __block vector<vMAT_idx_t> klist(m, k);
+        __block vector<unsigned int> dlist(m, depth);
+        __block vMAT_idx_t topk = 0;
+        vMAT_idx_t currk = 0;
         
-        void (^ subtree)(int i) = ^(int i) {
+        void (^ subtree)(vMAT_idx_t i) = ^(vMAT_idx_t i) {
             if (i >= m) {                // If it's not a leaf...
                 topk += 1;
                 klist[topk] = i - m;
@@ -60,10 +60,10 @@ vMAT_inconsistent(vMAT_Array * matZ,
 {
     if (depth == 0) depth = 2;
     MatZ Z = vMAT_double(matZ);
-    int32_t n = Z.size(1);
+    vMAT_idx_t n = Z.size(1);
     MatY Y = vMAT_zeros(vMAT_MakeSize(4, n), nil);
     double s[3] = { };
-    for (int k = 0;
+    for (vMAT_idx_t k = 0;
          k < n;
          k++) {
         traceTree(Z, s, k, depth);

@@ -126,9 +126,9 @@ vMAT_fwrite(NSOutputStream * stream,
                                          NSError * error));
 
 vMAT_API vMAT_Array *
-vMAT_idxstep(int32_t start,
-             int32_t limit,
-             int32_t step);
+vMAT_idxstep(vMAT_idx_t start,
+             vMAT_idx_t limit,
+             vMAT_idx_t step);
 
 vMAT_API vMAT_Array *
 vMAT_inconsistent(vMAT_Array * matZ,
@@ -210,9 +210,9 @@ vMAT_pick(vMAT_Array * matrix,
 
 vMAT_API vMAT_Array *
 vMAT_pick_idxvs(vMAT_Array * matrix,
-                int32_t * M,
+                vMAT_idx_t * M,
                 vDSP_Length lenM,
-                int32_t * N,
+                vMAT_idx_t * N,
                 vDSP_Length lenN);
 
 vMAT_API vMAT_Array *
@@ -222,9 +222,9 @@ vMAT_place(vMAT_Array * matrix,
 
 vMAT_API vMAT_Array *
 vMAT_place_idxvs(vMAT_Array * matrix,
-                 int32_t * M,
+                 vMAT_idx_t * M,
                  vDSP_Length lenM,
-                 int32_t * N,
+                 vMAT_idx_t * N,
                  vDSP_Length lenN,
                  id source);
 

@@ -58,10 +58,10 @@ namespace {
 {
     Mat<double> D = vMAT_zeros((vMAT_Size){ 10, 3, 2 }, @[ @"double" ]);
     {
-        int seq = 1;
-        for (int p = 0; p < 2; p++) {
-            for (int n = 0; n < 3; n++) {
-                for (int m = 0; m < 10; m++) {
+        vMAT_idx_t seq = 1;
+        for (vMAT_idx_t p = 0; p < 2; p++) {
+            for (vMAT_idx_t n = 0; n < 3; n++) {
+                for (vMAT_idx_t m = 0; m < 10; m++) {
                     D[{m,n,p}] = seq++;
                 }
             }
@@ -79,10 +79,10 @@ namespace {
     vMAT_Array * matS = vMAT_zeros((vMAT_Size){ 10, 3, 2 }, @[ @"single" ]);
     Mat<float> S(matS);
     {
-        int seq = 1;
-        for (int p = 0; p < 2; p++) {
-            for (int n = 0; n < 3; n++) {
-                for (int m = 0; m < 10; m++) {
+        vMAT_idx_t seq = 1;
+        for (vMAT_idx_t p = 0; p < 2; p++) {
+            for (vMAT_idx_t n = 0; n < 3; n++) {
+                for (vMAT_idx_t m = 0; m < 10; m++) {
                     S[{m,n,p}] = seq++;
                 }
             }

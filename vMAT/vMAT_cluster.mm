@@ -42,18 +42,18 @@ namespace {
     void
     checkCut(MatZ Z, double cutoff, VectorXd crit)
     {
-        double n = Z.size(1);        // Indexes are zero-based, so no need to add one
+        double n = Z.size(1);               // Indexes are zero-based, so no need to add one
         Array<bool, Dynamic, 1> conn = crit.array() < cutoff;
         Array<bool, Dynamic, 1> notLeaf = Z.array().row(0) > n || Z.array().row(1) > n;
         Array<bool, Dynamic, 1> todo = conn && notLeaf;
         cerr << "todo = " << todo << endl;
         while(todo.any()) {
-            Mat<int, Dynamic, 1> rows = vMAT_find(vMAT_cast(todo), nil);
+            Mat<vMAT_idx_t, Dynamic, 1> rows = vMAT_find(vMAT_cast(todo), nil);
             cerr << "rows = " << rows << endl;
             auto cdone = MatrixX2i::Ones(rows.size(), 2);
-            for (int j : { 0, 1 }) { // 0 is left child, 1 is right child
+            for (vMAT_idx_t j : { 0, 1 }) { // 0 is left child, 1 is right child
                 cerr << "j = " << j << endl;
-                Mat<double, Dynamic, 1> crows = vMAT_pick(Z.matA, @[ [NSNumber numberWithInt:j], rows.matA ]).mtrans;
+                Mat<double, Dynamic, 1> crows = vMAT_pick(Z.matA, @[ [NSNumber numberWithLong:j], rows.matA ]).mtrans;
                 cerr << "crows = " << crows << endl;
                 Array<bool, Dynamic, 1> t = crows.array() > n;
                 if (t.any()) {
@@ -74,9 +74,9 @@ vMAT_cluster(vMAT_Array * matZ,
     Options opts = clusterOptions(options);
     
     MatZ Z = vMAT_double(matZ);
-    int n = Z.size(1) + 1;
+    vMAT_idx_t n = Z.size(1) + 1;
     if (opts.useCutoff) {
-        int m = static_cast<int>(opts.cutoff.size());
+        vMAT_idx_t m = static_cast<vMAT_idx_t>(opts.cutoff.size());
         VectorXd crit(n - 1);
         MatA A = vMAT_zeros(vMAT_MakeSize(m, n), nil);
         if (opts.useInconsistent) {
