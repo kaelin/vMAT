@@ -132,6 +132,22 @@ namespace {
 
 @end
 
+@implementation vMAT_Int16Array (UnaryOps)
+
+- (NSString *)dump;
+{
+    return dump([self description], (int16_t *)self.data.bytes, self.size);
+}
+
+- (vMAT_Array *)mtrans;
+{
+    Mat<int16_t> A = self;
+    Matrix<int16_t, Dynamic, Dynamic> B = A.transpose();
+    return vMAT_cast(B);
+}
+
+@end
+
 @implementation vMAT_Int32Array (UnaryOps)
 
 - (NSString *)dump;
@@ -146,6 +162,22 @@ namespace {
     float * C = (float *)array.data.mutableBytes;
     vDSP_mtrans(A, 1, C, 1, self.size[0], self.size[1]);
     return array;
+}
+
+@end
+
+@implementation vMAT_Int64Array (UnaryOps)
+
+- (NSString *)dump;
+{
+    return dump([self description], (int64_t *)self.data.bytes, self.size);
+}
+
+- (vMAT_Array *)mtrans;
+{
+    Mat<int64_t> A = self;
+    Matrix<int64_t, Dynamic, Dynamic> B = A.transpose();
+    return vMAT_cast(B);
 }
 
 @end

@@ -30,6 +30,62 @@
     [super tearDown];
 }
 
+- (void)test_vMAT_coerce_double;
+{
+    vMAT_Array * matA = vMAT_coerce(@[ @10, @13 ], @[ @"double" ]);
+    STAssertTrue(matA.type == miDOUBLE, nil);
+    STAssertEqualObjects(vMAT_StringFromSize(matA.size), @"[2 1]", nil);
+    NSLog(@"%@", matA.dump);
+}
+
+- (void)test_vMAT_coerce_single;
+{
+    vMAT_Array * matA = vMAT_coerce(@[ @10, @13 ], @[ @"single" ]);
+    STAssertTrue(matA.type == miSINGLE, nil);
+    STAssertEqualObjects(vMAT_StringFromSize(matA.size), @"[2 1]", nil);
+    NSLog(@"%@", matA.dump);
+}
+
+- (void)test_vMAT_coerce_int8;
+{
+    vMAT_Array * matA = vMAT_coerce(@[ @10, @13 ], @[ @"int8" ]);
+    STAssertTrue(matA.type == miINT8, nil);
+    STAssertEqualObjects(vMAT_StringFromSize(matA.size), @"[2 1]", nil);
+    NSLog(@"%@", matA.dump);
+}
+
+- (void)test_vMAT_coerce_int16;
+{
+    vMAT_Array * matA = vMAT_coerce(@[ @10, @13 ], @[ @"int16" ]);
+    STAssertTrue(matA.type == miINT16, nil);
+    STAssertEqualObjects(vMAT_StringFromSize(matA.size), @"[2 1]", nil);
+    NSLog(@"%@", matA.dump);
+}
+
+- (void)test_vMAT_coerce_int32;
+{
+    vMAT_Array * matA = vMAT_coerce(@[ @10, @13 ], @[ @"int32" ]);
+    STAssertTrue(matA.type == miINT32, nil);
+    STAssertEqualObjects(vMAT_StringFromSize(matA.size), @"[2 1]", nil);
+    NSLog(@"%@", matA.dump);
+}
+
+- (void)test_vMAT_coerce_int64;
+{
+    vMAT_Array * matA = vMAT_coerce(@[ @10, @13 ], @[ @"int64" ]);
+    STAssertTrue(matA.type == miINT64, nil);
+    STAssertEqualObjects(vMAT_StringFromSize(matA.size), @"[2 1]", nil);
+    NSLog(@"%@", matA.dump);
+}
+
+- (void)test_vMAT_coerce_logical;
+{
+    vMAT_Array * matA = vMAT_coerce(@[ @YES, @NO ], @[ @"logical" ]);
+    STAssertTrue(matA.type == miINT8, nil);
+    STAssertEqualObjects(vMAT_StringFromSize(matA.size), @"[2 1]", nil);
+    NSLog(@"%@", matA.dump);
+}
+
 - (void)test_vMAT_eye;
 {
     vMAT_Array * matE = nil;
