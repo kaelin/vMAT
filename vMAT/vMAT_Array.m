@@ -167,8 +167,42 @@
 
 @implementation vMAT_Int8Array
 
+- (NSNumber *)elementAtIndex:(vMAT_Index)idxs;
+{
+    int8_t * A = (int8_t *)_data.bytes;
+    long idxA = vMAT_Index_dot(_multidxs, idxs);
+    NSCParameterAssert(idxA >= 0 && idxA < _length);
+    return [NSNumber numberWithInt:A[idxA]];
+}
+
+- (void)setElement:(NSNumber *)value
+           atIndex:(vMAT_Index)idxs;
+{
+    int8_t * A = (int8_t *)_data.bytes;
+    long idxA = vMAT_Index_dot(_multidxs, idxs);
+    NSCParameterAssert(idxA >= 0 && idxA < _length);
+    A[idxA] = [value intValue];
+}
+
 @end
 
 @implementation vMAT_Int32Array
+
+- (NSNumber *)elementAtIndex:(vMAT_Index)idxs;
+{
+    int32_t * A = (int32_t *)_data.bytes;
+    long idxA = vMAT_Index_dot(_multidxs, idxs);
+    NSCParameterAssert(idxA >= 0 && idxA < _length);
+    return [NSNumber numberWithInt:A[idxA]];
+}
+
+- (void)setElement:(NSNumber *)value
+           atIndex:(vMAT_Index)idxs;
+{
+    int32_t * A = (int32_t *)_data.bytes;
+    long idxA = vMAT_Index_dot(_multidxs, idxs);
+    NSCParameterAssert(idxA >= 0 && idxA < _length);
+    A[idxA] = [value intValue];
+}
 
 @end

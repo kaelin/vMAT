@@ -21,10 +21,17 @@ static void
 initFlexIndexesFromArray(vMAT_FlexIndexes * flexidxs,
                          vMAT_Array ** matMOut,
                          vMAT_Array ** matNOut,
+                         vMAT_Size dims,
                          NSArray * args)
 {
     id argM = [args objectAtIndex:0];
-    if ([argM respondsToSelector:@selector(intValue)]) {
+    if (argM == [NSNull null]) {
+        vMAT_Array * matM = vMAT_idxstep(0, dims[0], 1);
+        flexidxs->M = (int32_t *)matM.data.bytes;
+        flexidxs->lenM = vMAT_numel(matM);
+        *matMOut = matM;
+    }
+    else if ([argM respondsToSelector:@selector(intValue)]) {
         flexidxs->scalarIndex[0] = [argM intValue];
         flexidxs->M = &flexidxs->scalarIndex[0];
         flexidxs->lenM = 1;
@@ -37,6 +44,12 @@ initFlexIndexesFromArray(vMAT_FlexIndexes * flexidxs,
         else {
             matM = vMAT_coerce(matM, @[ @"int32" ]);
         }
+        flexidxs->M = (int32_t *)matM.data.bytes;
+        flexidxs->lenM = vMAT_numel(matM);
+        *matMOut = matM;
+    }
+    else if ([argM respondsToSelector:@selector(objectAtIndex:)]) {
+        vMAT_Array * matM = vMAT_coerce(argM, @[ @"int32" ]);
         flexidxs->M = (int32_t *)matM.data.bytes;
         flexidxs->lenM = vMAT_numel(matM);
         *matMOut = matM;
@@ -75,7 +88,7 @@ vMAT_pick(vMAT_Array * matrix,
     vMAT_FlexIndexes flexidxs = { };
     vMAT_Array * matM = nil;
     vMAT_Array * matN = nil;
-    initFlexIndexesFromArray(&flexidxs, &matM, &matN, indexes);
+    initFlexIndexesFromArray(&flexidxs, &matM, &matN, matrix.size, indexes);
     return vMAT_pick_idxvs(matrix, flexidxs.M, flexidxs.lenM, flexidxs.N, flexidxs.lenN);
 }
 
@@ -108,7 +121,63 @@ vMAT_place(vMAT_Array * matrix,
     vMAT_FlexIndexes flexidxs = { };
     vMAT_Array * matM = nil;
     vMAT_Array * matN = nil;
-    initFlexIndexesFromArray(&flexidxs, &matM, &matN, indexes);
+    initFlexIndexesFromArray(&flexidxs, &matM, &matN, matrix.size, indexes);
+    return vMAT_place_idxvs(matrix, flexidxs.M, flexidxs.lenM, flexidxs.N, flexidxs.lenN, source);
+}
+
+vMAT_Array *
+vMAT_place_idxvs(vMAT_Array * matrix,
+                 int32_t * M,
+                 vDSP_Length lenM,
+                 int32_t * N,
+                 vDSP_Length lenN,
+                 id source)
+{
+    vMAT_Array * array = matrix; // Don't make a new matrix; too much code assumes otherwise!
+    long lenB = 0;
     
-    return nil;
+    NSNumber * (^nextElement)() = nil;
+    
+    if ([source respondsToSelector:@selector(doubleValue)]) {
+        nextElement = ^ { return source; };
+    }
+    else if ([source respondsToSelector:@selector(elementAtIndex:)]) {
+        vMAT_Array * matB = source;
+        lenB = [matB length];
+        if (lenB != 1) {         // A 1x1 matrix is treated like a scalar
+            if (matB.size[0] != lenM ||
+                matB.size[1] != lenN) {
+                @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                        reason:[NSString stringWithFormat:@"Dimension mismatch in %s", __func__]
+                                             userInfo:@{ @"matrix": matrix, @"source": source }];
+            }
+        }
+        __block vMAT_Index idxs = vMAT_MakeIndex(0);
+        nextElement = ^ {
+            NSNumber * elt = [matB elementAtIndex:idxs];
+            if (++idxs.d[0] >= lenB) idxs.d[0] = 0;
+            return elt;
+        };
+    }
+    else if ([source respondsToSelector:@selector(objectAtIndex:)]) {
+        NSArray * arrB = source;
+        lenB = [arrB count];
+        __block NSUInteger idx = 0;
+        nextElement = ^ {
+            NSNumber * elt = [arrB objectAtIndex:idx];
+            if (++idx >= lenB) idx = 0;
+            return elt;
+        };
+    }
+    for (vDSP_Length idxN = 0;
+         idxN < lenN;
+         idxN++) {
+        for (vDSP_Length idxM = 0;
+             idxM < lenM;
+             idxM++) {
+            [array setElement:nextElement()
+                      atIndex:vMAT_MakeIndex(M[idxM], N[idxN])];
+        }
+    }
+    return array;
 }
