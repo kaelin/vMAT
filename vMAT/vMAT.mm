@@ -179,16 +179,28 @@ vMAT_zeros(vMAT_Size size,
 #pragma mark - Matrix Type Coercion
 
 vMAT_Array *
-vMAT_coerce(vMAT_Array * matrix,
+vMAT_coerce(id source,
             NSArray * options)
 {
     vMAT_Array * array = nil;
     vMAT_MIType type = arrayTypeOptions(options);
-    if (matrix.type != type) {
-        array = [vMAT_Array arrayWithSize:matrix.size type:type];
-        [array copyFrom:matrix];
+    if ([source respondsToSelector:@selector(doubleValue)]) {
+        array = [vMAT_Array arrayWithSize:vMAT_MakeSize(1, 1) type:type];
+        [array setElement:source
+                  atIndex:vMAT_MakeIndex(0, 0)];
     }
-    else array = matrix;
+    else if ([source respondsToSelector:@selector(elementAtIndex:)]) {
+        vMAT_Array * matrix = source;
+        if (matrix.type != type) {
+            array = [vMAT_Array arrayWithSize:matrix.size type:type];
+            [array copyFrom:matrix];
+        }
+        else array = matrix;
+    }
+    else if ([source respondsToSelector:@selector(objectAtIndex:)]) {
+        array = [vMAT_Array arrayWithSize:vMAT_MakeSize((int32_t)[source count], 1) type:type];
+        vMAT_place(array, @[ [NSNull null] ], source);
+    }
     return array;
 }
 
