@@ -32,11 +32,22 @@ namespace {
     STAssertEqualObjects(vecN, vecNv, @"Logical indexing broken");
 }
 
+- (void)test_vMAT_pick_scalarMarrayN;
+{
+    vMAT_Array * matA = vMAT_cast(VectorXd::LinSpaced(40, 1.0, 40.0).eval());
+    [matA reshape:vMAT_MakeSize(5, 8)];
+    vMAT_Array * vecN = vMAT_pick(matA, @[ @3, @[ @3, @7 ] ]);
+    NSLog(@"%@", vecN.dump);
+    Mat<double> vecNv = vMAT_zeros(vMAT_MakeSize(1, 2), nil);
+    vecNv << 19, 39;
+    STAssertEqualObjects(vecN, vecNv, @"Logical indexing broken");
+}
+
 - (void)test_vMAT_pick_scalarMlogicalN;
 {
     vMAT_Array * matA = vMAT_cast(VectorXd::LinSpaced(40, 1.0, 40.0).eval());
     [matA reshape:vMAT_MakeSize(5, 8)];
-    Mat<int8_t> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"int8" ]);
+    Mat<bool> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
     matS << 0, 0, 0, 1, 0, 0, 0, 1;
     vMAT_Array * vecN = vMAT_pick(matA, @[ @3, matS ]);
     NSLog(@"%@", vecN.dump);
@@ -49,7 +60,7 @@ namespace {
 {
     vMAT_Array * matA = vMAT_cast(VectorXd::LinSpaced(40, 1.0, 40.0).eval());
     [matA reshape:vMAT_MakeSize(5, 8)];
-    Mat<int8_t> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"int8" ]);
+    Mat<bool> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
     matS << 0, 0, 0, 1, 0, 0, 0, 1;
     vMAT_place(matA, @[ @3, matS ], @[ @"10", @13 ]); // Mmm, Cocoa.
     NSLog(@"%@", matA.dump);
@@ -64,7 +75,7 @@ namespace {
 {
     vMAT_Array * matA = vMAT_cast(VectorXd::LinSpaced(40, 1.0, 40.0).eval());
     [matA reshape:vMAT_MakeSize(5, 8)];
-    Mat<int8_t> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"int8" ]);
+    Mat<bool> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
     matS << 0, 0, 0, 1, 0, 0, 0, 1;
     vMAT_place(matA, @[ @3, matS ], vMAT_pick(matA, @[ @1, matS ]));
     NSLog(@"%@", matA.dump);
@@ -79,7 +90,7 @@ namespace {
 {
     vMAT_Array * matA = vMAT_cast(VectorXd::LinSpaced(40, 1.0, 40.0).eval());
     [matA reshape:vMAT_MakeSize(5, 8)];
-    Mat<int8_t> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"int8" ]);
+    Mat<bool> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
     matS << 0, 0, 0, 1, 0, 0, 0, 1;
     vMAT_place(matA, @[ @3, matS ], @3.14159);
     NSLog(@"%@", matA.dump);

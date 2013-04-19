@@ -56,7 +56,13 @@ initFlexIndexesFromArray(vMAT_FlexIndexes * flexidxs,
     }
     if (args.count >= 2) {
         id argN = [args objectAtIndex:1];
-        if ([argN respondsToSelector:@selector(longValue)]) {
+        if (argN == [NSNull null]) {
+            vMAT_Array * matN = vMAT_idxstep(0, dims[1], 1);
+            flexidxs->N = (vMAT_idx_t *)matN.data.bytes;
+            flexidxs->lenN = vMAT_numel(matN);
+            *matNOut = matN;
+        }
+        else if ([argN respondsToSelector:@selector(longValue)]) {
             flexidxs->scalarIndex[1] = [argN longValue];
             flexidxs->N = &flexidxs->scalarIndex[1];
             flexidxs->lenN = 1;
@@ -69,6 +75,12 @@ initFlexIndexesFromArray(vMAT_FlexIndexes * flexidxs,
             else {
                 matN = vMAT_coerce(matN, @[ @"index" ]);
             }
+            flexidxs->N = (vMAT_idx_t *)matN.data.bytes;
+            flexidxs->lenN = vMAT_numel(matN);
+            *matNOut = matN;
+        }
+        else if ([argN respondsToSelector:@selector(objectAtIndex:)]) {
+            vMAT_Array * matN = vMAT_coerce(argN, @[ @"index" ]);
             flexidxs->N = (vMAT_idx_t *)matN.data.bytes;
             flexidxs->lenN = vMAT_numel(matN);
             *matNOut = matN;
