@@ -91,6 +91,15 @@ vMAT_fwrite(NSOutputStream * stream,
     });
 }
 
+vMAT_Array *
+vMAT_idxstep(int32_t start,
+             int32_t limit,
+             int32_t step)
+{
+    vMAT_Array * array = vMAT_cast(VectorXi::LinSpaced(limit - start, start, limit - 1).eval());
+    return array;
+}
+
 NSDictionary *
 vMAT_load(NSURL * inputURL,
           NSArray * variableNames,

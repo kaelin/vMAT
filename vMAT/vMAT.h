@@ -126,6 +126,11 @@ vMAT_fwrite(NSOutputStream * stream,
                                          NSError * error));
 
 vMAT_API vMAT_Array *
+vMAT_idxstep(int32_t start,
+             int32_t limit,
+             int32_t step);
+
+vMAT_API vMAT_Array *
 vMAT_inconsistent(vMAT_Array * matZ,
                   unsigned int depth);
 
@@ -211,13 +216,26 @@ vMAT_pick_idxvs(vMAT_Array * matrix,
                 vDSP_Length lenN);
 
 vMAT_API vMAT_Array *
+vMAT_place(vMAT_Array * matrix,
+           NSArray * indexes,
+           id source);
+
+vMAT_API vMAT_Array *
+vMAT_place_idxvs(vMAT_Array * matrix,
+                 int32_t * M,
+                 vDSP_Length lenM,
+                 int32_t * N,
+                 vDSP_Length lenN,
+                 id source);
+
+vMAT_API vMAT_Array *
 vMAT_zeros(vMAT_Size size,
            NSArray * options);
 
 #pragma mark - Matrix Type Coercion
 
 vMAT_API vMAT_Array *
-vMAT_coerce(vMAT_Array * matrix,
+vMAT_coerce(id source,
             NSArray * options);
 
 vMAT_API vMAT_Array *
