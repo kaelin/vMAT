@@ -39,30 +39,33 @@ namespace {
         return opts;
     }
     
-    void
+    vMAT_Array *
     checkCut(MatZ Z, double cutoff, VectorXd crit)
     {
         double n = Z.size(1);               // Indexes are zero-based, so no need to add one
-        Array<bool, Dynamic, 1> conn = crit.array() < cutoff;
+        vMAT::Map<Array<bool, Dynamic, 1>> conn = (crit.array() < cutoff).eval();
         Array<bool, Dynamic, 1> notLeaf = Z.array().row(0) > n || Z.array().row(1) > n;
-        Array<bool, Dynamic, 1> todo = conn && notLeaf;
-        cerr << "todo = " << todo << endl;
+        vMAT::Map<Array<bool, Dynamic, 1>> todo = (conn && notLeaf).eval();
         while(todo.any()) {
-            Mat<vMAT_idx_t, Dynamic, 1> rows = vMAT_find(vMAT_cast(todo), nil);
-            cerr << "rows = " << rows << endl;
-            auto cdone = MatrixX2i::Ones(rows.size(), 2);
+            Mat<vMAT_idx_t, Dynamic, 1> rows = vMAT_find(todo.matA, nil);
+            Mat<bool, Dynamic, 2> cdone = vMAT_ones(vMAT_MakeSize(rows.size(), 2), @[ @"logical" ]);
             for (vMAT_idx_t j : { 0, 1 }) { // 0 is left child, 1 is right child
-                cerr << "j = " << j << endl;
                 Mat<double, Dynamic, 1> crows = vMAT_pick(Z.matA, @[ [NSNumber numberWithLong:j], rows.matA ]).mtrans;
                 cerr << "crows = " << crows << endl;
-                Array<bool, Dynamic, 1> t = crows.array() > n;
+                Array<bool, Dynamic, 1> t = (crows.array() > n);
+                vMAT_Array * matT = vMAT_cast(t);
                 if (t.any()) {
-                    cerr << "t = " << t << endl;
+                    Mat<double, Dynamic, 1> child = vMAT_pick(crows.matA, @[ matT ]);
+                    child.array() -= n;
+                    vMAT::Map<Array<bool, Dynamic, 1>> childTodo = vMAT_pick(todo.matA, @[ child.matA ]);
+                    vMAT::Map<Array<bool, Dynamic, 1>> childNotTodo = childTodo.unaryExpr([](bool elt) { return !elt; }).eval();
+                    vMAT_place(cdone.matA, @[ matT, [NSNumber numberWithLong:j] ], childNotTodo.matA);
+                    NSLog(@"%@", cdone.matA.dump);
                 }
             }
             todo.fill(false);
         }
-        
+        return conn;
     }
     
 }
@@ -87,7 +90,8 @@ vMAT_cluster(vMAT_Array * matZ,
             crit = Z.row(2);
         }
         for (auto cutoff : opts.cutoff) {
-            checkCut(Z, cutoff, crit);
+            vMAT_Array * matC = checkCut(Z, cutoff, crit);
+            NSLog(@"%@", matC.dump);
         }
     }
     return nil;
