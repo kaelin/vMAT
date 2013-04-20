@@ -168,6 +168,16 @@ arrayTypeOptions(NSArray * options)
 }
 
 vMAT_Array *
+vMAT_ones(vMAT_Size size,
+          NSArray * options)
+{
+    vMAT_MIType type = arrayTypeOptions(options);
+    vMAT_Array * array = [vMAT_Array arrayWithSize:size type:type];
+    vMAT_place(array, @[ [NSNull null], [NSNull null] ], @1);
+    return array;
+}
+
+vMAT_Array *
 vMAT_zeros(vMAT_Size size,
            NSArray * options)
 {

@@ -182,6 +182,10 @@ vMAT_mtrans(vMAT_Array * matrix);
 vMAT_API vDSP_Length
 vMAT_numel(vMAT_Array * matrix);
 
+vMAT_API vMAT_Array *
+vMAT_ones(vMAT_Size size,
+          NSArray * options);
+
 /*!
  @brief Compute the pairwise distances between the single-precision floating point samples in a matrix.
  @discussion
