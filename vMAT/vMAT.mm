@@ -159,12 +159,12 @@ arrayTypeOptions(NSArray * options)
 {
     vMAT_MIType type = miDOUBLE;
     if ([options count] != 0) {
-        NSString * spec = [options objectAtIndex:0];
+        NSString * spec = options[0];
         NSCParameterAssert([spec respondsToSelector:@selector(caseInsensitiveCompare:)]);
         NSComparisonResult cmp = [spec caseInsensitiveCompare:@"like:"];
         if (cmp == 0) {
             NSCParameterAssert([options count] == 2);
-            vMAT_Array * like = [options objectAtIndex:1];
+            vMAT_Array * like = options[1];
             NSCParameterAssert([like respondsToSelector:@selector(type)]);
             type = like.type;
         }

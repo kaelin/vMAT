@@ -35,7 +35,7 @@ namespace vMAT {
                                                                                   error:NULL];
         NSArray * matches = [regex matchesInString:description options:0 range:NSMakeRange(0, [description length])];
         NSCAssert([matches count] == 1, @"Couldn't make genericCmd from %@", description);
-        NSRange r1 = [[matches objectAtIndex:0] rangeAtIndex:1];
+        NSRange r1 = [matches[0] rangeAtIndex:1];
         NSString * genericCmdString = [NSString stringWithFormat:format,
                                        [description substringWithRange:r1]];
         return NSSelectorFromString(genericCmdString);
@@ -51,8 +51,8 @@ namespace vMAT {
                                                                                   error:NULL];
         NSArray * matches = [regex matchesInString:descriptions options:0 range:NSMakeRange(0, [descriptions length])];
         NSCAssert([matches count] == 2, @"Couldn't make genericCmd from %@", descriptions);
-        NSRange r1 = [[matches objectAtIndex:0] rangeAtIndex:1];
-        NSRange r2 = [[matches objectAtIndex:1] rangeAtIndex:1];
+        NSRange r1 = [matches[0] rangeAtIndex:1];
+        NSRange r2 = [matches[1] rangeAtIndex:1];
         NSString * genericCmdString = [NSString stringWithFormat:format,
                                     [descriptions substringWithRange:r1], [descriptions substringWithRange:r2]];
         return NSSelectorFromString(genericCmdString);
