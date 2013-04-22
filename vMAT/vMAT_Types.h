@@ -42,6 +42,7 @@
 
 @class vMAT_Array;
 
+extern NSNull * const vMAT_ALL;
 extern NSString * const vMAT_ErrorDomain;
 
 enum {
@@ -62,6 +63,12 @@ typedef long vMAT_idx_v __attribute__((__vector_size__(32)));
 typedef int vMAT_idx_t;
 typedef int vMAT_idx_v __attribute__((__vector_size__(16)));
 #endif
+
+static inline NSNumber *
+vMAT_idxNumber(vMAT_idx_t idx)
+{
+    return [NSNumber numberWithLong:idx];
+}
 
 typedef struct vMAT_Index {
     vMAT_idx_v d;

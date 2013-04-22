@@ -129,6 +129,8 @@ vMAT_StringFromSize(vMAT_Size size)
     return string;
 }
 
+NSNull * const vMAT_ALL = [NSNull null];
+
 NSString * const vMAT_ErrorDomain = @"com.ohmware.vMAT";
 
 NSString *

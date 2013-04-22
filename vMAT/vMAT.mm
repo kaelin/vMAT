@@ -100,6 +100,12 @@ vMAT_idxstep(vMAT_idx_t start,
     return array;
 }
 
+BOOL
+vMAT_isempty(vMAT_Array * matrix)
+{
+    return vMAT_numel(matrix) == 0;
+}
+
 NSDictionary *
 vMAT_load(NSURL * inputURL,
           NSArray * variableNames,
@@ -173,7 +179,7 @@ vMAT_ones(vMAT_Size size,
 {
     vMAT_MIType type = arrayTypeOptions(options);
     vMAT_Array * array = [vMAT_Array arrayWithSize:size type:type];
-    vMAT_place(array, @[ [NSNull null], [NSNull null] ], @1);
+    vMAT_place(array, @[ vMAT_ALL, vMAT_ALL ], @1);
     return array;
 }
 
@@ -209,7 +215,7 @@ vMAT_coerce(id source,
     }
     else if ([source respondsToSelector:@selector(objectAtIndex:)]) {
         array = [vMAT_Array arrayWithSize:vMAT_MakeSize((vMAT_idx_t)[source count], 1) type:type];
-        vMAT_place(array, @[ [NSNull null] ], source);
+        vMAT_place(array, @[ vMAT_ALL ], source);
     }
     return array;
 }

@@ -134,6 +134,9 @@ vMAT_API vMAT_Array *
 vMAT_inconsistent(vMAT_Array * matZ,
                   unsigned int depth);
 
+vMAT_API BOOL
+vMAT_isempty(vMAT_Array * matrix);
+
 /*!
  @brief Compute a hierarchical cluster tree from the single-precision floating point vector representation of a distance matrix.
  @discussion

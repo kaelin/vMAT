@@ -25,7 +25,7 @@ initFlexIndexesFromArray(vMAT_FlexIndexes * flexidxs,
                          NSArray * args)
 {
     id argM = [args objectAtIndex:0];
-    if (argM == [NSNull null]) {
+    if (argM == vMAT_ALL) {
         vMAT_Array * matM = vMAT_idxstep(0, dims[0], 1);
         flexidxs->M = (vMAT_idx_t *)matM.data.bytes;
         flexidxs->lenM = vMAT_numel(matM);
@@ -56,7 +56,7 @@ initFlexIndexesFromArray(vMAT_FlexIndexes * flexidxs,
     }
     if (args.count >= 2) {
         id argN = [args objectAtIndex:1];
-        if (argN == [NSNull null]) {
+        if (argN == vMAT_ALL) {
             vMAT_Array * matN = vMAT_idxstep(0, dims[1], 1);
             flexidxs->N = (vMAT_idx_t *)matN.data.bytes;
             flexidxs->lenN = vMAT_numel(matN);
