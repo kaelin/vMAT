@@ -105,6 +105,7 @@
 		05453DC0170CDE1200EFCB19 /* vMAT_Array.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vMAT_Array.m; sourceTree = "<group>"; };
 		05453DC3170CE1F600EFCB19 /* vMAT_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_Private.h; sourceTree = "<group>"; };
 		05453DC5170CE50200EFCB19 /* vMAT_Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_Types.h; sourceTree = "<group>"; };
+		054918D81724C0A70067D2E4 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		0568E7E91700124400AE99F4 /* vMAT.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = vMAT.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		0568E7EC1700124400AE99F4 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		0568E7EF1700124400AE99F4 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -203,6 +204,7 @@
 				058C5E62170610FD00A65E82 /* README.md */,
 				057E61C217136C6D00054302 /* LICENSE.md */,
 				05CA201517133DA50067AE9E /* vMAT.podspec */,
+				054918D81724C0A70067D2E4 /* .travis.yml */,
 				0568E7F21700124400AE99F4 /* vMAT */,
 				0568E8041700124400AE99F4 /* vMATTests */,
 				05435953170208FE0037AAC4 /* matxd */,
