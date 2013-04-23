@@ -129,10 +129,6 @@ vMAT_StringFromSize(vMAT_Size size)
     return string;
 }
 
-NSNull * const vMAT_ALL = [NSNull null];
-
-NSString * const vMAT_ErrorDomain = @"com.ohmware.vMAT";
-
 NSString *
 vMAT_MITypeDescription(vMAT_MIType type)
 {
@@ -158,6 +154,7 @@ vMAT_MITypeDescription(vMAT_MIType type)
         @"[18]miUTF32",
     };
     if (type > 0 && type < miRANGE_LIMIT) return desc[type];
+    else if (type == '~') return @"[~]SUPPRESSED";
     else return nil;
 }
 
@@ -210,6 +207,7 @@ vMAT_MITypeSizeof(vMAT_MIType type)
         sizeof(uint32_t),
     };
     if (type > 0 && type < miRANGE_LIMIT) return size[type];
+    else if (type == '~') return ~0;
     else return 0;
 }
 
@@ -262,3 +260,10 @@ vMAT_MXClassType(vMAT_MXClass mxClass)
     if (mxClass > 0 && mxClass < 16) return type[mxClass];
     else return miNONE;
 }
+
+#pragma mark - Constants
+
+NSNull * const vMAT_ALL = [NSNull null];
+vMAT_Array * const vMAT_SUPPRESSED = [vMAT_Array arrayWithSize:vMAT_MakeSize(0, 0) type:(vMAT_MIType)'~'];
+
+NSString * const vMAT_ErrorDomain = @"com.ohmware.vMAT";

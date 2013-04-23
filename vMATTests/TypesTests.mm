@@ -22,6 +22,13 @@ namespace {
 
 @implementation TypesTests
 
+- (void)test_vMAT_SUPPRESSED;
+{
+    vMAT_Array * OOPS = vMAT_SUPPRESSED;
+    NSLog(@"%@", OOPS.dump);
+    STAssertThrows(vMAT_coerce(OOPS, @[ @"double" ]), @"Can't coerce ~ value");
+}
+
 - (void)test_vMAT_manifesto;
 {
     const float iniM[] = {
