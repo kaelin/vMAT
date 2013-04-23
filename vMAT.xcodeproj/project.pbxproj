@@ -134,6 +134,8 @@
 		05A3BF50170F744C00FD79DC /* cluster-normaldata-10x3-13.mat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cluster-normaldata-10x3-13.mat"; sourceTree = "<group>"; };
 		05B27C591725EB370011128B /* vMAT_unique.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_unique.mm; sourceTree = "<group>"; };
 		05B27C5B1725F2570011128B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		05B27C5D1726CD1A0011128B /* vMATCodeMonkey.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = vMATCodeMonkey.rb; sourceTree = "<group>"; };
+		05B27C5E1726CDE40011128B /* copyFrom.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = copyFrom.rb; sourceTree = "<group>"; };
 		05CA1FFF170F7F1D0067AE9E /* vMAT_Types.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_Types.mm; sourceTree = "<group>"; };
 		05CA2002170F80EA0067AE9E /* vMAT_Array+UnaryOps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "vMAT_Array+UnaryOps.mm"; sourceTree = "<group>"; };
 		05CA2005171044AE0067AE9E /* vMAT_PrivateArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_PrivateArray.h; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				0568E8041700124400AE99F4 /* vMATTests */,
 				05435953170208FE0037AAC4 /* matxd */,
 				0569F9D717256DB500E29FEF /* lldb */,
+				05B27C5C1726CCAE0011128B /* ruby */,
 				0568E7EB1700124400AE99F4 /* Frameworks */,
 				0568E7EA1700124400AE99F4 /* Products */,
 			);
@@ -312,6 +315,15 @@
 				0569F9D817256E4F00E29FEF /* pmat.py */,
 			);
 			path = lldb;
+			sourceTree = "<group>";
+		};
+		05B27C5C1726CCAE0011128B /* ruby */ = {
+			isa = PBXGroup;
+			children = (
+				05B27C5D1726CD1A0011128B /* vMATCodeMonkey.rb */,
+				05B27C5E1726CDE40011128B /* copyFrom.rb */,
+			);
+			path = ruby;
 			sourceTree = "<group>";
 		};
 		05CA2001170F805B0067AE9E /* vMAT_Array */ = {
