@@ -200,6 +200,8 @@ vMAT_coerce(id source,
 {
     vMAT_Array * array = nil;
     vMAT_MIType type = arrayTypeOptions(options);
+    BOOL copyFlag = [options containsObject:@"-copy"];
+    NSCParameterAssert(type != miNONE);
     if ([source respondsToSelector:@selector(doubleValue)]) {
         array = [vMAT_Array arrayWithSize:vMAT_MakeSize(1, 1) type:type];
         [array setElement:source
@@ -207,7 +209,7 @@ vMAT_coerce(id source,
     }
     else if ([source respondsToSelector:@selector(elementAtIndex:)]) {
         vMAT_Array * matrix = source;
-        if (matrix.type != type) {
+        if (copyFlag || matrix.type != type) {
             array = [vMAT_Array arrayWithSize:matrix.size type:type];
             [array copyFrom:matrix];
         }
@@ -223,11 +225,17 @@ vMAT_coerce(id source,
 vMAT_Array *
 vMAT_double(vMAT_Array * matrix)
 {
-    return vMAT_coerce(matrix, @[ @"double" ]);
+    return vMAT_coerce(matrix, @[ @"double", @"-copy" ]);
 }
 
 vMAT_Array *
 vMAT_single(vMAT_Array * matrix)
 {
-    return vMAT_coerce(matrix, @[ @"single" ]);
+    return vMAT_coerce(matrix, @[ @"single", @"-copy" ]);
+}
+
+vMAT_Array *
+vMAT_int64(vMAT_Array * matrix)
+{
+    return vMAT_coerce(matrix, @[ @"int64", @"-copy" ]);
 }

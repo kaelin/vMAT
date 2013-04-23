@@ -235,6 +235,10 @@ vMAT_place_idxvs(vMAT_Array * matrix,
                  vDSP_Length lenN,
                  id source);
 
+vMAT_API NSArray *
+vMAT_unique(vMAT_Array * matrix,
+            NSArray * options);
+
 vMAT_API vMAT_Array *
 vMAT_zeros(vMAT_Size size,
            NSArray * options);
@@ -250,5 +254,8 @@ vMAT_double(vMAT_Array * matrix);
 
 vMAT_API vMAT_Array *
 vMAT_single(vMAT_Array * matrix);
+
+vMAT_API vMAT_Array *
+vMAT_int64(vMAT_Array * matrix);
 
 #endif // vMAT_H

@@ -156,6 +156,10 @@ namespace vMAT {
             NSCParameterAssert(idxA >= 0 && idxA < lenA);
             return A[idxA];
         }
+        
+        typedef Scalar * iterator;
+        inline iterator begin() { return &A[0]; }
+        inline iterator end()   { return &A[lenA]; }
     };
     
     template <typename EigenObjectType>

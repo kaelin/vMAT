@@ -47,9 +47,9 @@ namespace {
 {
     vMAT_Array * matA = vMAT_cast(VectorXd::LinSpaced(40, 1.0, 40.0).eval());
     [matA reshape:vMAT_MakeSize(5, 8)];
-    Mat<bool> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
-    matS << 0, 0, 0, 1, 0, 0, 0, 1;
-    vMAT_Array * vecN = vMAT_pick(matA, @[ @3, matS ]);
+    Mat<bool> S = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
+    S << 0, 0, 0, 1, 0, 0, 0, 1;
+    vMAT_Array * vecN = vMAT_pick(matA, @[ @3, S ]);
     NSLog(@"%@", vecN.dump);
     Mat<double> vecNv = vMAT_zeros(vMAT_MakeSize(1, 2), nil);
     vecNv << 19, 39;
@@ -60,11 +60,11 @@ namespace {
 {
     vMAT_Array * matA = vMAT_cast(VectorXd::LinSpaced(40, 1.0, 40.0).eval());
     [matA reshape:vMAT_MakeSize(5, 8)];
-    Mat<bool> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
-    matS << 0, 0, 0, 1, 0, 0, 0, 1;
-    vMAT_place(matA, @[ @3, matS ], @[ @"10", @13 ]); // Mmm, Cocoa.
+    Mat<bool> S = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
+    S << 0, 0, 0, 1, 0, 0, 0, 1;
+    vMAT_place(matA, @[ @3, S ], @[ @"10", @13 ]); // Mmm, Cocoa.
     NSLog(@"%@", matA.dump);
-    vMAT_Array * vecN = vMAT_pick(matA, @[ @3, matS ]);
+    vMAT_Array * vecN = vMAT_pick(matA, @[ @3, S ]);
     NSLog(@"%@", vecN.dump);
     Mat<double> vecNv = vMAT_zeros(vMAT_MakeSize(1, 2), nil);
     vecNv << 10, 13;
@@ -75,11 +75,11 @@ namespace {
 {
     vMAT_Array * matA = vMAT_cast(VectorXd::LinSpaced(40, 1.0, 40.0).eval());
     [matA reshape:vMAT_MakeSize(5, 8)];
-    Mat<bool> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
-    matS << 0, 0, 0, 1, 0, 0, 0, 1;
-    vMAT_place(matA, @[ @3, matS ], vMAT_pick(matA, @[ @1, matS ]));
+    Mat<bool> S = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
+    S << 0, 0, 0, 1, 0, 0, 0, 1;
+    vMAT_place(matA, @[ @3, S ], vMAT_pick(matA, @[ @1, S ]));
     NSLog(@"%@", matA.dump);
-    vMAT_Array * vecN = vMAT_pick(matA, @[ @3, matS ]);
+    vMAT_Array * vecN = vMAT_pick(matA, @[ @3, S ]);
     NSLog(@"%@", vecN.dump);
     Mat<double> vecNv = vMAT_zeros(vMAT_MakeSize(1, 2), nil);
     vecNv << 17, 37;
@@ -90,16 +90,48 @@ namespace {
 {
     vMAT_Array * matA = vMAT_cast(VectorXd::LinSpaced(40, 1.0, 40.0).eval());
     [matA reshape:vMAT_MakeSize(5, 8)];
-    Mat<bool> matS = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
-    matS << 0, 0, 0, 1, 0, 0, 0, 1;
-    vMAT_place(matA, @[ @3, matS ], @3.14159);
+    Mat<bool> S = vMAT_zeros(vMAT_MakeSize(8, 1), @[ @"logical" ]);
+    S << 0, 0, 0, 1, 0, 0, 0, 1;
+    vMAT_place(matA, @[ @3, S ], @3.14159);
     NSLog(@"%@", matA.dump);
-    vMAT_Array * vecN = vMAT_pick(matA, @[ @3, matS ]);
+    vMAT_Array * vecN = vMAT_pick(matA, @[ @3, S ]);
     NSLog(@"%@", vecN.dump);
     Mat<double> vecNv = vMAT_zeros(vMAT_MakeSize(1, 2), nil);
     vecNv << 3.14159, 3.14159;
     STAssertEqualObjects(vecN, vecNv, @"Scalar place broken");
 }
 
+- (void)test_vMAT_unique;
+{
+    Mat<vMAT_idx_t> M = vMAT_zeros(vMAT_MakeSize(10, 3), @[ @"index" ]);
+    M <<
+    13,  1, 13,
+     9,  2,  1,
+     8,  3,  2,
+     7,  4,  3,
+     6,  5,  4,
+     5,  6,  5,
+     4,  7,  6,
+     3,  8,  7,
+     2,  9,  8,
+     1, 13,  9;
+    NSLog(@"M = %@", M.matA.dump);
+    NSArray * result = vMAT_unique(M, @[ @"-want:", @"[~,~,_]" ]);
+    NSLog(@"%@", result);
+    STAssertNotNil(result, @"Returns an array");
+    Mat<vMAT_idx_t> ICv = vMAT_zeros(vMAT_MakeSize(10, 3), @[ @"index" ]);
+    ICv <<
+    9, 0, 9,
+    8, 1, 0,
+    7, 2, 1,
+    6, 3, 2,
+    5, 4, 3,
+    4, 5, 4,
+    3, 6, 5,
+    2, 7, 6,
+    1, 8, 7,
+    0, 9, 8;
+    STAssertEqualObjects(result[2], ICv, @"Expected IC?");
+}
 
 @end
