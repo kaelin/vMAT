@@ -7,11 +7,11 @@
 require './vMATCodeMonkey'
 
 VMATCodeMonkey.new(:print).options_processor <<EOS
-  :arrayType  default: 'double'
+  :array_type default: :double
 EOS
 
-VMATCodeMonkey.new(:print).options_processor <<EOS
-  -cutoff:    flag: set('useCutoff', true), arg: vector('double')
-  -depth:     flag: set('useInconsistent', true), arg: :double, default: 2.0
-  -maxclust:  flag: set('useCutoff', false), arg: vector('index')
+VMATCodeMonkey.new(:print).options_processor <<EOS, :static
+  -cutoff:    flag: set(:useCutoff, true), arg: vector(:double)
+  -depth:     flag: set(:useInconsistent, true), arg: :double, default: 2.0
+  -maxclust:  flag: set(:useCutoff, false), arg: vector(:index)
 EOS
