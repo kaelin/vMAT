@@ -64,7 +64,7 @@ namespace {
 
 @implementation vMAT_Array (GeneratedMethods)
 
-// Monkey's work; do not edit by hand!
+// vMATCodeMonkey's work; do not edit by hand!
 
 - (void)_copy_miINT8_from_miINT8:(vMAT_Array *)matrix;
 {

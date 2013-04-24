@@ -80,6 +80,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		051282FD17272B0A00929B2D /* arrayTypeOptions.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = arrayTypeOptions.rb; sourceTree = "<group>"; };
 		0537A9C7170D9F80005B590B /* vMAT_Array+CopyFrom.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "vMAT_Array+CopyFrom.mm"; sourceTree = "<group>"; };
 		0537A9C9170DC4D0005B590B /* vMAT_MATv5Variable+LoadFromOperation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "vMAT_MATv5Variable+LoadFromOperation.mm"; sourceTree = "<group>"; };
 		0537A9CB170EF597005B590B /* ClusterTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClusterTests.h; sourceTree = "<group>"; };
@@ -321,6 +322,7 @@
 			isa = PBXGroup;
 			children = (
 				05B27C5D1726CD1A0011128B /* vMATCodeMonkey.rb */,
+				051282FD17272B0A00929B2D /* arrayTypeOptions.rb */,
 				05B27C5E1726CDE40011128B /* copyFrom.rb */,
 			);
 			path = ruby;
