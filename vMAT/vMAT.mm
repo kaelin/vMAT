@@ -160,6 +160,8 @@ struct arrayTypeOptions {
     vMAT_MIType type;
 };
 
+#define WITH_arrayTypeOptions(options, opts) struct arrayTypeOptions opts; arrayTypeOptions(options, &opts)
+
 void
 arrayTypeOptions(NSArray * options, struct arrayTypeOptions * resultsOut)
 {
@@ -187,14 +189,11 @@ arrayTypeOptions(NSArray * options, struct arrayTypeOptions * resultsOut)
     }
 }
 
-typedef struct arrayTypeOptions ArrayTypeOptions;
-
 vMAT_Array *
 vMAT_ones(vMAT_Size size,
           NSArray * options)
 {
-    ArrayTypeOptions opts;
-    arrayTypeOptions(options, &opts);
+    WITH_arrayTypeOptions(options, opts);
     vMAT_Array * array = [vMAT_Array arrayWithSize:size type:opts.type];
     vMAT_place(array, @[ vMAT_ALL, vMAT_ALL ], @1);
     return array;
@@ -204,8 +203,7 @@ vMAT_Array *
 vMAT_zeros(vMAT_Size size,
            NSArray * options)
 {
-    ArrayTypeOptions opts;
-    arrayTypeOptions(options, &opts);
+    WITH_arrayTypeOptions(options, opts);
     vMAT_Array * array = [vMAT_Array arrayWithSize:size type:opts.type];
     return array;
 }
@@ -216,8 +214,7 @@ vMAT_Array *
 vMAT_coerce(id source,
             NSArray * options)
 {
-    ArrayTypeOptions opts;
-    arrayTypeOptions(options, &opts);
+    WITH_arrayTypeOptions(options, opts);
     vMAT_Array * array = nil;
     BOOL copyFlag = [options containsObject:@"-copy"];
     NSCParameterAssert(opts.type != miNONE);

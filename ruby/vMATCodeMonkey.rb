@@ -186,6 +186,7 @@ class VMATCodeMonkey
     end
     indent(:dec)
     out += "\n#{indent}};\n\n"
+    out += "#define WITH_#{fn}(options, opts) struct #{fn} opts; #{fn}(options, &opts)\n\n"
     out
   end
 
