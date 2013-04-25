@@ -11,6 +11,8 @@
 #import "vMAT_StreamDelegate.h"
 
 
+#import "arrayTypeOptions.mki"
+
 namespace {
     
     using namespace Eigen;
@@ -154,41 +156,6 @@ vMAT_numel(vMAT_Array * matrix)
     return vMAT_Size_prod(matrix.size);
 }
 
-// vMATCodeMonkey's work; do not edit by hand!
-
-struct arrayTypeOptions {
-    vMAT_MIType type;
-};
-
-#define WITH_arrayTypeOptions(options, opts) struct arrayTypeOptions opts; arrayTypeOptions(options, &opts)
-
-void
-arrayTypeOptions(NSArray * options, struct arrayTypeOptions * resultsOut)
-{
-    // array_type  default: :double
-    // Initialize resultsOut struct
-    resultsOut->type = miDOUBLE;
-    // Flags: []
-    // Locals
-    NSUInteger optidx = NSNotFound;
-    // Options array normalization
-    if ([options count] > 0) {
-    }
-    else return;
-    // array_type_ie {:default=>:double}
-    if ((optidx = [options indexOfObject:@"like:"]) != NSNotFound) {
-        NSCParameterAssert([options count] > optidx + 1);
-        vMAT_Array * like = options[optidx + 1];
-        NSCParameterAssert([like respondsToSelector:@selector(type)]);
-        resultsOut->type = like.type;
-    }
-    else {
-        NSString * spec = options[0];
-        NSCParameterAssert([spec respondsToSelector:@selector(caseInsensitiveCompare:)]);
-        resultsOut->type = vMAT_MITypeNamed(spec);
-    }
-}
-
 vMAT_Array *
 vMAT_ones(vMAT_Size size,
           NSArray * options)
@@ -216,7 +183,7 @@ vMAT_coerce(id source,
 {
     WITH_arrayTypeOptions(options, opts);
     vMAT_Array * array = nil;
-    BOOL copyFlag = [options containsObject:@"-copy"];
+    BOOL copyFlag = [opts.remainingOptions containsObject:@"-copy"];
     NSCParameterAssert(opts.type != miNONE);
     if ([source respondsToSelector:@selector(doubleValue)]) {
         array = [vMAT_Array arrayWithSize:vMAT_MakeSize(1, 1) type:opts.type];
@@ -238,20 +205,4 @@ vMAT_coerce(id source,
     return array;
 }
 
-vMAT_Array *
-vMAT_double(vMAT_Array * matrix)
-{
-    return vMAT_coerce(matrix, @[ @"double", @"-copy" ]);
-}
-
-vMAT_Array *
-vMAT_single(vMAT_Array * matrix)
-{
-    return vMAT_coerce(matrix, @[ @"single", @"-copy" ]);
-}
-
-vMAT_Array *
-vMAT_int64(vMAT_Array * matrix)
-{
-    return vMAT_coerce(matrix, @[ @"int64", @"-copy" ]);
-}
+#import "namedCoercions.mki"

@@ -28,12 +28,27 @@ class VMATCodeMonkey
         @out = IO.popen('pbcopy', 'w')
       when :print
         @out = $stdout
+        @out.puts "// vMATCodeMonkey's work; do not edit by hand!\n\n"
+      when :snippet
+        @out = $stdout
       else
         raise ArgumentError, "#{out_opt} is not an option!"
     end
-    @out.puts "// vMATCodeMonkey's work; do not edit by hand!\n\n"
     @todo = []
     initialize_options_processor
+  end
+
+  def named_coercions(&template_block)
+    MI_NUMERIC_TYPE_NAMES.each do |to|
+      @out.puts yield to
+      @out.puts "\n"
+    end
+  end
+
+  def named_types(&template_block)
+    MI_NUMERIC_TYPE_NAMES.each do |type|
+      @out.puts yield type
+    end
   end
 
   def coercions(&template_block)
@@ -80,7 +95,7 @@ class VMATCodeMonkey
   def options_processor(specs, *declspecs)
     src_specs = specs
     specs = instance_eval '{' + preprocess(specs) + '}'
-    fn = File.basename @caller_file, '.rb'
+    fn = File.basename @caller_file, '.mk'
     specs[:fn] = fn
     @todo.each { |proc| proc.call(specs) }
     specs.tap { |x| x.delete(:fn) }
@@ -143,9 +158,9 @@ class VMATCodeMonkey
 
   def initialize_options_processor
     @options_flags = []
-    @options_locals = ['NSUInteger optidx = NSNotFound;']
-    @options_slots = []
-    @options_inits = []
+    @options_locals = ['NSMutableArray * remainingOptions = nil;', 'NSUInteger optidx = NSNotFound;']
+    @options_slots = ['NSMutableArray * remainingOptions;']
+    @options_inits = ['resultsOut->remainingOptions = nil;']
   end
 
   def evaluate_array_type(spec)
@@ -232,6 +247,9 @@ class VMATCodeMonkey
   def options_normalization_codegen(name, spec)
     "// Options array normalization\n" + <<-'EOS'
     if ([options count] > 0) {
+        remainingOptions = [options mutableCopy];
+        resultsOut->remainingOptions = remainingOptions;
+        options = nil;
     }
     else return;
     EOS
@@ -239,16 +257,18 @@ class VMATCodeMonkey
 
   def array_type_ie_codegen(name, spec)
     <<-'EOS'
-    if ((optidx = [options indexOfObject:@"like:"]) != NSNotFound) {
-        NSCParameterAssert([options count] > optidx + 1);
-        vMAT_Array * like = options[optidx + 1];
+    if ((optidx = [remainingOptions indexOfObject:@"like:"]) != NSNotFound) {
+        NSCParameterAssert([remainingOptions count] > optidx + 1);
+        vMAT_Array * like = remainingOptions[optidx + 1];
         NSCParameterAssert([like respondsToSelector:@selector(type)]);
         resultsOut->type = like.type;
+        [remainingOptions removeObjectsInRange:NSMakeRange(optidx, 2)];
     }
     else {
-        NSString * spec = options[0];
-        NSCParameterAssert([spec respondsToSelector:@selector(caseInsensitiveCompare:)]);
+        NSString * spec = remainingOptions[0];
+        NSCParameterAssert([spec respondsToSelector:@selector(lowercaseString)]);
         resultsOut->type = vMAT_MITypeNamed(spec);
+        [remainingOptions removeObjectAtIndex:0];
     }
     EOS
   end

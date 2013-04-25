@@ -54,7 +54,24 @@
 		05CA200F1710C3690067AE9E /* vMAT_inconsistent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA200E1710C3690067AE9E /* vMAT_inconsistent.mm */; };
 		05CA20121710FC500067AE9E /* TypesTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA20111710FC500067AE9E /* TypesTests.mm */; };
 		05CA2014171253950067AE9E /* vMAT_cluster.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA2013171253950067AE9E /* vMAT_cluster.mm */; };
+		05E057771728F060000BC08E /* arrayTypeOptions.mk in Sources */ = {isa = PBXBuildFile; fileRef = 05C6A8A31728EDAE008FC2D9 /* arrayTypeOptions.mk */; };
+		05E057791728FFF9000BC08E /* copyFromMethods.mk in Sources */ = {isa = PBXBuildFile; fileRef = 05E057781728FF40000BC08E /* copyFromMethods.mk */; };
+		05E0577B17290D63000BC08E /* namedCoercions.mk in Sources */ = {isa = PBXBuildFile; fileRef = 05E0577A17290C0E000BC08E /* namedCoercions.mk */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		05C6A8A21728EBA3008FC2D9 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.mk";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.mki",
+			);
+			script = "/usr/local/bin/ruby -UI ${PROJECT_DIR}/ruby ${INPUT_FILE_PATH} > ${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.mki\n";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
 		0568E8011700124400AE99F4 /* PBXContainerItemProxy */ = {
@@ -80,7 +97,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		051282FD17272B0A00929B2D /* arrayTypeOptions.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = arrayTypeOptions.rb; sourceTree = "<group>"; };
+		051282FD17272B0A00929B2D /* arrayTypeOptions.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = arrayTypeOptions.mk; sourceTree = "<group>"; };
 		0537A9C7170D9F80005B590B /* vMAT_Array+CopyFrom.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "vMAT_Array+CopyFrom.mm"; sourceTree = "<group>"; };
 		0537A9C9170DC4D0005B590B /* vMAT_MATv5Variable+LoadFromOperation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "vMAT_MATv5Variable+LoadFromOperation.mm"; sourceTree = "<group>"; };
 		0537A9CB170EF597005B590B /* ClusterTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClusterTests.h; sourceTree = "<group>"; };
@@ -136,7 +153,8 @@
 		05B27C591725EB370011128B /* vMAT_unique.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_unique.mm; sourceTree = "<group>"; };
 		05B27C5B1725F2570011128B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		05B27C5D1726CD1A0011128B /* vMATCodeMonkey.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = vMATCodeMonkey.rb; sourceTree = "<group>"; };
-		05B27C5E1726CDE40011128B /* copyFrom.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = copyFrom.rb; sourceTree = "<group>"; };
+		05B27C5E1726CDE40011128B /* copyFrom.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = copyFrom.mk; sourceTree = "<group>"; };
+		05C6A8A31728EDAE008FC2D9 /* arrayTypeOptions.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arrayTypeOptions.mk; sourceTree = "<group>"; };
 		05CA1FFF170F7F1D0067AE9E /* vMAT_Types.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_Types.mm; sourceTree = "<group>"; };
 		05CA2002170F80EA0067AE9E /* vMAT_Array+UnaryOps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "vMAT_Array+UnaryOps.mm"; sourceTree = "<group>"; };
 		05CA2005171044AE0067AE9E /* vMAT_PrivateArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_PrivateArray.h; sourceTree = "<group>"; };
@@ -148,6 +166,9 @@
 		05CA20111710FC500067AE9E /* TypesTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TypesTests.mm; sourceTree = "<group>"; };
 		05CA2013171253950067AE9E /* vMAT_cluster.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_cluster.mm; sourceTree = "<group>"; };
 		05CA201517133DA50067AE9E /* vMAT.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vMAT.podspec; sourceTree = "<group>"; };
+		05E057781728FF40000BC08E /* copyFromMethods.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = copyFromMethods.mk; sourceTree = "<group>"; };
+		05E0577A17290C0E000BC08E /* namedCoercions.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = namedCoercions.mk; sourceTree = "<group>"; };
+		05E0577C172988B1000BC08E /* codeSnippets.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = codeSnippets.mk; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -322,8 +343,9 @@
 			isa = PBXGroup;
 			children = (
 				05B27C5D1726CD1A0011128B /* vMATCodeMonkey.rb */,
-				051282FD17272B0A00929B2D /* arrayTypeOptions.rb */,
-				05B27C5E1726CDE40011128B /* copyFrom.rb */,
+				051282FD17272B0A00929B2D /* arrayTypeOptions.mk */,
+				05B27C5E1726CDE40011128B /* copyFrom.mk */,
+				05E0577C172988B1000BC08E /* codeSnippets.mk */,
 			);
 			path = ruby;
 			sourceTree = "<group>";
@@ -336,6 +358,7 @@
 				05453DC0170CDE1200EFCB19 /* vMAT_Array.m */,
 				05CA2007171051290067AE9E /* vMAT_Array+BinaryOps.mm */,
 				0537A9C7170D9F80005B590B /* vMAT_Array+CopyFrom.mm */,
+				05E057781728FF40000BC08E /* copyFromMethods.mk */,
 				05CA2002170F80EA0067AE9E /* vMAT_Array+UnaryOps.mm */,
 			);
 			name = vMAT_Array;
@@ -355,11 +378,13 @@
 			isa = PBXGroup;
 			children = (
 				05B27C5B1725F2570011128B /* README.md */,
+				05C6A8A31728EDAE008FC2D9 /* arrayTypeOptions.mk */,
 				0568E7F51700124400AE99F4 /* vMAT.h */,
 				05453DC5170CE50200EFCB19 /* vMAT_Types.h */,
 				05453DC3170CE1F600EFCB19 /* vMAT_Private.h */,
 				05CA1FFF170F7F1D0067AE9E /* vMAT_Types.mm */,
 				0568E7F61700124400AE99F4 /* vMAT.mm */,
+				05E0577A17290C0E000BC08E /* namedCoercions.mk */,
 				05CA2013171253950067AE9E /* vMAT_cluster.mm */,
 				05CA200E1710C3690067AE9E /* vMAT_inconsistent.mm */,
 				05CA200A1710C1880067AE9E /* vMAT_linkage.m */,
@@ -417,6 +442,7 @@
 				0568E7E71700124400AE99F4 /* Headers */,
 			);
 			buildRules = (
+				05C6A8A21728EBA3008FC2D9 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -518,6 +544,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05E057771728F060000BC08E /* arrayTypeOptions.mk in Sources */,
+				05E057791728FFF9000BC08E /* copyFromMethods.mk in Sources */,
+				05E0577B17290D63000BC08E /* namedCoercions.mk in Sources */,
 				0568E7F71700124400AE99F4 /* vMAT.mm in Sources */,
 				054359491700B41A0037AAC4 /* vMAT_StreamDelegate.m in Sources */,
 				0543596517032C9A0037AAC4 /* vMAT_MATv5ReadOperation.m in Sources */,
