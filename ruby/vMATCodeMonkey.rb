@@ -32,6 +32,7 @@ class VMATCodeMonkey
         raise ArgumentError, "#{out_opt} is not an option!"
     end
     @out.puts "// vMATCodeMonkey's work; do not edit by hand!\n\n"
+    @todo = []
     initialize_options_processor
   end
 
@@ -63,7 +64,16 @@ class VMATCodeMonkey
   end
 
   def indent(level = :last)
-    @indent_level = level unless level == :last
+    case level
+      when :dec
+        @indent_level -= 1
+      when :inc
+        @indent_level += 1
+      when :last
+        # rest
+      else
+        @indent_level = level
+    end
     ' ' * @indent_level * 4
   end
 
@@ -71,18 +81,21 @@ class VMATCodeMonkey
     src_specs = specs
     specs = instance_eval '{' + preprocess(specs) + '}'
     fn = File.basename @caller_file, '.rb'
+    specs[:fn] = fn
+    @todo.each { |proc| proc.call(specs) }
+    specs.tap { |x| x.delete(:fn) }
     @out.puts indent(0) + options_processor_codegen(:options_results_struct, {fn: fn})
     @out.puts indent(0) + options_processor_codegen(:options_function_prologue, {fn: fn, declspecs: declspecs})
     indent(1)
     @out.puts comment src_specs
-    @out.puts indent(1) + "{\n"
-    @out.puts indent(2) + options_processor_codegen(:options_flags, {})
-    @out.puts indent(2) + options_processor_codegen(:options_locals, {})
+    @out.puts indent + options_processor_codegen(:options_inits, {})
+    @out.puts indent + options_processor_codegen(:options_flags, {})
+    @out.puts indent + options_processor_codegen(:options_locals, {})
+    @out.puts indent + options_processor_codegen(:options_normalization, {})
     specs.each { |key, spec|
-      @out.puts indent(2) + '// ' + key.to_s + ' ' + spec.to_s + "\n"
+      @out.puts indent + '// ' + key.to_s + ' ' + spec.to_s + "\n"
       @out.puts options_processor_codegen(key, spec)
     }
-    @out.puts indent(1) + "}\n"
     @out.puts indent(0) + options_processor_codegen(:options_function_epilogue, {})
   end
 
@@ -102,17 +115,26 @@ class VMATCodeMonkey
     lines.join(',')
   end
 
+  def later_with_spec(key, evaluate_block)
+    @todo += [lambda { |specs| evaluate_block.call(specs[key]) }]
+    key
+  end
+
   #
   # Methods for options_processor specs (called at instance_eval time).
   #
 
+  def array_type
+    later_with_spec :array_type_ie, lambda { |spec| evaluate_array_type spec }
+  end
+
   def set(flag, val)
     evaluate_set(flag, val)
-    { set_thingie_from_instance_eval: [flag, val] }
+    { set_ie: [flag, val] }
   end
 
   def vector(spec)
-    { vector_thingie_from_instance_eval: spec }
+    { vector_ie: spec }
   end
 
   #
@@ -122,10 +144,21 @@ class VMATCodeMonkey
   def initialize_options_processor
     @options_flags = []
     @options_locals = ['NSUInteger optidx = NSNotFound;']
+    @options_slots = []
+    @options_inits = []
+  end
+
+  def evaluate_array_type(spec)
+    @options_slots += ['vMAT_MIType type;']
+    default = spec[:default] || :none
+    @options_inits += ["resultsOut->type = mi#{default.to_s.upcase};"]
   end
 
   def evaluate_set(flag, val)
-    @options_flags += [flag] unless @options_flags.include? flag
+    unless @options_flags.include? flag
+      @options_flags += [flag]
+      @options_slots += ["bool #{flag};"]
+    end
   end
 
   #
@@ -135,7 +168,7 @@ class VMATCodeMonkey
   def options_processor_codegen(name, spec)
     case name
       when String
-        indent(2) + "There was one?\n"
+        indent + "There was one?\n"
       when Symbol
         selector = "#{name}_codegen"
         self.send selector, name, spec
@@ -147,7 +180,12 @@ class VMATCodeMonkey
   def options_results_struct_codegen(name, spec)
     fn = spec[:fn]
     out = "struct #{fn} {"
-    out += "\n#{indent}}\n\n"
+    indent(:inc)
+    @options_slots.each do |slot|
+      out += "\n#{indent}#{slot}"
+    end
+    indent(:dec)
+    out += "\n#{indent}};\n\n"
     out
   end
 
@@ -165,10 +203,19 @@ class VMATCodeMonkey
     out
   end
 
+  def options_inits_codegen(name, spec)
+    out = '// Initialize resultsOut struct'
+    @options_inits.each do |init|
+      out += "\n#{indent}#{init}"
+    end
+    out
+  end
+
   def options_flags_codegen(name, spec)
     out = '// Flags: ' + @options_flags.to_s
     @options_flags.each do |flag|
-      out += "\n#{indent}// #{flag}"
+      out += "\n#{indent}bool #{flag}_wasSet = false;"
+      out += "\n#{indent}resultsOut->#{flag} = false;"
     end
     out
   end
@@ -181,22 +228,27 @@ class VMATCodeMonkey
     out
   end
 
-  def array_type_codegen(name, spec)
+  def options_normalization_codegen(name, spec)
+    "// Options array normalization\n" + <<-'EOS'
+    if ([options count] > 0) {
+    }
+    else return;
+    EOS
+  end
+
+  def array_type_ie_codegen(name, spec)
     <<-'EOS'
-        vMAT_MIType type = miDOUBLE;
-        if (options == nil) return type; // Hoist this
-        if ((optidx = [options indexOfObject:@"like:"]) != NSNotFound) {
-            NSCParameterAssert([options count] > optidx + 1);
-            vMAT_Array * like = options[optidx + 1];
-            NSCParameterAssert([like respondsToSelector:@selector(type)]);
-            type = like.type;
-        }
-        else {
-            if ([options count] < 1) return type;
-            NSString * spec = options[0];
-            NSCParameterAssert([spec respondsToSelector:@selector(caseInsensitiveCompare:)]);
-            type = vMAT_MITypeNamed(spec);
-        }
+    if ((optidx = [options indexOfObject:@"like:"]) != NSNotFound) {
+        NSCParameterAssert([options count] > optidx + 1);
+        vMAT_Array * like = options[optidx + 1];
+        NSCParameterAssert([like respondsToSelector:@selector(type)]);
+        resultsOut->type = like.type;
+    }
+    else {
+        NSString * spec = options[0];
+        NSCParameterAssert([spec respondsToSelector:@selector(caseInsensitiveCompare:)]);
+        resultsOut->type = vMAT_MITypeNamed(spec);
+    }
     EOS
   end
 

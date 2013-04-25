@@ -7,7 +7,7 @@
 require './vMATCodeMonkey'
 
 VMATCodeMonkey.new(:print).options_processor <<EOS
-  :array_type default: :double
+  array_type  default: :double
 EOS
 
 VMATCodeMonkey.new(:print).options_processor <<EOS, :static

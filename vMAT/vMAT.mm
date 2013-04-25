@@ -154,31 +154,48 @@ vMAT_numel(vMAT_Array * matrix)
     return vMAT_Size_prod(matrix.size);
 }
 
-static vMAT_MIType
-arrayTypeOptions(NSArray * options)
+// vMATCodeMonkey's work; do not edit by hand!
+
+struct arrayTypeOptions {
+    vMAT_MIType type;
+};
+
+void
+arrayTypeOptions(NSArray * options, struct arrayTypeOptions * resultsOut)
 {
-    vMAT_MIType type = miDOUBLE;
-    if ([options count] != 0) {
+    // array_type  default: :double
+    // Initialize resultsOut struct
+    resultsOut->type = miDOUBLE;
+    // Flags: []
+    // Locals
+    NSUInteger optidx = NSNotFound;
+    // Options array normalization
+    if ([options count] > 0) {
+    }
+    else return;
+    // array_type_ie {:default=>:double}
+    if ((optidx = [options indexOfObject:@"like:"]) != NSNotFound) {
+        NSCParameterAssert([options count] > optidx + 1);
+        vMAT_Array * like = options[optidx + 1];
+        NSCParameterAssert([like respondsToSelector:@selector(type)]);
+        resultsOut->type = like.type;
+    }
+    else {
         NSString * spec = options[0];
         NSCParameterAssert([spec respondsToSelector:@selector(caseInsensitiveCompare:)]);
-        NSComparisonResult cmp = [spec caseInsensitiveCompare:@"like:"];
-        if (cmp == 0) {
-            NSCParameterAssert([options count] == 2);
-            vMAT_Array * like = options[1];
-            NSCParameterAssert([like respondsToSelector:@selector(type)]);
-            type = like.type;
-        }
-        else type = vMAT_MITypeNamed(spec);
+        resultsOut->type = vMAT_MITypeNamed(spec);
     }
-    return type;
 }
+
+typedef struct arrayTypeOptions ArrayTypeOptions;
 
 vMAT_Array *
 vMAT_ones(vMAT_Size size,
           NSArray * options)
 {
-    vMAT_MIType type = arrayTypeOptions(options);
-    vMAT_Array * array = [vMAT_Array arrayWithSize:size type:type];
+    ArrayTypeOptions opts;
+    arrayTypeOptions(options, &opts);
+    vMAT_Array * array = [vMAT_Array arrayWithSize:size type:opts.type];
     vMAT_place(array, @[ vMAT_ALL, vMAT_ALL ], @1);
     return array;
 }
@@ -187,8 +204,9 @@ vMAT_Array *
 vMAT_zeros(vMAT_Size size,
            NSArray * options)
 {
-    vMAT_MIType type = arrayTypeOptions(options);
-    vMAT_Array * array = [vMAT_Array arrayWithSize:size type:type];
+    ArrayTypeOptions opts;
+    arrayTypeOptions(options, &opts);
+    vMAT_Array * array = [vMAT_Array arrayWithSize:size type:opts.type];
     return array;
 }
 
@@ -198,25 +216,26 @@ vMAT_Array *
 vMAT_coerce(id source,
             NSArray * options)
 {
+    ArrayTypeOptions opts;
+    arrayTypeOptions(options, &opts);
     vMAT_Array * array = nil;
-    vMAT_MIType type = arrayTypeOptions(options);
     BOOL copyFlag = [options containsObject:@"-copy"];
-    NSCParameterAssert(type != miNONE);
+    NSCParameterAssert(opts.type != miNONE);
     if ([source respondsToSelector:@selector(doubleValue)]) {
-        array = [vMAT_Array arrayWithSize:vMAT_MakeSize(1, 1) type:type];
+        array = [vMAT_Array arrayWithSize:vMAT_MakeSize(1, 1) type:opts.type];
         [array setElement:source
                   atIndex:vMAT_MakeIndex(0, 0)];
     }
     else if ([source respondsToSelector:@selector(elementAtIndex:)]) {
         vMAT_Array * matrix = source;
-        if (copyFlag || matrix.type != type) {
-            array = [vMAT_Array arrayWithSize:matrix.size type:type];
+        if (copyFlag || matrix.type != opts.type) {
+            array = [vMAT_Array arrayWithSize:matrix.size type:opts.type];
             [array copyFrom:matrix];
         }
         else array = matrix;
     }
     else if ([source respondsToSelector:@selector(objectAtIndex:)]) {
-        array = [vMAT_Array arrayWithSize:vMAT_MakeSize((vMAT_idx_t)[source count], 1) type:type];
+        array = [vMAT_Array arrayWithSize:vMAT_MakeSize((vMAT_idx_t)[source count], 1) type:opts.type];
         vMAT_place(array, @[ vMAT_ALL ], source);
     }
     return array;
