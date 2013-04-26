@@ -99,8 +99,8 @@ class VMATCodeMonkey
     specs[:fn] = fn
     @todo.each { |proc| proc.call(specs) }
     specs.tap { |x| x.delete(:fn) }
-    @out.puts indent(0) + options_processor_codegen(:options_results_struct, {fn: fn})
-    @out.puts indent(0) + options_processor_codegen(:options_function_prologue, {fn: fn, declspecs: declspecs})
+    @out.puts indent(0) + options_processor_codegen(:options_results_struct, {:fn => fn})
+    @out.puts indent(0) + options_processor_codegen(:options_function_prologue, {:fn => fn, :declspecs => declspecs})
     indent(1)
     @out.puts comment src_specs
     @out.puts indent + options_processor_codegen(:options_inits, {})
@@ -145,11 +145,11 @@ class VMATCodeMonkey
 
   def set(flag, val)
     evaluate_set(flag, val)
-    { set_ie: [flag, val] }
+    { :set_ie => [flag, val] }
   end
 
   def vector(spec)
-    { vector_ie: spec }
+    { :vector_ie => spec }
   end
 
   #
