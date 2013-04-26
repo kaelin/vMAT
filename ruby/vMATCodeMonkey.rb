@@ -4,6 +4,8 @@
 #  Created by Kaelin Colclasure on 4/23/13.
 #  Copyright (c) 2013 Kaelin Colclasure. All rights reserved.
 
+require 'pp'
+
 class VMATCodeMonkey
 
   MI_NUMERIC_TYPES = %w[
@@ -130,8 +132,34 @@ class VMATCodeMonkey
     lines.join(',')
   end
 
+  def shake_tree(specs, key)
+    parent = find_parent(specs, key)
+    parent ? { parent => specs[parent] } : nil
+  end
+
+  def find_parent(specs, key, keypath = [])
+    specs.each do |k, v|
+      if k == key
+        return (keypath + [k])[0]
+      elsif v.is_a?(Hash)
+        branch = find_parent(v, key, keypath + [k])
+        if !branch.nil?
+          return branch
+        end
+      end
+    end
+    nil
+  end
+
   def later_with_spec(key, evaluate_block)
-    @todo += [lambda { |specs| evaluate_block.call(specs[key]) }]
+    case evaluate_block.arity
+      when 1
+        @todo += [lambda { |specs| evaluate_block.call(shake_tree specs, key) }]
+      when 2
+        @todo += [lambda { |specs| evaluate_block.call(specs, key) }]
+      else
+        raise ArgumentError, "Take one or two arguments; no more, no less."
+    end
     key
   end
 
@@ -143,13 +171,20 @@ class VMATCodeMonkey
     later_with_spec :array_type_ie, lambda { |spec| evaluate_array_type spec }
   end
 
+  $set_ie = 'set_ie0'
+
   def set(flag, val)
+    set_ie = $set_ie.succ!.to_sym
     evaluate_set(flag, val)
-    { :set_ie => [flag, val] }
+    { set_ie => [flag, val] }
   end
 
+  $vector_ie = 'vector_ie0'
+
   def vector(spec)
-    { :vector_ie => spec }
+    vector_ie = $vector_ie.succ!.to_sym
+    later_with_spec vector_ie, lambda { |spec| evaluate_vector(spec) }
+    { vector_ie => spec }
   end
 
   #
@@ -165,7 +200,7 @@ class VMATCodeMonkey
 
   def evaluate_array_type(spec)
     @options_slots += ['vMAT_MIType type;']
-    default = spec[:default] || :none
+    default = spec[:array_type_ie][:default] || :none
     @options_inits += ["resultsOut->type = mi#{default.to_s.upcase};"]
   end
 
@@ -174,6 +209,10 @@ class VMATCodeMonkey
       @options_flags += [flag]
       @options_slots += ["bool #{flag};"]
     end
+  end
+
+  def evaluate_vector(spec)
+    pp spec
   end
 
   #
