@@ -143,7 +143,7 @@ class VMATCodeMonkey
         return (keypath + [k])[0]
       elsif v.is_a?(Hash)
         branch = find_parent(v, key, keypath + [k])
-        if !branch.nil?
+        unless branch.nil?
           return branch
         end
       end
@@ -171,6 +171,18 @@ class VMATCodeMonkey
     later_with_spec :array_type_ie, lambda { |spec| evaluate_array_type spec }
   end
 
+  $choice_ie = 'choice_ie0'
+
+  def choice(*alternatives)
+    choice_ie = $choice_ie.succ!.to_sym
+    later_with_spec choice_ie, lambda { |specs, key| evaluate_choice(specs, key) }
+    if alternatives.empty?
+      choice_ie
+    else
+      { choice_ie => alternatives }
+    end
+  end
+
   $scalar_ie = 'scalar_ie0'
 
   def scalar(type)
@@ -185,6 +197,14 @@ class VMATCodeMonkey
     set_ie = $set_ie.succ!.to_sym
     evaluate_set(flag, val)
     { set_ie => [flag, val] }
+  end
+
+  $string_ie = 'string_ie0'
+
+  def string
+    string_ie = $string_ie.succ!.to_sym
+    later_with_spec string_ie, lambda { |specs, key| evaluate_string(specs, key) }
+    { string_ie => '' }
   end
 
   $vector_ie = 'vector_ie0'
@@ -209,6 +229,17 @@ class VMATCodeMonkey
     @options_optarg_unused = true
   end
 
+  def evaluation_preamble(specs, key)
+    spec = shake_tree specs, key
+    root = spec.keys[0]
+    slot = /\w+/.match(root)[0]
+    rest = spec[root]
+    specs[root][:arg][:key] = key
+    specs[root][:arg][:slot] = slot
+    @options_optarg_unused = false
+    return spec, root, slot, rest
+  end
+
   def evaluate_array_type(spec)
     @options_slots += ['vMAT_MIType type;']
     default = spec[:array_type_ie][:default] || :none
@@ -216,20 +247,23 @@ class VMATCodeMonkey
     @options_optarg_unused = false
   end
 
+  def evaluate_choice(specs, key)
+    spec, root, slot, rest = evaluation_preamble(specs, key)
+    specs[root][:arg][:kind] = rest[:arg][key].is_a?(Hash) ? :choice_with_flags : :choice
+    @options_slots += ["NSString * #{slot};"]
+  end
+
   def evaluate_scalar(specs, key)
-    spec = shake_tree specs, key
-    root = spec.keys[0]
-    rest = spec[root]
-    name = /\w+/.match(root)[0]
-    @options_slots += ["vMAT_Array * #{name};"]
+    spec, root, slot, rest = evaluation_preamble(specs, key)
+    specs[root][:arg][:kind] = :scalar_or_vector
+    @options_slots += ["vMAT_Array * #{slot};"]
     default = rest[:default]
-    if !default.nil?
-      type = rest[:arg][:type]
-      @options_inits += ["resultsOut->#{name} = vMAT_coerce(@#{default}, @[ @\"#{type}\" ]);"]
+    if default.nil?
+      @options_inits += ["resultsOut->#{slot} = nil;"]
     else
-      @options_inits += ["resultsOut->#{name} = nil;"]
+      type = rest[:arg][:type]
+      @options_inits += ["resultsOut->#{slot} = vMAT_coerce(@#{default}, @[ @\"#{type}\" ]);"]
     end
-    @options_optarg_unused = false
   end
 
   def evaluate_set(flag, val)
@@ -239,13 +273,23 @@ class VMATCodeMonkey
     end
   end
 
+  def evaluate_string(specs, key)
+    spec, root, slot, rest = evaluation_preamble(specs, key)
+    specs[root][:arg][:kind] = :string
+    @options_slots += ["NSString * #{slot};"]
+    default = rest[:default]
+    if default.nil?
+      @options_inits += ["resultsOut->#{slot} = nil;"]
+    else
+      @options_inits += ["resultsOut->#{slot} = @\"#{default}\";"]
+    end
+  end
+
   def evaluate_vector(specs, key)
-    spec = shake_tree specs, key
-    root = spec.keys[0]
-    name = /\w+/.match(root)[0]
-    @options_slots += ["vMAT_Array * #{name};"]
-    @options_inits += ["resultsOut->#{name} = nil;"]
-    @options_optarg_unused = false
+    spec, root, slot, rest = evaluation_preamble(specs, key)
+    specs[root][:arg][:kind] = :scalar_or_vector
+    @options_slots += ["vMAT_Array * #{slot};"]
+    @options_inits += ["resultsOut->#{slot} = nil;"]
   end
 
   #
@@ -255,13 +299,9 @@ class VMATCodeMonkey
   def options_processor_codegen(name, spec)
     case name
       when String
-        slot = /\w+/.match(name)
         out = "#{indent}if ((optidx = [remainingOptions indexOfObject:@\"#{name}\"]) != NSNotFound) {\n"
         indent(:inc)
         spec.each do |key, rest|
-          if rest.is_a?(Hash)
-            rest[:slot] = slot
-          end
           out += indent + options_processor_codegen(key, rest)
         end
         out += "#{indent(:dec)}}\n"
@@ -358,8 +398,30 @@ class VMATCodeMonkey
   end
 
   def arg_codegen(name, spec)
-    out = "resultsOut->#{spec[:slot]} = vMAT_coerce(optarg(), @[ @\"#{spec[:type]}\" ]);\n"
+    case spec[:kind]
+      when :choice
+        out = "// Choice is good... Have some.\n"
+      when :choice_with_flags
+        out = options_processor_codegen(spec[:kind], spec)
+      when :scalar_or_vector
+        out = "resultsOut->#{spec[:slot]} = vMAT_coerce(optarg(), @[ @\"#{spec[:type]}\" ]);\n"
+      when :string
+        out = "resultsOut->#{spec[:slot]} = [optarg() description];\n"
+      else
+        raise ArgumentError, "#{spec[:kind]}?"
+    end
     out += "#{indent}[remainingOptions removeObjectsInRange:NSMakeRange(optidx, 2)];\n"
+    out
+  end
+
+  def choice_with_flags_codegen(name, spec)
+    respec = spec[spec[:key]]
+    out = "{\n#{indent(:inc)}NSMutableArray * remainingOptions = [@[ optarg(), optarg() ] mutableCopy];\n"
+    out += "#{indent}NSUInteger optidx = NSNotFound;\n"
+    respec.each do |key, rest|
+      out += options_processor_codegen(key, { :flag => rest, :arg => { :slot => spec[:slot], :kind => :string } })
+    end
+    out += "#{indent(:dec)}}\n"
     out
   end
 
