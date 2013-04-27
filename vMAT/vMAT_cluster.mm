@@ -32,22 +32,7 @@ namespace {
     typedef Mat<double, Dynamic, 3> MatZ; // Input is a Mx3 hierarchical cluster tree (after Z gets transposed!)
     typedef Mat<double, Dynamic, 4> MatY; // Result is a (M+1)x4 inconsistancy matrix (after Y gets transposed!)
     typedef Mat<double> MatA;             // Result is (M+1)xN assignment matrix (after Z gets transposed!)
-    
-//    struct Options {
-//        BOOL useCutoff;
-//        BOOL useInconsistent;
-//        int depth;
-//        vector<double> cutoff;
-//        vector<int> maxclust;
-//    };
-    
-//    Options
-//    clusterOptions(NSArray * options)
-//    {
-//        Options opts = { YES, YES, 2, { 0.5, 0.75 }, { } };
-//        return opts;
-//    }
-    
+        
     typedef Array<bool, Dynamic, 1> ArrayX1b;
     typedef vMAT::Map<ArrayX1b> MatArrayX1b;
     typedef Mat<double, Dynamic, 1> MatX1d;
@@ -121,7 +106,7 @@ namespace {
             }
             vMAT_place(todo, @[ rows ], @NO);
         }
-        NSArray * result = vMAT_unique(matA, @[ @"-want:", @"[~,~,_]" ]);
+        NSArray * result = vMAT_unique(matA, @[ @"want:", @"[~,~,_]" ]);
         return result[2];
     }
     

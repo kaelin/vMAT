@@ -221,6 +221,7 @@ class VMATCodeMonkey
 
   def initialize_options_processor
     @options_flags = []
+    @options_flag_defaults = {}
     @options_locals = ['__block NSMutableArray * remainingOptions = nil;',
                        '__block NSUInteger optidx = NSNotFound;',
                        'id (^ optarg)() = ^ { NSCParameterAssert([remainingOptions count] > optidx + 1); return remainingOptions[optidx + 1]; };']
@@ -249,8 +250,20 @@ class VMATCodeMonkey
 
   def evaluate_choice(specs, key)
     spec, root, slot, rest = evaluation_preamble(specs, key)
-    specs[root][:arg][:kind] = rest[:arg][key].is_a?(Hash) ? :choice_with_flags : :choice
+    kind = rest[:arg][key].is_a?(Hash) ? :choice_with_flags : :choice
+    specs[root][:arg][:kind] = kind
     @options_slots += ["NSString * #{slot};"]
+    default = rest[:default]
+    if default.nil?
+      @options_inits += ["resultsOut->#{slot} = nil;"]
+    else
+      @options_inits += ["resultsOut->#{slot} = @\"#{default}\";"]
+      if kind == :choice_with_flags
+        choices = rest[:arg][rest[:arg][:key]]
+        setter = Hash[*choices[default].to_a[0][1]]
+        @options_flag_defaults.merge!(setter)
+      end
+    end
   end
 
   def evaluate_scalar(specs, key)
@@ -352,8 +365,9 @@ class VMATCodeMonkey
   def options_flags_codegen(name, spec)
     out = '// Flags: ' + @options_flags.to_s
     @options_flags.each do |flag|
+      default = @options_flag_defaults[flag] || false
       out += "\n#{indent}bool #{flag}_wasSet = false;"
-      out += "\n#{indent}resultsOut->#{flag} = false;"
+      out += "\n#{indent}resultsOut->#{flag} = #{default};"
     end
     out
   end

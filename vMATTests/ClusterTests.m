@@ -52,7 +52,7 @@
     NSLog(@"W  = %@", matW.dump);
     STAssertTrue([matW isEqual:matWv epsilon:0.005], @"vMAT_inconsistent results don't match expected output");
     vMAT_Array * matV = nil;
-    matV = vMAT_cluster(matZ, @[ @"cutoff:", @.5, @"criterion:", @"inconsistent" ]);
+    matV = vMAT_cluster(matZ, @[ @"cutoff:", @[ @.5, @.75 ] ]);
     NSLog(@"V  = %@", matV.dump);
     matV = vMAT_cluster(matZ, @[ @"maxclust:", @4 ]);
     NSLog(@"V  = %@", matV.dump);
