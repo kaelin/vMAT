@@ -109,10 +109,10 @@ class VMATCodeMonkey
     @out.puts indent + options_processor_codegen(:options_flags, {})
     @out.puts indent + options_processor_codegen(:options_locals, {})
     @out.puts indent + options_processor_codegen(:options_normalization, {})
-    specs.each { |key, spec|
+    specs.each do |key, spec|
       @out.puts indent + '// ' + key.to_s + ' ' + spec.to_s + "\n"
       @out.puts options_processor_codegen(key, spec)
-    }
+    end
     @out.puts indent(0) + options_processor_codegen(:options_function_epilogue, {})
   end
 
@@ -171,6 +171,14 @@ class VMATCodeMonkey
     later_with_spec :array_type_ie, lambda { |spec| evaluate_array_type spec }
   end
 
+  $scalar_ie = 'scalar_ie0'
+
+  def scalar(type)
+    scalar_ie = $scalar_ie.succ!.to_sym
+    later_with_spec scalar_ie, lambda { |specs, key| evaluate_scalar(specs, key) }
+    { scalar_ie => type, :type => type }
+  end
+
   $set_ie = 'set_ie0'
 
   def set(flag, val)
@@ -181,10 +189,10 @@ class VMATCodeMonkey
 
   $vector_ie = 'vector_ie0'
 
-  def vector(spec)
+  def vector(type)
     vector_ie = $vector_ie.succ!.to_sym
-    later_with_spec vector_ie, lambda { |spec| evaluate_vector(spec) }
-    { vector_ie => spec }
+    later_with_spec vector_ie, lambda { |specs, key| evaluate_vector(specs, key) }
+    { vector_ie => type, :type => type }
   end
 
   #
@@ -193,15 +201,35 @@ class VMATCodeMonkey
 
   def initialize_options_processor
     @options_flags = []
-    @options_locals = ['NSMutableArray * remainingOptions = nil;', 'NSUInteger optidx = NSNotFound;']
+    @options_locals = ['__block NSMutableArray * remainingOptions = nil;',
+                       '__block NSUInteger optidx = NSNotFound;',
+                       'id (^ optarg)() = ^ { NSCParameterAssert([remainingOptions count] > optidx + 1); return remainingOptions[optidx + 1]; };']
     @options_slots = ['NSMutableArray * remainingOptions;']
     @options_inits = ['resultsOut->remainingOptions = nil;']
+    @options_optarg_unused = true
   end
 
   def evaluate_array_type(spec)
     @options_slots += ['vMAT_MIType type;']
     default = spec[:array_type_ie][:default] || :none
     @options_inits += ["resultsOut->type = mi#{default.to_s.upcase};"]
+    @options_optarg_unused = false
+  end
+
+  def evaluate_scalar(specs, key)
+    spec = shake_tree specs, key
+    root = spec.keys[0]
+    rest = spec[root]
+    name = /\w+/.match(root)[0]
+    @options_slots += ["vMAT_Array * #{name};"]
+    default = rest[:default]
+    if !default.nil?
+      type = rest[:arg][:type]
+      @options_inits += ["resultsOut->#{name} = vMAT_coerce(@#{default}, @[ @\"#{type}\" ]);"]
+    else
+      @options_inits += ["resultsOut->#{name} = nil;"]
+    end
+    @options_optarg_unused = false
   end
 
   def evaluate_set(flag, val)
@@ -211,8 +239,13 @@ class VMATCodeMonkey
     end
   end
 
-  def evaluate_vector(spec)
-    pp spec
+  def evaluate_vector(specs, key)
+    spec = shake_tree specs, key
+    root = spec.keys[0]
+    name = /\w+/.match(root)[0]
+    @options_slots += ["vMAT_Array * #{name};"]
+    @options_inits += ["resultsOut->#{name} = nil;"]
+    @options_optarg_unused = false
   end
 
   #
@@ -222,7 +255,17 @@ class VMATCodeMonkey
   def options_processor_codegen(name, spec)
     case name
       when String
-        indent + "There was one?\n"
+        slot = /\w+/.match(name)
+        out = "#{indent}if ((optidx = [remainingOptions indexOfObject:@\"#{name}\"]) != NSNotFound) {\n"
+        indent(:inc)
+        spec.each do |key, rest|
+          if rest.is_a?(Hash)
+            rest[:slot] = slot
+          end
+          out += indent + options_processor_codegen(key, rest)
+        end
+        out += "#{indent(:dec)}}\n"
+        out
       when Symbol
         selector = "#{name}_codegen"
         self.send selector, name, spec
@@ -277,6 +320,9 @@ class VMATCodeMonkey
 
   def options_locals_codegen(name, spec)
     out = '// Locals'
+    if @options_optarg_unused
+      @options_locals.delete_at(2)
+    end
     @options_locals.each do |local|
       out += "\n#{indent}#{local}"
     end
@@ -297,8 +343,7 @@ class VMATCodeMonkey
   def array_type_ie_codegen(name, spec)
     <<-'EOS'
     if ((optidx = [remainingOptions indexOfObject:@"like:"]) != NSNotFound) {
-        NSCParameterAssert([remainingOptions count] > optidx + 1);
-        vMAT_Array * like = remainingOptions[optidx + 1];
+        vMAT_Array * like = optarg();
         NSCParameterAssert([like respondsToSelector:@selector(type)]);
         resultsOut->type = like.type;
         [remainingOptions removeObjectsInRange:NSMakeRange(optidx, 2)];
@@ -310,6 +355,24 @@ class VMATCodeMonkey
         [remainingOptions removeObjectAtIndex:0];
     }
     EOS
+  end
+
+  def arg_codegen(name, spec)
+    out = "resultsOut->#{spec[:slot]} = vMAT_coerce(optarg(), @[ @\"#{spec[:type]}\" ]);\n"
+    out += "#{indent}[remainingOptions removeObjectsInRange:NSMakeRange(optidx, 2)];\n"
+    out
+  end
+
+  def default_codegen(name, spec)
+    "// Default #{spec}\n"
+  end
+
+  def flag_codegen(name, spec)
+    flag = spec[spec.keys[0]][0]
+    val = spec[spec.keys[0]][1]
+    out = "if (#{flag}_wasSet) NSCParameterAssert(#{val} == resultsOut->#{flag});\n"
+    out += "#{indent}else { resultsOut->#{flag} = #{val}; #{flag}_wasSet = true; }\n"
+    out
   end
 
 end

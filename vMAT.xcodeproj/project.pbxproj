@@ -57,6 +57,7 @@
 		05E057771728F060000BC08E /* arrayTypeOptions.mk in Sources */ = {isa = PBXBuildFile; fileRef = 05C6A8A31728EDAE008FC2D9 /* arrayTypeOptions.mk */; };
 		05E057791728FFF9000BC08E /* copyFromMethods.mk in Sources */ = {isa = PBXBuildFile; fileRef = 05E057781728FF40000BC08E /* copyFromMethods.mk */; };
 		05E0577B17290D63000BC08E /* namedCoercions.mk in Sources */ = {isa = PBXBuildFile; fileRef = 05E0577A17290C0E000BC08E /* namedCoercions.mk */; };
+		05E05798172B72E4000BC08E /* clusterOptions.mk in Sources */ = {isa = PBXBuildFile; fileRef = 05E05797172B71DF000BC08E /* clusterOptions.mk */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -169,6 +170,7 @@
 		05E057781728FF40000BC08E /* copyFromMethods.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = copyFromMethods.mk; sourceTree = "<group>"; };
 		05E0577A17290C0E000BC08E /* namedCoercions.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = namedCoercions.mk; sourceTree = "<group>"; };
 		05E0577C172988B1000BC08E /* codeSnippets.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = codeSnippets.mk; sourceTree = "<group>"; };
+		05E05797172B71DF000BC08E /* clusterOptions.mk */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = clusterOptions.mk; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -378,14 +380,15 @@
 			isa = PBXGroup;
 			children = (
 				05B27C5B1725F2570011128B /* README.md */,
-				05C6A8A31728EDAE008FC2D9 /* arrayTypeOptions.mk */,
 				0568E7F51700124400AE99F4 /* vMAT.h */,
 				05453DC5170CE50200EFCB19 /* vMAT_Types.h */,
 				05453DC3170CE1F600EFCB19 /* vMAT_Private.h */,
 				05CA1FFF170F7F1D0067AE9E /* vMAT_Types.mm */,
 				0568E7F61700124400AE99F4 /* vMAT.mm */,
+				05C6A8A31728EDAE008FC2D9 /* arrayTypeOptions.mk */,
 				05E0577A17290C0E000BC08E /* namedCoercions.mk */,
 				05CA2013171253950067AE9E /* vMAT_cluster.mm */,
+				05E05797172B71DF000BC08E /* clusterOptions.mk */,
 				05CA200E1710C3690067AE9E /* vMAT_inconsistent.mm */,
 				05CA200A1710C1880067AE9E /* vMAT_linkage.m */,
 				05CA200C1710C2760067AE9E /* vMAT_pdist.m */,
@@ -545,6 +548,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05E057771728F060000BC08E /* arrayTypeOptions.mk in Sources */,
+				05E05798172B72E4000BC08E /* clusterOptions.mk in Sources */,
 				05E057791728FFF9000BC08E /* copyFromMethods.mk in Sources */,
 				05E0577B17290D63000BC08E /* namedCoercions.mk in Sources */,
 				0568E7F71700124400AE99F4 /* vMAT.mm in Sources */,

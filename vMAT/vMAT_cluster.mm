@@ -14,6 +14,8 @@
 #import <Eigen/Dense>
 
 
+#import "clusterOptions.mki"
+
 namespace {
     
     using namespace Eigen;
@@ -31,20 +33,20 @@ namespace {
     typedef Mat<double, Dynamic, 4> MatY; // Result is a (M+1)x4 inconsistancy matrix (after Y gets transposed!)
     typedef Mat<double> MatA;             // Result is (M+1)xN assignment matrix (after Z gets transposed!)
     
-    struct Options {
-        BOOL useCutoff;
-        BOOL useInconsistent;
-        int depth;
-        vector<double> cutoff;
-        vector<int> maxclust;
-    };
+//    struct Options {
+//        BOOL useCutoff;
+//        BOOL useInconsistent;
+//        int depth;
+//        vector<double> cutoff;
+//        vector<int> maxclust;
+//    };
     
-    Options
-    clusterOptions(NSArray * options)
-    {
-        Options opts = { YES, YES, 2, { 0.5, 0.75 }, { } };
-        return opts;
-    }
+//    Options
+//    clusterOptions(NSArray * options)
+//    {
+//        Options opts = { YES, YES, 2, { 0.5, 0.75 }, { } };
+//        return opts;
+//    }
     
     typedef Array<bool, Dynamic, 1> ArrayX1b;
     typedef vMAT::Map<ArrayX1b> MatArrayX1b;
@@ -129,24 +131,25 @@ vMAT_Array *
 vMAT_cluster(vMAT_Array * matZ,
              NSArray * options)
 {
-    Options opts = clusterOptions(options);
-    
+    WITH_clusterOptions(options, opts);
     MatZ Z = vMAT_double(matZ.mtrans); // Note mtrans!
     vMAT_Array * matA = nil;
     vMAT_idx_t m = Z.size(0) + 1;
     if (opts.useCutoff) {
-        vMAT_idx_t n = static_cast<vMAT_idx_t>(opts.cutoff.size());
+        vMAT_idx_t n = vMAT_numel(opts.cutoff);
         VectorXd crit(m - 1);
         matA = vMAT_zeros(vMAT_MakeSize(m, n), @[ @"index" ]);
         if (opts.useInconsistent) {
-            MatY Y = vMAT_inconsistent(Z.matA.mtrans, opts.depth).mtrans; // Note double mtrans!
+            Mat<vMAT_idx_t> depth = opts.depth;
+            MatY Y = vMAT_inconsistent(Z.matA.mtrans, depth[0]).mtrans; // Note double mtrans!
             crit = Y.col(3);
         }
         else {
             crit = Z.col(2);
         }
         vMAT_idx_t idxA = 0;
-        for (auto cutoff : opts.cutoff) {
+        MatX1d cutoffv = opts.cutoff;
+        for (auto cutoff : cutoffv) {
             vMAT_Array * matC = checkCut(Z, cutoff, crit);
             NSLog(@"%@", matC.dump);
             vMAT_place(matA, @[ vMAT_ALL, vMAT_idxNumber(idxA) ], labelTree(Z, matC));
