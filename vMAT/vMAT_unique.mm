@@ -20,7 +20,7 @@ namespace {
 
 }
 
-// TODO: All types besides signed integers & implement @"-want:" options.
+// TODO: All types besides signed integers & implement @"want:" options.
 
 NSArray *
 vMAT_unique(vMAT_Array * matrix,
