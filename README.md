@@ -1,4 +1,3 @@
-
 vMAT
 ====
 
@@ -8,7 +7,7 @@ This library is being developed as part of a facial recognition project. As such
 contains a small (but growing) set of matrix functions and related utilities which that project happens to use.
 The project is still in an early, pre-release state right now, but stay tuned...
 
-For an idea of what is to come, have a look at the first draft of [The vMAT Manifesto](http://kaelin.github.io/posts/the-vmat-manifesto/).
+For an idea of what is to come, have a look at the first draft of [The vMAT Manifesto](http://kaelin.github.io/blog/2013/04/13/the-vmat-manifesto/).
 
 
 ## matxd
