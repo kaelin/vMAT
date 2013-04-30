@@ -117,7 +117,9 @@ vMAT_cluster(vMAT_Array * matZ,
              NSArray * options)
 {
     WITH_clusterOptions(options, opts);
-    MatZ Z = vMAT_double(matZ.mtrans); // Note mtrans!
+    NSCParameterAssert(opts.useCutoff); // Only these options are implemented for the Bootstrap release
+    NSCParameterAssert(opts.useInconsistent);
+    MatZ Z = vMAT_double(matZ.mtrans);  // Note mtrans!
     vMAT_Array * matA = nil;
     vMAT_idx_t m = Z.size(0) + 1;
     if (opts.useCutoff) {
@@ -136,7 +138,7 @@ vMAT_cluster(vMAT_Array * matZ,
         MatX1d cutoffv = opts.cutoff;
         for (auto cutoff : cutoffv) {
             vMAT_Array * matC = checkCut(Z, cutoff, crit);
-            NSLog(@"%@", matC.dump);
+            // NSLog(@"%@", matC.dump);
             vMAT_place(matA, @[ vMAT_ALL, vMAT_idxNumber(idxA) ], labelTree(Z, matC));
             ++idxA;
         }
