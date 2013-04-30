@@ -96,7 +96,7 @@ class OptionSpecsLexer < Racc::Parser
       when (text = @ss.scan(/\]/))
          action { [:close_square, text] }
 
-      when (text = @ss.scan(/\\\n/))
+      when (text = @ss.scan(/\\\s+/))
          action { }
 
       when (text = @ss.scan(/\n/))
@@ -118,7 +118,19 @@ class OptionSpecsLexer < Racc::Parser
 
   def enumerate_tokens
     Enumerator.new { |token|
-      loop { token << next_token }
+      loop {
+        t = next_token
+        break if t.nil?
+        token << t
+      }
     }
+  end
+  def normalize(source)
+    scan_setup source
+    out = ""
+    enumerate_tokens.each do |token|
+      out += ' ' + token[1]
+    end
+    out
   end
 end # class

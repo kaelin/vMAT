@@ -4,5 +4,5 @@ rule '.rb' => ['.rex'] do |task|
 end
 
 task :test => ['OptionSpecsLexer.rb'] do |task|
-  sh "bin/rspec *_spec.rb"
+  sh "bin/rspec --format documentation *_spec.rb"
 end

@@ -13,13 +13,29 @@ rules
   \)                    { [:close_paren, text] }
   \[                    { [:close_square, text] }
   \]                    { [:close_square, text] }
-  \\\n                  { }
+  \\\s+                 { }
   \n                    { [:eol, text] }
   \s+                   { }
+
 inner
+
   def enumerate_tokens
     Enumerator.new { |token|
-      loop { token << next_token }
+      loop {
+        t = next_token
+        break if t.nil?
+        token << t
+      }
     }
   end
+
+  def normalize(source)
+    scan_setup source
+    out = ""
+    enumerate_tokens.each do |token|
+      out += ' ' + token[1]
+    end
+    out
+  end
+
 end
