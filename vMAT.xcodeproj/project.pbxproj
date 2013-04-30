@@ -151,6 +151,10 @@
 		058C5E681708E46900A65E82 /* vMAT_MATv5Variable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_MATv5Variable.h; sourceTree = "<group>"; };
 		058C5E691708E46900A65E82 /* vMAT_MATv5Variable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vMAT_MATv5Variable.m; sourceTree = "<group>"; };
 		05A3BF50170F744C00FD79DC /* cluster-normaldata-10x3-13.mat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cluster-normaldata-10x3-13.mat"; sourceTree = "<group>"; };
+		05A5FB2917307DC100AACED7 /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
+		05A5FB2A17307DC100AACED7 /* OptionSpecsLexer_spec.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = OptionSpecsLexer_spec.rb; sourceTree = "<group>"; };
+		05A5FB2B17307DC100AACED7 /* OptionSpecsLexer.rex */ = {isa = PBXFileReference; lastKnownFileType = text; path = OptionSpecsLexer.rex; sourceTree = "<group>"; };
+		05A5FB2C17307DC100AACED7 /* Rakefile.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = Rakefile.rb; sourceTree = "<group>"; };
 		05B27C591725EB370011128B /* vMAT_unique.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_unique.mm; sourceTree = "<group>"; };
 		05B27C5B1725F2570011128B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		05B27C5D1726CD1A0011128B /* vMATCodeMonkey.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = vMATCodeMonkey.rb; sourceTree = "<group>"; };
@@ -344,6 +348,10 @@
 		05B27C5C1726CCAE0011128B /* ruby */ = {
 			isa = PBXGroup;
 			children = (
+				05A5FB2917307DC100AACED7 /* Gemfile */,
+				05A5FB2A17307DC100AACED7 /* OptionSpecsLexer_spec.rb */,
+				05A5FB2B17307DC100AACED7 /* OptionSpecsLexer.rex */,
+				05A5FB2C17307DC100AACED7 /* Rakefile.rb */,
 				05B27C5D1726CD1A0011128B /* vMATCodeMonkey.rb */,
 				051282FD17272B0A00929B2D /* arrayTypeOptions.mk */,
 				05B27C5E1726CDE40011128B /* copyFrom.mk */,
