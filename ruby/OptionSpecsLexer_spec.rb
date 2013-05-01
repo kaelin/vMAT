@@ -63,6 +63,13 @@ describe 'The lexer for preprocessing option specifications' do
                       [:symbol, ':login'], [:rocket, '=>'], [:identifier, 'kaelin'], [:eol, "\n"]]
   end
 
+  it 'should preserve ruby function call syntax.' do
+    lexer = OptionSpecsLexer.new
+    lexer.scan_setup(' bzzzt() ')
+    result = lexer.enumerate_tokens.to_a
+    result.should == [[:funcall_open_paren, 'bzzzt('], [:close_paren, ')']]
+  end
+
   it 'should be able to tokenize a complete, preexisting specification!' do
     lexer = OptionSpecsLexer.new
     lexer.scan_setup <<-'EOS'
@@ -74,7 +81,7 @@ describe 'The lexer for preprocessing option specifications' do
       "maxclust:"   flag: set(:useCutoff, false), arg: vector(:index)
     EOS
     result = lexer.enumerate_tokens.to_a
-    result.length.should == 77
+    result.length.should == 69
   end
 
 end

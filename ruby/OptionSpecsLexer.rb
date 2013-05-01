@@ -5,6 +5,8 @@
 #++
 
 require 'racc/parser'
+require 'generator'
+
 class OptionSpecsLexer < Racc::Parser
   require 'strscan'
 
@@ -66,6 +68,9 @@ class OptionSpecsLexer < Racc::Parser
       when (text = @ss.scan(/\:\w+/))
          action { [:symbol, text] }
 
+      when (text = @ss.scan(/\w+\(/))
+         action { [:funcall_open_paren, text] }
+
       when (text = @ss.scan(/\w+/))
          action { [:identifier, text] }
 
@@ -78,10 +83,10 @@ class OptionSpecsLexer < Racc::Parser
       when (text = @ss.scan(/,/))
          action { [:comma, text] }
 
-      when (text = @ss.scan(/{/))
+      when (text = @ss.scan(/\{/))
          action { [:open_curly, text] }
 
-      when (text = @ss.scan(/}/))
+      when (text = @ss.scan(/\}/))
          action { [:close_curly, text] }
 
       when (text = @ss.scan(/\(/))
@@ -117,11 +122,11 @@ class OptionSpecsLexer < Racc::Parser
   end  # def _next_token
 
   def enumerate_tokens
-    Enumerator.new { |token|
+    Generator.new { |token|
       loop {
         t = next_token
         break if t.nil?
-        token << t
+        token.yield(t)
       }
     }
   end

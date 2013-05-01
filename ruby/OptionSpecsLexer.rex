@@ -1,14 +1,17 @@
+require 'generator'
+
 class OptionSpecsLexer
 rules
   \d+(\.\d*)            { [:number, text] }
   \w+:                  { [:syntax_hash_key, ":#{text[0, text.length - 1]} =>"] }
   \:\w+                 { [:symbol, text] }
+  \w+\(                 { [:funcall_open_paren, text] }
   \w+                   { [:identifier, text] }
   \"(\\.|[^\\"])*\"     { [:string, text] }
   =>                    { [:rocket, text] }
   ,                     { [:comma, text] }
-  {                     { [:open_curly, text] }
-  }                     { [:close_curly, text] }
+  \{                    { [:open_curly, text] }
+  \}                    { [:close_curly, text] }
   \(                    { [:open_paren, text] }
   \)                    { [:close_paren, text] }
   \[                    { [:close_square, text] }
@@ -20,11 +23,11 @@ rules
 inner
 
   def enumerate_tokens
-    Enumerator.new { |token|
+    Generator.new { |token|
       loop {
         t = next_token
         break if t.nil?
-        token << t
+        token.yield(t)
       }
     }
   end

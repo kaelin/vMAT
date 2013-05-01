@@ -5,6 +5,7 @@
 #  Copyright (c) 2013 Kaelin Colclasure. All rights reserved.
 
 require 'pp'
+require 'OptionSpecsLexer'
 
 class VMATCodeMonkey
 
@@ -121,6 +122,8 @@ class VMATCodeMonkey
   #
 
   def preprocess(specs)
+    lexer = OptionSpecsLexer.new
+    specs = lexer.normalize specs
     lines = specs.split(/,?\r?\n/)
     lines.map! do |line|
       parts = line.strip.split(/\s+/)

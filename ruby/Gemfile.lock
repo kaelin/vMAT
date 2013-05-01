@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.2.4)
-    rake (0.9.2.2)
+    rake (10.0.4)
     rexical (1.0.5)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
@@ -17,6 +17,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rake
+  rake (~> 10.0.4)
   rexical
   rspec
