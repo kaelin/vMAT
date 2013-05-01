@@ -33,31 +33,31 @@
 #import "vMAT.h"
 
 
-@interface MATv5ReadDelegate : NSObject <vMAT_MATv5ReadOperationDelegate>
+@interface MATv5LoadDelegate : NSObject <vMAT_MATv5LoadOperationDelegate>
 
 @property (assign) int recursionDepth;
 
 @end
 
-@implementation MATv5ReadDelegate
+@implementation MATv5LoadDelegate
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
    handleVariable:(vMAT_MATv5Variable *)variable;
 {
-    // MATv5ReadDelegate provides its own alternative implementation of the
+    // MATv5LoadDelegate provides its own alternative implementation of the
     // -operation:handleElement:length:stream: method. It intentionally
     // bypasses the default processing of workspace variables so that it
     // can dump the constituent elements individually.
     NSAssert(NO, @"%s should never be called!", __func__);
 }
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
       handleError:(NSError *)error;
 {
     NSLog(@"%@", [error localizedDescription]);
 }
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
      handleHeader:(NSData *)descriptiveData
           version:(int16_t)version
         byteOrder:(int32_t)byteOrder;
@@ -80,7 +80,7 @@
     printf("MATv5 Header %s\n", [[descriptiveData description] UTF8String]);
 }
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
     handleElement:(vMAT_MIType)type
            length:(uint32_t)byteLength
            stream:(NSInputStream *)stream;
@@ -111,8 +111,8 @@ int main(int argc, const char * argv[])
         NSString * matPath = [NSString stringWithUTF8String:argv[1]];
         stream = [NSInputStream inputStreamWithFileAtPath:matPath];
         [stream open];
-        vMAT_MATv5ReadOperation * reader = [[vMAT_MATv5ReadOperation alloc] initWithInputStream:stream];
-        MATv5ReadDelegate * delegate = [[MATv5ReadDelegate alloc] init];
+        vMAT_MATv5LoadOperation * reader = [[vMAT_MATv5LoadOperation alloc] initWithInputStream:stream];
+        MATv5LoadDelegate * delegate = [[MATv5LoadDelegate alloc] init];
         [reader setDelegate:delegate];
         NSOperationQueue * queue = [[NSOperationQueue alloc] init];
         [queue setName:@"com.ohmware.matxd"];

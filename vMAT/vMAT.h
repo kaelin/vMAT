@@ -49,7 +49,7 @@
 #import "vMAT_Types.h"
 
 #import "vMAT_Array.h"
-#import "vMAT_MATv5ReadOperation.h"
+#import "vMAT_MATv5LoadOperation.h"
 #import "vMAT_MATv5Variable.h"
 
 
@@ -234,6 +234,17 @@ vMAT_place_idxvs(vMAT_Array * matrix,
                  vMAT_idx_t * N,
                  vDSP_Length lenN,
                  id source);
+
+vMAT_API void
+vMAT_save(NSURL * outputURL,
+          NSDictionary * workspace,
+          NSError ** errorOut);
+
+vMAT_API void
+vMAT_save_async(NSOutputStream * stream,
+                NSDictionary * workspace,
+                void (^asyncCompletionBlock)(NSDictionary * workspace,
+                                             NSError * error));
 
 vMAT_API NSArray *
 vMAT_unique(vMAT_Array * matrix,

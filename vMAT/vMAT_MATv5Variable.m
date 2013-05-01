@@ -66,7 +66,7 @@
     return string;
 }
 
-- (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation;
+- (void)loadFromOperation:(vMAT_MATv5LoadOperation *)operation;
 {
     [self doesNotRecognizeSelector:_cmd]; // Subclass responsibility
 }

@@ -30,13 +30,13 @@
     return loadCmd;
 }
 
-- (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation;
+- (void)loadFromOperation:(vMAT_MATv5LoadOperation *)operation;
 {
     [self loadFromOperation:operation
                 withMXClass:_mxClass];
 }
 
-- (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation
+- (void)loadFromOperation:(vMAT_MATv5LoadOperation *)operation
               withMXClass:(vMAT_MXClass)mxClass;
 {
     const int numericClasses = 0b1111111111010000;
@@ -111,7 +111,7 @@ namespace {
     template <typename TypeA, typename ClassB>
     void
     loadFromOperation(vMAT_MATv5NumericArray * self,
-                      vMAT_MATv5ReadOperation * operation,
+                      vMAT_MATv5LoadOperation * operation,
                       TypeA a,
                       ClassB b)
     {
@@ -138,27 +138,27 @@ namespace {
     
 }
 
-- (void)_load_miDOUBLE_mxDOUBLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
+- (void)_load_miDOUBLE_mxDOUBLE_fromOperation:(vMAT_MATv5LoadOperation *)operation;
 {
     loadFromOperation(self, operation, DOUBLE, DOUBLE);
 }
 
-- (void)_load_miSINGLE_mxSINGLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
+- (void)_load_miSINGLE_mxSINGLE_fromOperation:(vMAT_MATv5LoadOperation *)operation;
 {
     loadFromOperation(self, operation, SINGLE, SINGLE);
 }
 
-- (void)_load_miUINT8_mxDOUBLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
+- (void)_load_miUINT8_mxDOUBLE_fromOperation:(vMAT_MATv5LoadOperation *)operation;
 {
     loadFromOperation(self, operation, UINT8, DOUBLE);
 }
 
-- (void)_load_miUINT8_mxSINGLE_fromOperation:(vMAT_MATv5ReadOperation *)operation;
+- (void)_load_miUINT8_mxSINGLE_fromOperation:(vMAT_MATv5LoadOperation *)operation;
 {
     loadFromOperation(self, operation, UINT8, SINGLE);
 }
 
-- (void)_load_miUINT8_mxUINT8_fromOperation:(vMAT_MATv5ReadOperation *)operation;
+- (void)_load_miUINT8_mxUINT8_fromOperation:(vMAT_MATv5LoadOperation *)operation;
 {
     loadFromOperation(self, operation, UINT8, UINT8);
 }

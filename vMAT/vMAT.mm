@@ -8,8 +8,6 @@
 
 #import "vMAT_Private.h"
 
-#import "vMAT_StreamDelegate.h"
-
 
 #import "arrayTypeOptions.mki"
 
@@ -61,38 +59,6 @@ vMAT_find(vMAT_Array * matrix,
     return indexes;
 }
 
-void
-vMAT_fread(NSInputStream * stream,
-           vMAT_Array * matrix,
-           NSDictionary * options,
-           void (^asyncOutputBlock)(vMAT_Array * matrix,
-                                    NSError * error))
-{
-    vMAT_StreamDelegate * reader = [[vMAT_StreamDelegate alloc] initWithStream:stream
-                                                                        matrix:matrix
-                                                                       options:options];
-    reader.outputBlock = asyncOutputBlock;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
-        [reader startReading];
-    });
-}
-
-void
-vMAT_fwrite(NSOutputStream * stream,
-            vMAT_Array * matrix,
-            NSDictionary * options,
-            void (^asyncCompletionBlock)(vDSP_Length outputLength,
-                                         NSError * error))
-{
-    vMAT_StreamDelegate * writer = [[vMAT_StreamDelegate alloc] initWithStream:stream
-                                                                        matrix:matrix
-                                                                       options:options];
-    writer.completionBlock = asyncCompletionBlock;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
-        [writer startWriting];
-    });
-}
-
 vMAT_Array *
 vMAT_idxstep(vMAT_idx_t start,
              vMAT_idx_t limit,
@@ -106,42 +72,6 @@ BOOL
 vMAT_isempty(vMAT_Array * matrix)
 {
     return vMAT_numel(matrix) == 0;
-}
-
-NSDictionary *
-vMAT_load(NSURL * inputURL,
-          NSArray * variableNames,
-          NSError ** errorOut)
-{
-    NSInputStream * stream = [NSInputStream inputStreamWithURL:inputURL];
-    [stream open];
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    __block NSDictionary * ws = nil;
-    vMAT_load_async(stream, variableNames, ^(NSDictionary * workspace, NSError * error) {
-        ws = workspace;
-        if (errorOut != NULL) {
-            *errorOut = error;
-        }
-        [stream close];
-        dispatch_semaphore_signal(semaphore);
-    });
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    return ws;
-}
-
-void
-vMAT_load_async(NSInputStream * stream,
-                NSArray * variableNames,
-                void (^asyncCompletionBlock)(NSDictionary * workspace,
-                                             NSError * error))
-{
-    vMAT_MATv5ReadOperation * operation = [[vMAT_MATv5ReadOperation alloc] initWithInputStream:stream];
-    vMAT_MATv5ReadOperationDelegate * reader = [[vMAT_MATv5ReadOperationDelegate alloc] initWithReadOperation:operation];
-    reader.variableNames = variableNames;
-    reader.completionBlock = asyncCompletionBlock;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
-        [reader start];
-    });
 }
 
 vMAT_Array *

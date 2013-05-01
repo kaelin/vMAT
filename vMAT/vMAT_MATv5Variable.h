@@ -33,7 +33,7 @@
 #import "vMAT_Types.h"
 
 
-@class vMAT_MATv5ReadOperation;
+@class vMAT_MATv5LoadOperation;
 @class vMAT_MATv5NumericArray;
 
 @interface vMAT_MATv5Variable : NSObject {
@@ -59,7 +59,7 @@
                                  dimensions:(vMAT_Size)size
                                        name:(NSString *)name;
 
-- (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation;
+- (void)loadFromOperation:(vMAT_MATv5LoadOperation *)operation;
 
 - (vMAT_MATv5NumericArray *)toNumericArray;
 
@@ -82,9 +82,9 @@
 
 @interface vMAT_MATv5NumericArray (LoadFromOperation)
 
-- (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation;
+- (void)loadFromOperation:(vMAT_MATv5LoadOperation *)operation;
 
-- (void)loadFromOperation:(vMAT_MATv5ReadOperation *)operation
+- (void)loadFromOperation:(vMAT_MATv5LoadOperation *)operation
               withMXClass:(vMAT_MXClass)mxClass;
 
 @end

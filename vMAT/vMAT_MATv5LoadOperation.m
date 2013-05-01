@@ -1,17 +1,17 @@
 //
-//  vMAT_MATv5ReadOperation.m
+//  vMAT_MATv5LoadOperation.m
 //  vMAT
 //
 //  Created by Kaelin Colclasure on 3/27/13.
 //  Copyright (c) 2013 Kaelin Colclasure. All rights reserved.
 //
 
-#import "vMAT_MATv5ReadOperation.h"
+#import "vMAT_MATv5LoadOperation.h"
 
 #import "vMAT_Private.h"
 
 
-@interface vMAT_MATv5ReadOperation (Private)
+@interface vMAT_MATv5LoadOperation (Private)
 
 - (void)readElementType:(vMAT_MIType *)typeInOut
                  length:(uint32_t *)lengthInOut
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation vMAT_MATv5ReadOperation
+@implementation vMAT_MATv5LoadOperation
 
 - (id)initWithInputStream:(NSInputStream *)stream;
 {
@@ -369,7 +369,7 @@ static void (^ unexpectedEOS)() = ^ {
     _elementRemainingLength = 0;
 }
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
     handleElement:(vMAT_MIType)type
            length:(uint32_t)byteLength
            stream:(NSInputStream *)stream;
@@ -418,7 +418,7 @@ static void (^ unexpectedEOS)() = ^ {
     }
 }
 
-- (void)setDelegate:(id<vMAT_MATv5ReadOperationDelegate>)delegate;
+- (void)setDelegate:(id<vMAT_MATv5LoadOperationDelegate>)delegate;
 {
     _delegate = delegate;
     if ([_delegate respondsToSelector:@selector(operation:handleElement:length:stream:)]) {
@@ -437,9 +437,9 @@ static void (^ unexpectedEOS)() = ^ {
 
 @end
 
-@implementation vMAT_MATv5ReadOperationDelegate
+@implementation vMAT_MATv5LoadOperationDelegate
 
-- (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;
+- (id)initWithReadOperation:(vMAT_MATv5LoadOperation *)operation;
 {
     if ((self = [super init]) != nil) {
         _operation = operation;
@@ -453,13 +453,13 @@ static void (^ unexpectedEOS)() = ^ {
 {
     [_operation start];
 //    NSOperationQueue * queue = [[NSOperationQueue alloc] init];
-//    [queue setName:@"com.ohmware.vMAT_MATv5ReadOperationDelegate"];
+//    [queue setName:@"com.ohmware.vMAT_MATv5LoadOperationDelegate"];
 //    [queue addOperation:_operation];
 //    [queue waitUntilAllOperationsAreFinished];
     _completionBlock(_workspace, nil);
 }
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
    handleVariable:(vMAT_MATv5Variable *)variable;
 {
     if (![_variableNames containsObject:variable.name]) return;
@@ -469,7 +469,7 @@ static void (^ unexpectedEOS)() = ^ {
                    forKey:array.name];
 }
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
       handleError:(NSError *)error;
 {
     _completionBlock(@{ }, error);

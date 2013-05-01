@@ -1,5 +1,5 @@
 //
-//  vMAT_MATv5ReadOperation.h
+//  vMAT_MATv5LoadOperation.h
 //  vMAT
 //
 //  Created by Kaelin Colclasure on 3/27/13.
@@ -33,36 +33,36 @@
 #import "vMAT_Types.h"
 
 
-@class vMAT_MATv5ReadOperation;
+@class vMAT_MATv5LoadOperation;
 
 @class vMAT_MATv5Variable;
 
-@protocol vMAT_MATv5ReadOperationDelegate <NSObject>
+@protocol vMAT_MATv5LoadOperationDelegate <NSObject>
 @required
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
    handleVariable:(vMAT_MATv5Variable *)variable;
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
       handleError:(NSError *)error;
 
 @optional
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
      handleHeader:(NSData *)descriptiveData
           version:(int16_t)version
         byteOrder:(int32_t)byteOrder;
 
-- (void)operation:(vMAT_MATv5ReadOperation *)operation
+- (void)operation:(vMAT_MATv5LoadOperation *)operation
     handleElement:(vMAT_MIType)type
            length:(uint32_t)byteLength
            stream:(NSInputStream *)stream;
 
 @end
 
-@interface vMAT_MATv5ReadOperation : NSOperation
+@interface vMAT_MATv5LoadOperation : NSOperation
 
-@property (weak, nonatomic) id<vMAT_MATv5ReadOperationDelegate> delegate;
+@property (weak, nonatomic) id<vMAT_MATv5LoadOperationDelegate> delegate;
 @property (assign, nonatomic) BOOL isFinished;
 @property (readonly, retain) NSInputStream * stream;
 @property (readonly) int32_t byteOrder;
@@ -84,14 +84,14 @@
 
 @end
 
-@interface vMAT_MATv5ReadOperationDelegate : NSObject <vMAT_MATv5ReadOperationDelegate>
+@interface vMAT_MATv5LoadOperationDelegate : NSObject <vMAT_MATv5LoadOperationDelegate>
 
-@property (readonly) vMAT_MATv5ReadOperation * operation;
+@property (readonly) vMAT_MATv5LoadOperation * operation;
 @property (retain) NSArray * variableNames;
 @property (readonly, retain) NSMutableDictionary * workspace;
 @property (copy) void (^ completionBlock)(NSDictionary * workspace, NSError * error);
 
-- (id)initWithReadOperation:(vMAT_MATv5ReadOperation *)operation;
+- (id)initWithReadOperation:(vMAT_MATv5LoadOperation *)operation;
 
 - (void)start;
 

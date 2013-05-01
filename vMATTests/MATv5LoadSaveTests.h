@@ -1,5 +1,5 @@
 //
-//  MATv5ReadWriteTests.h
+//  MATv5LoadSaveTests.h
 //  vMAT
 //
 //  Created by Kaelin Colclasure on 3/29/13.
@@ -8,6 +8,6 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-@interface MATv5ReadWriteTests : SenTestCase
+@interface MATv5LoadSaveTests : SenTestCase
 
 @end

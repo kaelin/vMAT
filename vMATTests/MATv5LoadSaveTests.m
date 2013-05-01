@@ -1,17 +1,17 @@
 //
-//  MATv5ReadWriteTests.m
+//  MATv5LoadSaveTests.m
 //  vMAT
 //
 //  Created by Kaelin Colclasure on 3/29/13.
 //  Copyright (c) 2013 Kaelin Colclasure. All rights reserved.
 //
 
-#import "MATv5ReadWriteTests.h"
+#import "MATv5LoadSaveTests.h"
 
 #import "vMAT.h"
 
 
-@implementation MATv5ReadWriteTests
+@implementation MATv5LoadSaveTests
 
 - (void)setUp
 {
