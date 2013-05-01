@@ -103,5 +103,6 @@ vMAT_save_async(NSOutputStream * stream,
                 void (^asyncCompletionBlock)(NSDictionary * workspace,
                                              NSError * error))
 {
-    
+    vMAT_MATv5SaveOperation * operation = [[vMAT_MATv5SaveOperation alloc] initWithOutputStream:stream];
+    asyncCompletionBlock(nil, nil);
 }

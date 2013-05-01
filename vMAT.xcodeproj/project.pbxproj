@@ -45,6 +45,8 @@
 		058C5E6B1708E46900A65E82 /* vMAT_MATv5Variable.m in Sources */ = {isa = PBXBuildFile; fileRef = 058C5E691708E46900A65E82 /* vMAT_MATv5Variable.m */; };
 		05A3BF51170F744C00FD79DC /* cluster-normaldata-10x3-13.mat in Resources */ = {isa = PBXBuildFile; fileRef = 05A3BF50170F744C00FD79DC /* cluster-normaldata-10x3-13.mat */; };
 		05A5FB2F1731A1D000AACED7 /* vMAT_load+save.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A5FB2E1731A1D000AACED7 /* vMAT_load+save.m */; };
+		05A5FB331731C6FF00AACED7 /* vMAT_MATv5SaveOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A5FB311731C6FF00AACED7 /* vMAT_MATv5SaveOperation.h */; };
+		05A5FB341731C6FF00AACED7 /* vMAT_MATv5SaveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A5FB321731C6FF00AACED7 /* vMAT_MATv5SaveOperation.m */; };
 		05B27C5A1725EB370011128B /* vMAT_unique.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B27C591725EB370011128B /* vMAT_unique.mm */; };
 		05CA2000170F7F1D0067AE9E /* vMAT_Types.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA1FFF170F7F1D0067AE9E /* vMAT_Types.mm */; };
 		05CA2003170F80EA0067AE9E /* vMAT_Array+UnaryOps.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA2002170F80EA0067AE9E /* vMAT_Array+UnaryOps.mm */; };
@@ -158,6 +160,8 @@
 		05A5FB2C17307DC100AACED7 /* Rakefile.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = Rakefile.rb; sourceTree = "<group>"; };
 		05A5FB2D1730A6A000AACED7 /* OptionSpecsLexer.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = OptionSpecsLexer.rb; sourceTree = "<group>"; };
 		05A5FB2E1731A1D000AACED7 /* vMAT_load+save.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "vMAT_load+save.m"; sourceTree = "<group>"; };
+		05A5FB311731C6FF00AACED7 /* vMAT_MATv5SaveOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vMAT_MATv5SaveOperation.h; sourceTree = "<group>"; };
+		05A5FB321731C6FF00AACED7 /* vMAT_MATv5SaveOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = vMAT_MATv5SaveOperation.m; sourceTree = "<group>"; };
 		05B27C591725EB370011128B /* vMAT_unique.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = vMAT_unique.mm; sourceTree = "<group>"; };
 		05B27C5B1725F2570011128B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		05B27C5D1726CD1A0011128B /* vMATCodeMonkey.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = vMATCodeMonkey.rb; sourceTree = "<group>"; };
@@ -349,6 +353,8 @@
 			children = (
 				0543596217032C9A0037AAC4 /* vMAT_MATv5LoadOperation.h */,
 				0543596317032C9A0037AAC4 /* vMAT_MATv5LoadOperation.m */,
+				05A5FB311731C6FF00AACED7 /* vMAT_MATv5SaveOperation.h */,
+				05A5FB321731C6FF00AACED7 /* vMAT_MATv5SaveOperation.m */,
 				05CA2004170F82970067AE9E /* vMAT_MATv5Variable */,
 				054359461700B41A0037AAC4 /* vMAT_StreamDelegate.h */,
 				054359471700B41A0037AAC4 /* vMAT_StreamDelegate.m */,
@@ -434,6 +440,7 @@
 				05453DC4170CE1F600EFCB19 /* vMAT_Private.h in Headers */,
 				054359481700B41A0037AAC4 /* vMAT_StreamDelegate.h in Headers */,
 				05CA2006171044AE0067AE9E /* vMAT_PrivateArray.h in Headers */,
+				05A5FB331731C6FF00AACED7 /* vMAT_MATv5SaveOperation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,6 +596,7 @@
 				053CB4AE171E156F00ED686B /* vMAT_pick+place.m in Sources */,
 				05B27C5A1725EB370011128B /* vMAT_unique.mm in Sources */,
 				05A5FB2F1731A1D000AACED7 /* vMAT_load+save.m in Sources */,
+				05A5FB341731C6FF00AACED7 /* vMAT_MATv5SaveOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
