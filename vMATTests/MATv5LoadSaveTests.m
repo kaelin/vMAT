@@ -187,6 +187,32 @@
     STAssertThrowsSpecificNamed(vMAT_load(nil, nil, NULL), NSException, NSInternalInconsistencyException, nil);
 }
 
+- (void)test_vMAT_save_multiple_variables;
+{
+    NSURL * inputURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"cluster-normaldata-10x3-13"
+                                                                withExtension:@"mat"];
+    NSError * error = nil;
+    NSDictionary * workspace = vMAT_load(inputURL, @[@"X", @"Y", @"Zv"], &error);
+    STAssertNil(error, nil);
+    NSString * tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"otest-%@-%d.mat",
+                                                                                 @"cluster-normaldata-10x3-13", getpid()]];
+    NSURL * outputURL = [NSURL fileURLWithPath:tmpPath isDirectory:NO];
+    vMAT_save(outputURL, workspace, &error);
+    // NSLog(@"%@", workspace);
+    STAssertNil(error, nil);
+    STAssertNotNil([workspace objectForKey:@"X"], nil);
+    STAssertNotNil([workspace objectForKey:@"Y"], nil);
+    STAssertNotNil([workspace objectForKey:@"Zv"], nil);
+    NSFileManager * fileManager = [NSFileManager defaultManager];
+    NSDictionary * attrs = [fileManager attributesOfItemAtPath:tmpPath error:&error];
+    NSLog(@"attrs = %@", attrs);
+    STAssertTrue([[attrs objectForKey:NSFileSize] longValue] > 0, nil);
+    STAssertNil(error, nil);
+    NSURL * trashURL = nil;
+    [fileManager trashItemAtURL:outputURL resultingItemURL:&trashURL error:&error];
+    STAssertNil(error, nil);
+}
+
 - (void)test_vMAT_save_nil_URL;
 {
     STAssertThrowsSpecificNamed(vMAT_save(nil, nil, NULL), NSException, NSInternalInconsistencyException, nil);

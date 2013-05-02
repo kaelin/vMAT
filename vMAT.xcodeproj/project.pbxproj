@@ -47,6 +47,7 @@
 		05A5FB2F1731A1D000AACED7 /* vMAT_load+save.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A5FB2E1731A1D000AACED7 /* vMAT_load+save.m */; };
 		05A5FB331731C6FF00AACED7 /* vMAT_MATv5SaveOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A5FB311731C6FF00AACED7 /* vMAT_MATv5SaveOperation.h */; };
 		05A5FB341731C6FF00AACED7 /* vMAT_MATv5SaveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A5FB321731C6FF00AACED7 /* vMAT_MATv5SaveOperation.m */; };
+		05A5FB351732EBAC00AACED7 /* NSData+RSHexDump.m in Sources */ = {isa = PBXBuildFile; fileRef = 05435960170232490037AAC4 /* NSData+RSHexDump.m */; };
 		05B27C5A1725EB370011128B /* vMAT_unique.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B27C591725EB370011128B /* vMAT_unique.mm */; };
 		05CA2000170F7F1D0067AE9E /* vMAT_Types.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA1FFF170F7F1D0067AE9E /* vMAT_Types.mm */; };
 		05CA2003170F80EA0067AE9E /* vMAT_Array+UnaryOps.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CA2002170F80EA0067AE9E /* vMAT_Array+UnaryOps.mm */; };
@@ -597,6 +598,7 @@
 				05B27C5A1725EB370011128B /* vMAT_unique.mm in Sources */,
 				05A5FB2F1731A1D000AACED7 /* vMAT_load+save.m in Sources */,
 				05A5FB341731C6FF00AACED7 /* vMAT_MATv5SaveOperation.m in Sources */,
+				05A5FB351732EBAC00AACED7 /* NSData+RSHexDump.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

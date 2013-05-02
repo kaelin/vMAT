@@ -45,6 +45,8 @@
 extern NSNull * const vMAT_ALL;
 extern vMAT_Array * const vMAT_SUPPRESSED;
 
+extern NSString * const vMAT_VersionTag; // @"0.0.1", etc.
+
 extern NSString * const vMAT_ErrorDomain;
 
 enum {

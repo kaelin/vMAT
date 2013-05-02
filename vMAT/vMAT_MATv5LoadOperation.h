@@ -91,7 +91,7 @@
 @property (readonly, retain) NSMutableDictionary * workspace;
 @property (copy) void (^ completionBlock)(NSDictionary * workspace, NSError * error);
 
-- (id)initWithReadOperation:(vMAT_MATv5LoadOperation *)operation;
+- (id)initWithLoadOperation:(vMAT_MATv5LoadOperation *)operation;
 
 - (void)start;
 

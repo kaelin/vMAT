@@ -71,7 +71,7 @@ vMAT_load_async(NSInputStream * stream,
                                              NSError * error))
 {
     vMAT_MATv5LoadOperation * operation = [[vMAT_MATv5LoadOperation alloc] initWithInputStream:stream];
-    vMAT_MATv5LoadOperationDelegate * reader = [[vMAT_MATv5LoadOperationDelegate alloc] initWithReadOperation:operation];
+    vMAT_MATv5LoadOperationDelegate * reader = [[vMAT_MATv5LoadOperationDelegate alloc] initWithLoadOperation:operation];
     reader.variableNames = variableNames;
     reader.completionBlock = asyncCompletionBlock;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
@@ -104,5 +104,10 @@ vMAT_save_async(NSOutputStream * stream,
                                              NSError * error))
 {
     vMAT_MATv5SaveOperation * operation = [[vMAT_MATv5SaveOperation alloc] initWithOutputStream:stream];
-    asyncCompletionBlock(nil, nil);
+    vMAT_MATv5SaveOperationDelegate * writer = [[vMAT_MATv5SaveOperationDelegate alloc] initWithSaveOperation:operation];
+    writer.workspace = workspace;
+    writer.completionBlock = asyncCompletionBlock;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
+        [writer start];
+    });
 }

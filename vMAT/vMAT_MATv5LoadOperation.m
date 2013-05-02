@@ -439,7 +439,7 @@ static void (^ unexpectedEOS)() = ^ {
 
 @implementation vMAT_MATv5LoadOperationDelegate
 
-- (id)initWithReadOperation:(vMAT_MATv5LoadOperation *)operation;
+- (id)initWithLoadOperation:(vMAT_MATv5LoadOperation *)operation;
 {
     if ((self = [super init]) != nil) {
         _operation = operation;

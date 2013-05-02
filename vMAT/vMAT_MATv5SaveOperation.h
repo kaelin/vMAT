@@ -33,12 +33,58 @@
 #import "vMAT_Types.h"
 
 
+@class vMAT_MATv5SaveOperation;
+
 @class vMAT_MATv5Variable;
+
+@protocol vMAT_MATv5SaveOperationDataSource <NSObject>
+@required
+
+- (NSUInteger)numberOfVariablesForOperation:(vMAT_MATv5SaveOperation *)operation;
+
+- (vMAT_MATv5Variable *)operation:(vMAT_MATv5SaveOperation *)operation
+                  variableAtIndex:(NSUInteger)index;
+
+@optional
+
+- (NSString *)headerDescriptionForOperation:(vMAT_MATv5SaveOperation *)operation;
+
+@end
+
+@protocol vMAT_MATv5SaveOperationDelegate <NSObject>
+@required
+
+- (void)operation:(vMAT_MATv5SaveOperation *)operation
+      handleError:(NSError *)error;
+
+@optional
+
+- (void)operation:(vMAT_MATv5SaveOperation *)operation
+  didSaveVariable:(vMAT_MATv5Variable *)variable;
+
+@end
 
 @interface vMAT_MATv5SaveOperation : NSOperation
 
+@property (weak, nonatomic) id<vMAT_MATv5SaveOperationDataSource> dataSource;
+@property (weak, nonatomic) id<vMAT_MATv5SaveOperationDelegate> delegate;
+@property (assign, nonatomic) BOOL isFinished;
+@property (assign, nonatomic) NSUInteger numberOfVariables;
+@property (assign, nonatomic) NSUInteger numberOfVariablesRemaining;
 @property (readonly, retain) NSOutputStream * stream;
 
 - (id)initWithOutputStream:(NSOutputStream *)stream;
+
+@end
+
+@interface vMAT_MATv5SaveOperationDelegate : NSObject <vMAT_MATv5SaveOperationDataSource, vMAT_MATv5SaveOperationDelegate>
+
+@property (readonly) vMAT_MATv5SaveOperation * operation;
+@property (retain, nonatomic) NSDictionary * workspace;
+@property (copy) void (^ completionBlock)(NSDictionary * workspace, NSError * error);
+
+- (id)initWithSaveOperation:(vMAT_MATv5SaveOperation *)operation;
+
+- (void)start;
 
 @end
