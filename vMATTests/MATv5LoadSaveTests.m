@@ -187,6 +187,39 @@
     STAssertThrowsSpecificNamed(vMAT_load(nil, nil, NULL), NSException, NSInternalInconsistencyException, nil);
 }
 
+- (void)test_vMAT_save_single_55x57_v6;
+{
+    NSURL * inputURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"test-single-55x57-v6"
+                                                                withExtension:@"mat"];
+    NSInputStream * stream = [NSInputStream inputStreamWithURL:inputURL];
+    [stream open];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    vMAT_load_async(stream, @[@"I"], ^(NSDictionary *workspace, NSError *error) {
+        vMAT_Array * matM = [workspace variable:@"I"].matrix;
+        STAssertNil(error, nil);
+        STAssertEquals(matM.size, vMAT_MakeSize(55, 57), nil);
+        [stream close];
+        NSString * tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"otest-%@-%d.mat",
+                                                                                     @"single-55x57", getpid()]];
+        NSURL * outputURL = [NSURL fileURLWithPath:tmpPath isDirectory:NO];
+        vMAT_save(outputURL, workspace, &error);
+        // NSLog(@"%@", workspace);
+        STAssertNil(error, nil);
+        NSFileManager * fileManager = [NSFileManager defaultManager];
+        NSDictionary * attrs = [fileManager attributesOfItemAtPath:tmpPath error:&error];
+        NSLog(@"attrs = %@", attrs);
+        STAssertNil(error, nil);
+        STAssertTrue([[attrs objectForKey:NSFileSize] longValue] > 128, nil);
+        NSURL * trashURL = nil;
+        [fileManager trashItemAtURL:outputURL resultingItemURL:&trashURL error:&error];
+        STAssertNil(error, nil);
+        dispatch_semaphore_signal(semaphore);
+    });
+    long timedout = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW,
+                                                                     1 * NSEC_PER_SEC));
+    STAssertFalse(timedout, @"Timed out waiting for completion (1s)");
+}
+
 - (void)test_vMAT_save_multiple_variables;
 {
     NSURL * inputURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"cluster-normaldata-10x3-13"
@@ -206,8 +239,8 @@
     NSFileManager * fileManager = [NSFileManager defaultManager];
     NSDictionary * attrs = [fileManager attributesOfItemAtPath:tmpPath error:&error];
     NSLog(@"attrs = %@", attrs);
-    STAssertTrue([[attrs objectForKey:NSFileSize] longValue] > 0, nil);
     STAssertNil(error, nil);
+    STAssertTrue([[attrs objectForKey:NSFileSize] longValue] > 128, nil);
     NSURL * trashURL = nil;
     [fileManager trashItemAtURL:outputURL resultingItemURL:&trashURL error:&error];
     STAssertNil(error, nil);

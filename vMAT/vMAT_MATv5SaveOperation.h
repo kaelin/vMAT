@@ -75,12 +75,16 @@
 
 - (id)initWithOutputStream:(NSOutputStream *)stream;
 
+- (void)writeComplete:(const void *)buffer
+               length:(long)length;
+
 @end
 
 @interface vMAT_MATv5SaveOperationDelegate : NSObject <vMAT_MATv5SaveOperationDataSource, vMAT_MATv5SaveOperationDelegate>
 
 @property (readonly) vMAT_MATv5SaveOperation * operation;
 @property (retain, nonatomic) NSDictionary * workspace;
+@property (readonly) NSArray * variables;
 @property (copy) void (^ completionBlock)(NSDictionary * workspace, NSError * error);
 
 - (id)initWithSaveOperation:(vMAT_MATv5SaveOperation *)operation;

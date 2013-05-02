@@ -81,6 +81,12 @@ vMAT_mtrans(vMAT_Array * matrix)
 }
 
 vDSP_Length
+vMAT_ndims(vMAT_Array * matrix)
+{
+    return 2 + (matrix.size[3] > 1 ? 2 : matrix.size[2] > 1);
+}
+
+vDSP_Length
 vMAT_numel(vMAT_Array * matrix)
 {
     return vMAT_Size_prod(matrix.size);

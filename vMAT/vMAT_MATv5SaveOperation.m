@@ -89,7 +89,7 @@
     NSUInteger index = _numberOfVariables - _numberOfVariablesRemaining;
     --_numberOfVariablesRemaining;
     vMAT_MATv5Variable * variable = [_dataSource operation:self variableAtIndex:index];
-    
+    [variable saveFromOperation:self];
     [_delegate operation:self didSaveVariable:variable];
 }
 
@@ -146,13 +146,20 @@
 
 - (NSUInteger)numberOfVariablesForOperation:(vMAT_MATv5SaveOperation *)operation;
 {
-    return 0;
+    _variables = [_workspace allValues];
+    return _variables.count;
 }
 
 - (vMAT_MATv5Variable *)operation:(vMAT_MATv5SaveOperation *)operation
                   variableAtIndex:(NSUInteger)index;
 {
-    return nil;
+    return _variables[index];
+}
+
+- (void)operation:(vMAT_MATv5SaveOperation *)operation
+  didSaveVariable:(vMAT_MATv5Variable *)variable;
+{
+    
 }
 
 - (void)operation:(vMAT_MATv5LoadOperation *)operation

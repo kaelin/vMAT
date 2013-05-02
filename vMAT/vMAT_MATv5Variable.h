@@ -35,6 +35,7 @@
 
 @class vMAT_MATv5LoadOperation;
 @class vMAT_MATv5NumericArray;
+@class vMAT_MATv5SaveOperation;
 
 @interface vMAT_MATv5Variable : NSObject {
 @protected
@@ -60,6 +61,8 @@
                                        name:(NSString *)name;
 
 - (void)loadFromOperation:(vMAT_MATv5LoadOperation *)operation;
+
+- (void)saveFromOperation:(vMAT_MATv5SaveOperation *)operation;
 
 - (vMAT_MATv5NumericArray *)toNumericArray;
 

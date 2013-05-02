@@ -184,6 +184,9 @@ vMAT_API vMAT_Array *
 vMAT_mtrans(vMAT_Array * matrix);
 
 vMAT_API vDSP_Length
+vMAT_ndims(vMAT_Array * matrix);
+
+vMAT_API vDSP_Length
 vMAT_numel(vMAT_Array * matrix);
 
 vMAT_API vMAT_Array *

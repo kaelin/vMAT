@@ -76,6 +76,11 @@
     return nil;                           // Subclass responsibility
 }
 
+- (void)saveFromOperation:(vMAT_MATv5SaveOperation *)operation;
+{
+    [self doesNotRecognizeSelector:_cmd]; // Subclass responsibility    
+}
+
 - (vMAT_MATv5NumericArray *)toNumericArray;
 {
     return nil;                           // Subclass responsibility
@@ -94,9 +99,57 @@
 
 @implementation vMAT_MATv5NumericArray
 
+- (uint32_t)arrayFlags;
+{
+    uint32_t result = _mxClass;
+    if (_isComplex) result |= 0x800;
+    if (_isGlobal)  result |= 0x400;
+    if (_isLogical) result |= 0x200;
+    return result;
+}
+
 - (vMAT_Array *)matrix;
 {
     return _array;
+}
+
+- (void)saveFromOperation:(vMAT_MATv5SaveOperation *)operation;
+{
+    NSOutputStream * header = [NSOutputStream outputStreamToMemory];
+    [header open];
+    uint32_t tag[2] = { miMATRIX, 0 };
+    [header write:(void *)tag maxLength:sizeof(tag)];
+    tag[0] = miUINT32; tag[1] = 8;
+    [header write:(void *)tag maxLength:sizeof(tag)];
+    tag[0] = [self arrayFlags]; tag[1] = 0;
+    [header write:(void *)tag maxLength:sizeof(tag)];
+    vDSP_Length ndims = vMAT_ndims(_array);
+    tag[0] = miINT32; tag[1] = (uint32_t)(4 * ndims);
+    [header write:(void *)tag maxLength:sizeof(tag)];
+    tag[0] = (uint32_t)_size[0]; tag[1] = (uint32_t)_size[1];
+    [header write:(void *)tag maxLength:sizeof(tag)];
+    if (ndims > 2) {
+        tag[0] = (uint32_t)_size[2]; tag[1] = (uint32_t)_size[3];
+        [header write:(void *)tag maxLength:sizeof(tag)];
+    }
+    NSMutableData * nameData = [[_name dataUsingEncoding:NSASCIIStringEncoding] mutableCopy];
+    tag[0] = miINT8; tag[1] = (uint32_t)nameData.length;
+    [header write:(void *)tag maxLength:sizeof(tag)];
+    [nameData setLength:((unsigned long)((nameData.length) + (8) - 1)) & ~((unsigned long)((8) - 1))];
+    [header write:nameData.bytes maxLength:nameData.length];
+    tag[0] = _mxClass; tag[1] = (uint32_t)_array.data.length;
+    [header write:(void *)tag maxLength:sizeof(tag)];
+    NSMutableData * headerData = [header propertyForKey:NSStreamDataWrittenToMemoryStreamKey];
+    uint32_t * fix = headerData.mutableBytes;
+    long actualLength = ((unsigned long)((_array.data.length) + (8) - 1)) & ~((unsigned long)((8) - 1));
+    fix[1] = (uint32_t)(headerData.length + actualLength - 8);
+    [operation writeComplete:headerData.bytes length:headerData.length];
+    [header close];
+    [operation writeComplete:_array.data.bytes length:_array.data.length];
+    if (actualLength > _array.data.length) {
+        char pad[8] = { 0, 'N', 'a', 'k', '!', '!', '!', '!' };
+        [operation writeComplete:pad length:actualLength - _array.data.length];
+    }
 }
 
 - (vMAT_MATv5NumericArray *)toNumericArray;
