@@ -266,6 +266,7 @@ vMAT_MXClassType(vMAT_MXClass mxClass)
 NSNull * const vMAT_ALL = [NSNull null];
 vMAT_Array * const vMAT_SUPPRESSED = [vMAT_Array arrayWithSize:vMAT_MakeSize(0, 0) type:(vMAT_MIType)'~'];
 
-NSString * const vMAT_VersionTag = @"0.0.1";
+extern double vMATVersionNumber; // From vMAT_vers.c
+NSString * const vMAT_VersionTag = [NSString stringWithFormat:@"%g", vMATVersionNumber];
 
 NSString * const vMAT_ErrorDomain = @"com.ohmware.vMAT";
