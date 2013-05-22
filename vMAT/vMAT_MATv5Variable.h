@@ -55,6 +55,10 @@
 @property (readonly, retain) NSString * name;
 @property (readonly) vMAT_Array * matrix;
 
++ (vMAT_MATv5Variable *)variableWithArray:(vMAT_Array *)matrix
+                               arrayFlags:(uint32_t)flags
+                                     name:(NSString *)name;
+
 + (vMAT_MATv5Variable *)variableWithMXClass:(vMAT_MXClass)mxClass
                                  arrayFlags:(uint32_t)flags
                                  dimensions:(vMAT_Size)size

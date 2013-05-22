@@ -261,6 +261,34 @@ vMAT_MXClassType(vMAT_MXClass mxClass)
     else return miNONE;
 }
 
+vMAT_MXClass
+vMAT_MITypeClass(vMAT_MIType type)
+{
+    static vMAT_MXClass mxClass[miRANGE_LIMIT] = {
+        mxNONE,
+        mxINT8_CLASS,
+        mxUINT8_CLASS,
+        mxINT16_CLASS,
+        mxUINT16_CLASS,
+        mxINT32_CLASS,
+        mxUINT32_CLASS,
+        mxSINGLE_CLASS,
+        mxNONE,
+        mxDOUBLE_CLASS,
+        mxNONE,
+        mxNONE,
+        mxINT64_CLASS,
+        mxUINT64_CLASS,
+        mxNONE,
+        mxNONE,
+        mxUINT8_CLASS,
+        mxUINT16_CLASS,
+        mxUINT32_CLASS,
+    };
+    if (type > 0 && type < miRANGE_LIMIT) return mxClass[type];
+    else return mxNONE;
+}
+
 #pragma mark - Constants
 
 NSNull * const vMAT_ALL = [NSNull null];

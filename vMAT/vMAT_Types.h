@@ -194,6 +194,9 @@ vMAT_MXClassDescription(vMAT_MXClass mxClass);
 vMAT_API vMAT_MIType
 vMAT_MXClassType(vMAT_MXClass mxClass);
 
+vMAT_API vMAT_MXClass
+vMAT_MITypeClass(vMAT_MIType type);
+
 #ifdef __cplusplus
 
 namespace vMAT {
