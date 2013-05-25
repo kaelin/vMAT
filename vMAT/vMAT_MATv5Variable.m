@@ -17,13 +17,14 @@
                                arrayFlags:(uint32_t)flags
                                      name:(NSString *)name;
 {
-    vMAT_MATv5Variable * variable = [[vMAT_MATv5NumericArray alloc] init];
+    vMAT_MATv5NumericArray * variable = [[vMAT_MATv5NumericArray alloc] init];
     variable->_isComplex = (flags & 0x800) == 0x800;
     variable->_isGlobal  = (flags & 0x400) == 0x400;
     variable->_isLogical = (flags & 0x200) == 0x200;
     variable->_mxClass = vMAT_MITypeClass(matrix.type);
     variable->_size = matrix.size;
     variable->_name = name;
+    variable->_array = matrix;
     return variable;
 }
 

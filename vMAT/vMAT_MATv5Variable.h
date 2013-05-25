@@ -38,7 +38,7 @@
 @class vMAT_MATv5SaveOperation;
 
 @interface vMAT_MATv5Variable : NSObject {
-@protected
+@public
     BOOL _isComplex;
     BOOL _isGlobal;
     BOOL _isLogical;
@@ -79,7 +79,7 @@
 @end
 
 @interface vMAT_MATv5NumericArray : vMAT_MATv5Variable {
-@protected
+@public
     vMAT_Array * _array;
 }
 
